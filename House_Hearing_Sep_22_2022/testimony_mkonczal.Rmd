@@ -1,0 +1,164 @@
+---
+title: "Why Market Power Matters for Inflation"
+author: 
+   - Mike Konczal
+date: |
+  | Director, Macroeconomic Analysis
+  | Roosevelt Institute
+  |
+  | Testimony before the
+  | House Committee on Oversight and Reform
+  | Subcommittee on Economic and Consumer Policy
+  |
+  | September 22, 2022
+output: pdf_document
+urlcolor: blue
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhf{}
+- \fancyhead[CO,CE]{}
+- \fancyfoot[CO,CE]{ROOSEVELT INSTITUTE}
+- \fancyfoot[LE,RO]{\thepage}
+bibliography: markups_testimony.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(distill)
+library(stargazer)
+library(knitr)
+library(scales)
+library(lubridate)
+```
+```{r code}
+
+# This is formatting for bib citations: @{firstauthor_firstwordoftitle_yyyy} 
+```
+
+Chairman Krishnamoorthi, Ranking Member Cloud, and distinguished Members of the Committee: Thank you for inviting me to testify at this hearing. My name is Mike Konczal, and I’m the Director of Macroeconomic Analysis at the Roosevelt Institute, a progressive economic think tank. I’ve led our organization’s research on the recoveries from both the Great Recession and the recent recession following the COVID-19 outbreak.
+
+## Introduction^[Special thanks to Ira Regmi for research support and to Sonya Gurwitt for editorial support.]
+
+This has been a remarkable recovery for workers, with 10.2 million jobs added since January 2021. As Figure 1 shows, there are now between 2.7 and 3 million more jobs compared to a February 2021 Congressional Budget Office (CBO) projection, with unemployment 1.2 percent lower and labor force participation 0.3 percent higher than what would have happened without the American Rescue Plan. Estimates of labor market dynamism—depressed for decades before the COVID-19 pandemic—have skyrocketed, making workers more able to move up the career ladder and quit their jobs to seek new and better ones. We are also recovering to the pre-COVID macroeconomic trend; in contrast, as shown in Figure 2, we never returned to anywhere near the previous trend after the Great Recession, signifying a loss of trillions of dollars.
+
+```{r Figure1, fig.width = 7, fig.height = 5, fig.align='center', fig.cap = "\\label{fig1}The recovery was faster than February 2021 CBO projections"}
+setwd("/Users/mkonczal/Documents/GitHub/Presentations-and-Testimony/House_Hearing_Sep_22_2022/")
+source("graphics_code/1_3_create_cbo_projections.R")
+cbo_plot
+```
+
+```{r Figure2, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{fig2}Returning to trend (real personal consumption expenditures, 2012=100)"}
+setwd("/Users/mkonczal/Documents/GitHub/Presentations-and-Testimony/House_Hearing_Sep_22_2022/")
+source("graphics_code/2_2_BEA_graphic.R")
+bea_trend
+```
+Yet this recovery has also featured higher-than-expected inflation. This inflation has occurred alongside record high corporate profit margins, and the relationship between these two trends has been one of the central debates of this recovery.
+
+As Figure 3 shows, 40 percent of the increases in prices for nonfinancial corporate businesses in the recovery has been driven by corporate profits, in contrast with just 22 percent from employee wages. Over the previous 40 years, these values were 11 percent and 62 percent, respectively [@bivens_corporate_2022]. Estimates from the Center for American Progress indicate that the corporate price markups here are adding 1 percent more to nonfinancial corporate price increases than they did during the Great Recession [@jarsulic_effective_2022]. There is increasing scrutiny of the opportunistic justifications for price increases as disclosed in corporate earnings calls [@owens_corporate_2022]. Researchers at the Federal Reserve Bank of New York have found a connection between higher prices, as measured by the Producer Price Index, and gross profit margins—a connection that is especially high in 2021 and early 2022 [@andler_corporate_2022]. There is also a growing disconnect between the price increases for inputs to business measured in the Producer Price Index and the increases in the prices of goods for consumers in the Consumer Price Index—especially for goods like automobiles [@brainard_bringing_2022].
+
+```{r Figure3, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{fig3}Nonfinancial corporate price increases are associated with higher corporate profits (NIPA Table 1.15)"}
+setwd("/Users/mkonczal/Documents/GitHub/Presentations-and-Testimony/House_Hearing_Sep_22_2022/")
+source("graphics_code/2_3_BEA_graphic_1_15.R")
+bea_1_15
+```
+
+However, without firm-level data, it is difficult to determine the exact relationship between the increase in markups and inflation. A paper I co-wrote with my Roosevelt Institute colleague Niko Lusiani, *Prices, Profits, and Power: An Analysis of 2021 Firm-Level Markups,* is the first to explore the size and distribution of markups—the difference between revenues and the marginal costs of production—across individual firms during this recovery. 
+
+Our analysis, which went back to the 1950s and included 3,700 firms operating in the US in 2021, reproduced and updated the analysis of Jan De Loecker, Jan Eeckhout, and Gabriel Unger’s *The Rise of Market Power and the Macroeconomic Implications*, a paper whose methodology has been at the center of the debates on market power in recent years [@de_loecker_rise_2020]. In that work, the authors found that markups, which had been flat from 1955 through 1980, increased in a consistent and dramatic fashion from 1980 through 2015, the last year in their sample. This increase was almost entirely driven by firms in the top half of the markup distribution, and especially those in the top quarter. In addition, profitability increased for these firms, even controlling for changes in overhead costs and other business measures. For our paper, we updated their analysis through 2021.
+
+We found that markups and profits skyrocketed in 2021 to their highest recorded level since the 1950s. Further, firms in the US increased their markups and profits in 2021 at the fastest annual pace since 1955. Adjusting for size, pre-pandemic markups were a strong predictor of the increase in markups during 2021, suggesting that market power had a role in driving inflation. More specifically, a 10 percent higher level of size-adjusted markups before the pandemic was associated with an increase of markups between 1.6 and 2.7 percent in 2021.
+
+Inflation has broadened since these 2021 results. Table 1 breaks down contributions to inflation from goods, housing, and services excluding housing, for the pre-pandemic period, 2021, and 2022. Though in 2022 inflation has broadened more to services—and especially to housing—goods inflation still remains high and has also not seen any real deflation back to older prices. If corporate power allows margins and goods inflation to continue to be this elevated, then there is no real path back to pre-pandemic levels of inflation without severely driving down inflation in services.
+
+```{r goods, results='asis', include=TRUE}
+# This source call gives us all our data for the report
+source("graphics_code/3_2_cpi_breakdown.R")
+stargazer(as.data.frame(graphic), summary=FALSE, rownames=FALSE, title="Contribution to Inflation, Annualized, CPI", header=FALSE)
+```
+
+Inflation is a global phenomenon [@bivens_rising_2022], and corporate profits are just one reason it remains high. But since markups are unusually and suddenly so high, there is room for reversing them with little economic harm and likely societal benefit, including lower prices in the short term, and less inequality and potentially more innovation in the medium term. With these margins, profits and markups can decrease as either supply opens up or demand cools, removing pricing pressure. Such a high profit margin also means that there's room for wages to increase without necessarily raising prices—an important dynamic in a hot labor market. We believe the evidence presented by our analysis points to an all-of-government administrative, regulatory, and legislative approach to tackling inflation that includes demand, supply, and market power interventions.
+
+## Data and Methodology
+
+We relied on Compustat, the research standard for publicly traded firm-level data, which pulls publicly disclosed data from SEC filings, annual and quarterly reports to shareholders, and S&P’s Global Indices. This initially gave us roughly 600,000 firm-level observations, with 11,500 from firms in 2021. This isn’t purely representative of the economy as a whole, as publicly traded firms are generally older and larger than other firms. But it does represent an important part of the economy. We cleaned the data by removing firms with missing entries for our values and excluding the top and bottom 1 percent of certain variables. This left us with 3,698 observations for 2021 and 265,893 observations between 1955 and 2020.
+
+[@de_loecker_rise_2020] found that a markup of a firm can be derived from the following equation:
+
+$$
+\mu_{it} =\theta^v  \frac{P_{it}Q_{it}}{P^V_{it}V_{it}} = \theta^v \frac{Price*Quantity}{Costs^V*Inputs} =  \theta^v \frac{Sales}{COGS}
+$$
+
+Where $\theta^v$ is an industry- and year-specific production function; $P_{it} Q_{it}$ is total revenue, which can be approximated by *sales*; and $P^V_{it}V_{it}$ is average cost of production multiplied by production, which can be approximated by *cost of goods sold.* Both of these are reported by the firms in the income statement that Compustat collects and standardizes across years and firms.
+
+Because of data limitations, we did not estimate the production function for 2021 in the markup equation. Instead, we used 0.85, the average value in De Loecker, Eeckhout, and Unger’s sample, across firms and years. We checked this by using industry-level production functions for 2015 for subsequent years and found the significance and general results unchanged.
+
+Throughout this analysis, we used both firm-level markups and size-adjusted, firm-level markups. In order to adjust for size, we weighted the firm by the share of total sales in that year. This is important because the size of sales of firms varied greatly among our sample. Looking at yearly sales averages, the 75th percentile of firms had 22 times the sales of the 25th percentile, while the 90th percentile firm had over 400 times the sales of the 10th percentile. The more sales a particular firm makes, the more impact it will have on consumers, prices, and the economy as a whole. 
+
+## Results
+
+### Markups
+
+Figure 4 shows size-adjusted, firm-level markups from 1955 through 2021. We found that markups in the year 2021 were both the highest level on record and the largest one-year increase—over 2.5 times the increase of the next several largest annual increases. While markups averaged 1.26 between 1960 and 1980, they have been on a slow and consistent rise since then, averaging 1.56 during the 2010s. In 2021, markups suddenly increased to 1.72—that is, the average markup charged in 2021 was 72 percent above marginal cost. In other words, in 2021, we saw a sharp increase in the 30-year trend of firms in the aggregate decoupling their prices from their underlying costs.
+
+```{r total_markups, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{fig4}Markups have increased"}
+source("graphics_code/0_1_Compustat_data_creation.R")
+source("graphics_code/0_2_Compustat_graphics.R")
+g3_1p
+```
+
+### Profits
+
+Higher markups do not necessarily have to translate to higher profits, but they did in 2021. Figure 5 shows that profits margins were at record highs, both for operating profits (*sales* minus *costs of goods sold,* as well as *selling, general, and administrative expenses [sga]* as a percent of *sales*) and net profit margins (defined as *net income* divided by *sales*). The 3.2 percent annual increase in operating profits is more than twice the next highest annual increase across the time period analyzed.
+
+```{r total_profits, fig.align='center', fig.width = 6, fig.height = 3, fig.cap = "\\label{fig5}Profit margins are at record highs"}
+g31_1p
+```
+
+### Distribution
+
+As a result of creating firm-level markups, we were able to calculate the distribution of markups between firms, as well as observe changes both over time and in 2021. Figure 6 shows the distribution of markups between firms by year.
+
+```{r dist1, fig.width = 6, fig.height = 4, fig.align='center', fig.cap = "\\label{fig6}Distribution of markups between firms increases overall, especially at the top"}
+dist1
+```
+
+The distribution at the top (the uppermost two lines in Figure 4) pulls away even further from the rest in 2021, with record levels at the 75th and 90th percentile of the distribution. (Since these are calculated each year, firms can change their rankings.) This shows that the sharp increase in aggregate markups in 2021 seems to be driven by firms with markups in the top 10th of the distribution. In addition, there is a broader increase in markups; the median and the 25th percentile of markups increased to their highest level on record. Though much smaller in scope, given the broad nature across the distribution, this is impactful and consistent with demand-side stories.
+
+### Industry
+
+Markups increased much more across some industries than others, consistent with supply-side stories. Markups increased especially for finance and insurance, real estate, mining, quarrying and oil/gas extraction, manufacturing, and information. (Because of the unique nature of financial and insurance income statements, we reran our analysis with those firms excluded, and reached the same conclusions.)
+
+```{r within_between, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{fig7}A partial shift from within industries to between industries"}
+within_graphic2
+```
+
+We can go further and decompose the increase in markups into increases within and between particular industries. Over the last several decades, markups have mostly increased within industries and not between them. This is often described as the rise of “superstar firms” that come to take over each industry, rather than something focused in a smaller number of specific industries [@autor_fall_2020]. Figure 7 shows the cumulative change in markups that come from within and between three-digit NAICS industries. Looking at the change in markups that came from within versus between industries, we see that from 1980 to 2019, 81 percent of the increase in markups has come from within industries, pointing to a more generalized increase in market power over this time. Markups within industries did jump sharply from 2020 to 2021, as observed in the top line. At the same time, however, markups between industries—essentially flat since 1990—also jumped significantly in this recovery, accounting for 38 percent of the increase. This is consistent with an industry-specific reopening story leading to inflation in 2021.
+
+### Demand and markups
+
+We next turned to regressions to see if a higher level of previous markups for our cross-section of firms was associated with a higher increase in markups in 2021, which would be suggestive of a market power explanation. For this, we took the average annual markup from 2018 to 2020, adjusted for firm size *(SA)*, as our independent variable. If market power was a significant factor in increased markups, we should see previous markups as a predictor of future ones. Next, we took the *SA* 2021 markup and subtracted the previous period markup to get our difference, which we treated as the dependent variable. In Figure 8 we excluded the top and bottom 1 percent outliers of each of these two variables (the results are the same either way).
+
+```{r mp2, fig.align='center', fig.width = 6, fig.height = 4, fig.cap = "\\label{fig8}Relationship with outliers removed"}
+mp_g2
+```
+
+Table 2 has a list of regressions, with and without three-digit NAICS industry controls. We see strong relationships with some explanatory power in these cross-sections. Firms with 10 percent higher *SA* markups before the pandemic are associated with an increase in their *SA* margins of 2.7 or 1.6 percent. These results aren’t due to the specific base years either. We also ran the analysis with 2018 and 2019 as the baseline years and the change between then and now, as well as with 2017 through 2019 as the baseline, and found the same results for the changes during this recovery.
+
+As Table 2 also shows, if we don’t size-adjust markups, there’s a slight negative relationship between the two. However, size adjustment is more relevant for understanding the economy as a whole (and pricing in particular), as these firms significantly vary in size and sales. In the 2021 cross-section of firms, the 75th percentile of sales is 21 times larger than the 25th percentile; that ratio is 645 times larger for the 90th percentile versus the 10th. The sales by these small firms are less relevant to consumers, to the overall setting of prices, and to the economy as a whole. Given that we want to see the impact on the economy just as much as the impact on each firm, we adjusted for firm size as above by multiplying firms against their percentage of total sales.
+
+There is a chance that using revenues to adjust for size introduced a bias, as revenues were also part of the markup equation. Yet we believe revenues are the best approximation of the impact on the economy here. In order to double check our results, we also reran our analysis adjusting for firm size based on *cost of goods sold* and *selling, general, and administrative expenses* together, and found the same results.
+
+```{r market_power_regression, results='asis', include=TRUE}
+stargazer(mp_lm_list, type = "latex", omit="ind3d", omit.labels = "Industry controls", omit.stat=c("f", "ser"), header=FALSE,
+          covariate.labels = c("SA Previous Markup", "Previous Markup", "Constant"),
+          dep.var.labels = c("SA Markup Increase", "SA Outliers Removed", "Markup Increase"))
+```
+
+## Conclusion
+
+Markups being unusually and suddenly high means there is room for them to reverse with little economic harm and with likely societal benefit, including lower prices in the short term and less inequality and potentially more innovation in the medium term. The markups revealed in our analysis reflect significant room for these margins to come down, as well as for any wage increases to be absorbed within the firm without the need for price increases. I believe the evidence I have presented strengthens arguments for an all-of-government administrative, regulatory, and legislative approach to tackling inflation, which should include demand, supply, and market power interventions.
+
+## Bibliography
+
