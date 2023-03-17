@@ -16,8 +16,8 @@ library(lubridate)
 theme_lass <-   theme_modern_rc(ticks = TRUE) +
   theme(legend.position = "none", legend.title = element_blank(),
         panel.grid.major.y = element_line(size=0.5),panel.grid.minor.y = element_blank(), plot.title.position = "plot",
-        axis.title.x = element_blank(), axis.title.y = element_blank(), plot.title = element_text(size = 25, face="bold"),
-        plot.subtitle = element_text(size=15, color="white"), plot.caption = element_text(size=10, face="italic"),
+        axis.title.x = element_blank(), axis.title.y = element_blank(), plot.title = element_text(size = 20, face="bold"),
+        plot.subtitle = element_text(size=12, color="white"), plot.caption = element_text(size=10, face="italic"),
         legend.text = element_text(size=12), axis.text.y = element_text(size=12, face="bold"), axis.text.x = element_text(size=12, face="bold"),
         strip.text = element_text(face = "bold", color="white", hjust = 0.5, size = 10), panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(), strip.background = element_blank()) +
@@ -64,6 +64,7 @@ AEI_chart <- AEI_chart %>%
 
 AEI_chart %>%
   mutate(category = as.factor(category), name = reorder_within(item_name, change, category))  %>%
+  mutate(category = fct_relevel(category, "Services")) %>%
   ggplot(aes(name, change, fill = category)) +
   geom_col(size=0) +
   coord_flip() +
@@ -75,9 +76,9 @@ AEI_chart %>%
   theme(plot.title.position = "plot") +
   labs(y = NULL,
        x = NULL,
-       title = "Price Increases",
-       subtitle = "Price increase since 2000.",
-       caption ="BLS, CPI, Author's Calculation. Mike Konczal") +
+       title = "Price Increases Are Higher For Services Than Goods",
+       subtitle = "Price increases from Jan 2000 through Feb 2023, Lowest level item categories, CPI.",
+       caption ="BLS, CPI, seasonally adjusted values only. Author's calculation. Mike Konczal") +
   theme(axis.text.y = element_text(size=12, face="plain"),
         legend.position = c(0.75,0.5))
 
@@ -86,12 +87,12 @@ ggsave("price_increases.png", dpi="retina", width = 8, height=12, units = "in")
 write.csv(AEI_chart, "AEI_chart.csv")
 
 #### All Prices since 2013 Chart ####
-since_2013_csv <- cpi %>% filter(seasonal == "S") %>%
+since_2012_csv <- cpi %>% filter(seasonal == "S") %>%
   filter(begin_year <= 2012 & end_year == 2023) %>%
   group_by(item_name) %>%
-  summarize(change = value[date=="2023-02-01"]/value[date=="2012-01-01"]-1) %>%
+  summarize(change_since_jan_2012 = value[date=="2023-02-01"]/value[date=="2012-01-01"]-1) %>%
   ungroup() %>%
-  arrange(desc(change))
+  arrange(desc(change_since_jan_2012))
 
-write.csv(since_2013_csv, "all_since_2013.csv")
+write.csv(since_2012_csv, "all_since_2012.csv")
 
