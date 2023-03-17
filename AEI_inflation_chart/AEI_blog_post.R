@@ -86,7 +86,7 @@ ggsave("price_increases.png", dpi="retina", width = 8, height=12, units = "in")
 
 write.csv(AEI_chart, "AEI_chart.csv")
 
-#### All Prices since 2013 Chart ####
+#### All Prices since 2012 Chart ####
 since_2012_csv <- cpi %>% filter(seasonal == "S") %>%
   filter(begin_year <= 2012 & end_year == 2023) %>%
   group_by(item_name) %>%
