@@ -96,3 +96,46 @@ since_2012_csv <- cpi %>% filter(seasonal == "S") %>%
 
 write.csv(since_2012_csv, "all_since_2012.csv")
 
+
+
+##### Final Graphic ####
+
+### Download ECI ###
+eci_wages <- read_delim(file = "https://download.bls.gov/pub/time.series/ci/ci.data.1.AllData") %>%
+  clean_names()
+eci_wages$value <- as.numeric(eci_wages$value)
+eci_wages <- eci_wages %>%
+  mutate(month = case_when(
+    period == "Q01" ~ 3,
+    period == "Q02" ~ 6,
+    period == "Q03" ~ 9,
+    period == "Q04" ~ 12))
+eci_wages$date <- paste(eci_wages$month, "01", eci_wages$year, sep="/")
+eci_wages$date <- as.Date(eci_wages$date, "%m/%d/%Y")
+
+eci_wages <- eci_wages %>% filter(series_id == "CIS2020000000000I")  %>% mutate(wage_change = value/lag(value)-1) %>% select(wage_change, date)
+
+eci_cpi <- cpi %>% filter(item_name %in% c("Services less energy services","Commodities less food and energy commodities")) %>%
+  filter(seasonal == "S") %>% group_by(item_name) %>% mutate(inflation_change = value/lag(value,3)-1) %>%
+  ungroup() %>% select(item_name, date, inflation_change) %>%
+  inner_join(eci_wages, by="date")
+
+
+goods <- eci_cpi %>% filter(item_name == "Commodities less food and energy commodities") %>% mutate(wage_change = lag(wage_change,2))
+a <- lm(inflation_change ~ wage_change, data=goods)
+summary(a)
+
+services <- eci_cpi %>% filter(item_name == "Services less energy services") %>% mutate(wage_change = lag(wage_change,2))
+b <- lm(inflation_change ~ wage_change, data=services)
+summary(b)
+
+ggplot(eci_cpi, aes(x=lag(wage_change,2), y=inflation_change, color=item_name)) + geom_point() + geom_smooth(method="lm") +
+  facet_wrap(~item_name) + theme_lass +
+  labs(title="Wages Has a Positive, Significant Relationship with Services Inflation, But Not Goods",
+       subtitle="3-month change in ECI private wages, CPI inflation category, wages lagged 6 months",
+       caption="BLS, CPI, ECI, seasonally-adjusted. Same effect with or without lag. Author's calculations, Mike Konczal",
+       y="CPI Inflation, 3-months", x="ECI Private Wages, 3-Months, Lagged 6 Months") +
+  scale_y_continuous(labels = scales::percent) + scale_x_continuous(labels = scales::percent) +
+  theme(axis.title.x = element_text(color="white"), axis.title.y = element_text(color="white", angle=90))
+  
+ggsave("wages_goods_services.png", dpi="retina", width = 12, height=8, units = "in")
