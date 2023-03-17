@@ -1,0 +1,63 @@
+"","item_name","category","change"
+"1","Delivery services","Services",2.71476827094474
+"2","Hospital services","Services",2.42828138913624
+"3","Water and sewerage maintenance","Services",1.89584409799555
+"4","Pet services including veterinary","Services",1.89287934186472
+"5","Elementary and high school tuition and fees","Services",1.83350235849057
+"6","College tuition and fees","Services",1.82300277178934
+"7","Educational books and supplies","Goods",1.62607391145262
+"8","Motor vehicle insurance","Services",1.60480972930561
+"9","Housing at school, excluding board","Services",1.45272909967846
+"10","Nursing homes and adult day services","Services",1.37782646801052
+"11","Technical and business school tuition and fees","Services",1.374
+"12","Motor vehicle repair","Services",1.25876647834275
+"13","Day care and preschool","Services",1.24279344262295
+"14","Dental services","Services",1.23103353057199
+"15","Rent of primary residence","Services",1.16148148148148
+"16","Garbage and trash collection","Services",1.15374859708193
+"17","Food away from home","Services",1.08055622009569
+"18","Funeral expenses","Services",1.00318279569892
+"19","Alcoholic beverages away from home","Goods",1.00114047968674
+"20","Fees for lessons or instructions","Services",0.97995189738108
+"21","Owners' equivalent rent of primary residence","Services",0.948117346938776
+"22","Prescription drugs","Goods",0.942097404905794
+"23","Admissions","Services",0.940753212228622
+"24","Financial services","Services",0.922615894039735
+"25","Car and truck rental","Services",0.794345018450184
+"26","Physicians' services","Services",0.720258225739275
+"27","Beer, ale, and other malt beverages at home","Goods",0.720168393782383
+"28","Services by other medical professionals","Services",0.603911138923654
+"29","Other lodging","Services",0.594897218863362
+"30","Tires","Goods",0.577435633367662
+"31","Club memberships","Services",0.472319925163704
+"32","Sports vehicles including bicycles","Goods",0.396733902249806
+"33","Jewelry","Goods",0.368496503496504
+"34","Miscellaneous household products","Goods",0.358673765730881
+"35","Eyeglasses and eye care","Services",0.345542818610924
+"36","Boys' and girls' footwear","Goods",0.338307440719542
+"37","Watches","Goods",0.314838174273859
+"38","Distilled spirits at home","Goods",0.31128991859737
+"39","Airline fares","Services",0.3092696122633
+"40","New vehicles","Goods",0.253778089887641
+"41","Used cars and trucks","Goods",0.199987004548408
+"42","Wine at home","Goods",0.199569251159708
+"43","Men's footwear","Goods",0.153464810518175
+"44","Outdoor equipment and supplies","Goods",0.126757575757576
+"45","Women's footwear","Goods",0.113094245204337
+"46","Women's dresses","Goods",0.0407839388145317
+"47","Other intercity transportation","Services",0.0234478450968145
+"48","Boys' apparel","Goods",-0.0424789207419899
+"49","Infants' and toddlers' apparel","Goods",-0.0464820359281437
+"50","Men's pants and shorts","Goods",-0.0542716981132075
+"51","Miscellaneous personal goods","Goods",-0.0625435897435898
+"52","Women's outerwear","Goods",-0.0984999999999999
+"53","Girls' apparel","Goods",-0.122225941422594
+"54","Other furniture","Goods",-0.161014778325123
+"55","Other appliances","Goods",-0.188683937823834
+"56","Men's shirts and sweaters","Goods",-0.216877551020408
+"57","Women's suits and separates","Goods",-0.238803245436105
+"58","Men's suits, sport coats, and outerwear","Goods",-0.243059427732942
+"59","Photographic equipment and supplies","Goods",-0.506889763779528
+"60","Toys","Goods",-0.721138059701493
+"61","Other video equipment","Goods",-0.875756302521008
+"62","Televisions","Goods",-0.977409523809524
