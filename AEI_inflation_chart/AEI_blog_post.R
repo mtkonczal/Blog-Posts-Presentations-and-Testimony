@@ -30,8 +30,8 @@ cpi <- cpi %>%
   clean_names()
 cpi$value <- as.numeric(cpi$value)
 cpi$series_id <- str_trim(cpi$series_id)
-cpi$date <- paste(substr(cpi$period, 2,3), "01", substr(cpi$year, 3, 4), sep="/")
-cpi$date <- as.Date(cpi$date, "%m/%d/%y")
+cpi$date <- paste(substr(cpi$period, 2,3), "01", cpi$year, sep="/")
+cpi$date <- as.Date(cpi$date, "%m/%d/%Y")
 
 series <- read_delim(file = "https://download.bls.gov/pub/time.series/cu/cu.series")
 series <- series %>%
