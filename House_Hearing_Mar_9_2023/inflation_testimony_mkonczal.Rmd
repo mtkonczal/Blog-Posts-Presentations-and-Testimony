@@ -1,0 +1,181 @@
+---
+title: "Inflation in 2023: Causes, Progress, and Solutions"
+author: 
+   - Mike Konczal
+date: |
+  | Director, Macroeconomic Analysis
+  | Roosevelt Institute
+  |
+  | Testimony before the
+  | House Committee on Oversight and Accountability
+  | Subcommittee on Health Care and Financial Services
+  |
+  | March 9, 2023
+output: pdf_document
+urlcolor: blue
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyhf{}
+- \fancyhead[CO,CE]{}
+- \fancyfoot[CO,CE]{ROOSEVELT INSTITUTE}
+- \fancyfoot[LE,RO]{\thepage}
+bibliography: inflation_testimony.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(distill)
+library(stargazer)
+library(knitr)
+library(scales)
+library(lubridate)
+```
+```{r code}
+setwd("/Users/mkonczal/Documents/GitHub/Blog-Posts-Presentations-and-Testimony/House_Hearing_Mar_9_2023/")
+source("testimony_analysis_CPI.R")
+# This is formatting for bib citations: @{firstauthor_firstwordoftitle_yyyy} 
+```
+
+```{r code2}
+source("testimony_analysis_PCE.R")
+```
+Chair McClain, ranking member Porter, and distinguished members of the subcommittee: Thank you for inviting me to testify at this hearing. My name is Mike Konczal, and I’m the Director of Macroeconomic Analysis at the Roosevelt Institute. I’ve led our organization’s research on the economic recoveries from both the Great Recession and the recent recession following the start of the COVID-19 pandemic.^[Special thanks to Ira Regmi for research support and to Sonya Gurwitt for editorial support.]
+
+Today, I’m going to speak about the most recent recovery, the causes of inflation that have been unique to this recovery, the progress we’ve made in bringing down inflation so far, and what Congress and the administration can do to further bring down inflation.
+
+# The Recovery
+
+First, it’s important to remember that this recovery has been strong. The economy has added more than 12 million jobs over the past two years—a rate of 517,000 jobs per month since President Biden took office. There are now 4 million more jobs than the February 2021 Congressional Budget Office (CBO) projection, with unemployment 1.5 percent lower and labor force participation 0.2 percent higher than what the CBO estimated would have happened without the American Rescue Plan. Measures of labor market dynamism—which had been depressed for decades before the COVID-19 pandemic—have skyrocketed, allowing workers to move up the career ladder and quit their jobs to seek new, better-paying, and more productive ones. We’ve seen many headlines illustrating this trend, such as a recent one in _The Atlantic_: "Low-Wage Jobs Are Becoming Middle-Class Jobs" [@lowrey_low-wage_2023]. In contrast to previous recessions, we are also recovering to the pre-COVID macroeconomic trend, with real GDP close to projections of where it would have been without the pandemic.
+
+# Inflation
+
+In addition to the speed of this recovery, however, we’ve also experienced inflation that has been higher and more sustained than economists, financial markets, and the Federal Reserve anticipated. Because inflation and any interventions around it have real impacts on people and communities, this is a subject that requires serious analysis and responses.
+
+## Causes of Inflation
+
+There have been four key contributors to inflation during the past two years.
+
+### 1. Shift from services to goods
+
+We've heard stories about people canceling gym memberships and buying home gym equipment instead—and this shift in demand from services to goods has been aggregated across the entire economy. As shown in Figure 1, in a matter of months, we went from an economy that was roughly 65 percent services and 35 percent goods to one that was more like 60 percent services and 40 percent goods. This is a major shift for such a short time period—to find another such sudden shift between goods and services you would have to look back to the post-war period of the mid to late 1940s, which was also a period of high, sudden inflation.
+
+```{r shift, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{fig1}A shift from services to goods (real personal consumption expenditures by major type of product, monthly, chained dollars, Jan 2020 = 1, log-linear trendline from 2015-2019)"}
+graphic_shift
+```
+
+Normally, we might expect a corresponding shift in demand between two items to lead to a shift in prices—that is, that the price of services would go down while the price of goods would increase. However, instead, the price of services did not fall even as the price of goods skyrocketed. Economists debate the sources of these nominal price rigidities within sectoral demand changes [@guerrieri_monetary_2021]. But it is very clear, in the data and in our experiences, that the price of movie tickets or a haircut did not fall even as demand for them decreased. This, mechanically, increased inflation. As the economy began to reopen more fully and consumer demand began to shift back to pre-pandemic proportions of goods and services, services inflation picked up from where it had been, even as goods inflation was still normalizing. This, too, has led to higher inflation.
+
+### 2. Vulnerabilities in supply chains
+
+The price of goods skyrocketed during this period, and one reason for this was vulnerabilities in our supply chains. Shifts in spending (to goods) stressed global supply chains, many of which already lacked resiliency due to decades of just-in-time production and the problems introduced by the pandemic itself. Supply chain bottleneck measures skyrocketed, as demonstrated by everything from mentions in earnings calls to the time it took to unload products at our ports. This also led to higher inflation.
+
+The case of automobiles is indicative here. After contributing almost nothing to inflation for the two decades prior to the pandemic, cars were responsible for 1.94 percentage points of inflation in 2021. Even now, in 2023, the automobile industry is under a production shortfall of about 5 million automobiles, due to the lingering effects of the temporary shutdown of production during lockdowns and the delays caused by a semiconductor shortage [@williams_where_2023].
+
+You can see the overall impact of these shifts in Figure 2, which shows the relationship between supply and prices for overall goods and services. The Bureau of Economic Analysis (BEA) keeps track of nominal spending in these categories in the National Accounts, and breaks them down into both a quantity measure and a price measure. This is how the BEA can analyze real spending and inflation. Plotting these two measures shows the convex nature of goods: After a certain point of quantities expanding, price becomes nearly vertical. There is never a price drop in services, even though the amount consumed collapses; indeed, prices pick up right where they left off. This effect of the reopening is going to increase overall inflation.
+
+```{r convey, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{figTK}Goods face a convex supply curve while services show downward nominal rigidity (NIPA table 2.4.3 and 2.4.4)"}
+convex_curve
+```
+
+### 3. Housing market and increase in working from home
+
+Another important cause of inflation has been major shifts in the demand for housing. Currently, the cost of shelter is one of the highest points of price increases, growing 6.1 percent annualized during 2021 and 2022, compared to 3.3 percent in 2018 to 2019. At roughly a third of the Consumer Price Index, this has contributed significantly to overall inflation.
+
+The housing market reflects significant changes in demand as a result of many workers shifting to remote work. This was a very sudden change; by best estimates, roughly 5 percent of full-paid working days were from home pre-pandemic, compared to 34 percent in 2021. This increase in remote work and housing demand is something that will likely continue. Even as employers try to bring people back into offices, an estimated 28 percent of working days have still been from home over the past three months [@barrero_why_2021].
+
+This has changed housing demand patterns, such as shifting preferences toward places with more space and floor plans conducive to working from home. One study by the Federal Reserve Bank of San Francisco found that places where working from home increased more also saw higher rates of housing price increases, even when controlling for migration. In the study’s estimates, these shifting patterns of demand resulting from remote work could explain half of the overall increase in house prices and rents during the past two years [@mondragon_housing_2022].
+
+### 4. Russia’s invasion of Ukraine
+
+Russia’s invasion of Ukraine in February 2022 also increased US inflation through effects on energy and food prices. The Consumer Price Index for energy skyrocketed 18 percent in the four-month period following the invasion, with food prices following shortly after that. Thanks to coordinated international efforts, including important use of financial commitments to deploy and restock the US Strategic Petroleum Reserve, the Consumer Price Index for energy has come down 11 percent since June to rates near the beginning of that war.
+
+Though the Federal Reserve is focused on observing core inflation, which excludes volatile energy prices, there were important second order effects of those rapid increases in energy prices in the short-run. Though our economy’s price index is less sensitive to energy price changes than in the past, we saw rises in prices, notably airline fares, that do play into core inflation measures. These prices later fell as energy prices fell.
+
+## What’s Missing from the Explanations of High Inflation?
+
+The above explanations are sufficient to explain most of the shifts in inflation over the past two years. But if inflation was primarily the result of the Biden administration’s policies and the American Rescue Plan, we would have expected to see certain things in the data that we do not see.
+
+### Demand isn’t above trend.
+
+If too much demand was the main or a major contributor to inflation, we’d expect to see measurements of demand higher than estimates of what our economy is capable of producing (or, potential output). But we don’t see this. Real GDP hasn't exceeded the CBO’s measures of potential output during 2021 and 2022.
+
+During this recovery, both real GDP and, notably, real consumption, never exceeded their trendlines. If people were simply consuming too much real output, we’d expect to see real consumption exceed its trendline. But this hasn’t happened. Nominal GDP, of course, is above its trendline. But this only tells us that prices have increased given a level of output; the earlier elements are more likely the drivers of this increase [@stiglitz_causes_2023].
+
+### Inflation is high globally.
+
+This recovery is taking place in a global context. If the issues related to reopenings from the pandemic lockdowns were the driver, we’d expect them to be reflected globally. And we have seen inflation increase everywhere. Data from the Organisation for Economic Co-operation and Development (OECD) shows that 31 out of 40 countries had higher inflation in 2021 than they did in 2019. Notably, the United States saw inflation earlier than other countries. But that’s also because our pickup in growth was higher and faster. 
+
+It’s worth noting how much higher our growth has been compared to peer countries. Last fall, the International Monetary Fund (IMF) estimated that US growth will average 1.4 percent from 2020 through 2023—well above the eurozone’s 0.7 percent.
+
+### We’ve seen a rapid return in labor force participation.
+
+Many have claimed that the American Rescue Plan has caused a labor market shortage. Instead, we’ve seen a rapid recovery in labor force participation and employment-to-population ratios.
+
+In the three months before the pandemic, the prime-age (25-54) employment-to-population ratio (EPOP) was 80.5 percent. In January 2023, that value was 80.3 percent and still growing, compared to 76.3 percent in December 2020. During the Great Recession, it took almost 11 years to recover prime-age EPOP and return to a similar difference. Any labor shortage one could point to is the result of sectoral changes and upskilling, not the level of actual employment.
+
+Debates among economists have focused on “missing workers,” but those are generally workers who are above prime age, particularly those between the ages of 65 and 80. By our calculations, the employment-to-population ratio for workers in their 70s has fallen from 14 to 13 percent. As Figure 3 shows, it still remains much higher than it was during the 1990s.
+
+```{r epop_age, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{figTK}Employment-to-population ratio by each age value, CPS survey microdata, across June through November of respective year, IPUMS-CPS, University of Minnesota; Author's calculation."}
+age_distribution_graphic
+```
+
+## Positive Developments
+
+### Declining inflation
+
+Though inflation remains an important challenge, it has dropped over the past six months, no matter how it’s measured. Table 1 demonstrates this by comparing inflation in the first half of 2022 with inflation in the second half of 2022, as well as with the three months before January 2023. 
+
+```{r declining, results='asis', include=TRUE}
+stargazer(as.data.frame(inflation_declining_table), summary=FALSE, rownames=FALSE, title="Inflation is slowing across measures in 2022 (percent growth, annualized)", header=FALSE)
+```
+
+During the first half of 2022, headline inflation was driven by energy prices being disrupted by Russia’s invasion of Ukraine and then later reverting. But even if we look through those volatile prices, at what economists call core inflation, we see that rate falling. However, this too is being influenced by both the drop in the prices of used cars as supply chains reopen, as well as the fact that housing inflation, roughly a third of consumer spending, is reported with a significant delay and won’t capture the declines in the housing market that analysts currently see. To get a sense of how persistent and demand-driven inflation is, some economists have focused on core inflation, excluding housing and used cars. This “supercore” inflation, too, has declined.
+
+There is still further to go and work to be done, but we are not in a situation where inflation is spiraling or becoming entrenched at very high levels. This means that we can reduce inflation without compromising our strong job market.
+
+### Expectations remain anchored
+
+One serious concern is that financial markets, businesses, and consumers could expect inflation to be higher, and as a result, inflation expectations become anchored at a higher level. We don’t see that. Measures of inflation expectations, such as the median three-year ahead expectation from the Federal Reserve Bank of New York’s Survey of Consumer Expectations and the median one- and ten-year ahead expectations from the Survey of Professional Forecasters administered by the Federal Reserve of Philadelphia remain at levels consistent with the belief that inflation will come down.
+
+### Wages are decelerating, and workers have more power
+
+If unemployment was below a natural rate of unemployment, we’d expect nominal wages to be increasing, or even accelerating in their rate of increase [@brookings_institution_jared_2023]. Instead, the growth rate of wages, however measured, decelerated across 2022. The private wages growth rate for the Employment Cost Index was between 5 and 6 percent, annualized, in the first half of 2022. It was 4 percent annualized in the fourth quarter of 2022. (This same pattern is seen across measures of wages, though the ECI, due to it holding employment distribution constant, is considered the best measure across a business cycle.)
+
+The following graphic shows how ECI wages are returning to trend. In red, it plots a regression of the quits rate, an important indicator of labor market tightness, from 2000 to 2019. It then shows the data during the recovery in blue: We can see that values were much higher than what would be predicted for much of 2022, but are now returning to trend.
+
+```{r merged_doc, fig.width = 6, fig.height = 3, fig.align='center', fig.cap = "\\label{figTK}Wages are back toward their predicted values (regression line and red points are 2001 to 2020)"}
+merged_graphic
+```
+
+In recent months, the Federal Reserve has emphasized the importance of the interconnectedness of wages and inflation in non-housing services. There is a strong literature on the passthrough rates of wages into inflation for goods declining in recent decades, even as it remains clear for services [@heise_missing_2022]. However, we see the ECI declining for services as well.
+
+Wages staying at the levels associated with the immediate reopening over the medium term would likely be too high for inflation to come down to trend. But this initial increase in wages was important, as it reflected a major compression of the income distribution. As David Autor, Arindrajit Dube, and Annie McGrew show, wages have been increasing not just from demand but from a weakening of employer monopsony power [@autor_unexpected_2023]. Wages have increased the most among the bottom half of the income distribution, the lowest paid third of occupations, Black and Hispanic workers, the youngest workers, and workers with just a high school diploma. They model how the labor supply curve has become more elastic from both additional options and extra liquidity from pandemic savings and income support. In my read, these wages reflect a necessary correction to the bad labor markets of the previous decade, and a boost to productivity and overall economic health. They are also something that will level out with time.
+
+# Ways to Fight Inflation
+
+All this said, inflation is still higher than we want it to be, and there are policy options that can help speed its decline.
+
+###  1. Recognition that a lot of tightening has taken place
+
+The Federal Reserve raised interest rates rapidly in 2022, with the goal of tightening demand and decreasing inflation. There is a significant amount of disagreement over what time period we should understand tightening working, and it has likely changed over time as the Fed has updated its communications strategies. But the general phrase of “long and variable lags” should be taken seriously. Some of the impact of tightening, such as through financial conditions and the housing market, has happened fast, even if housing is recorded with a delay. But other parts of the impact, such as through wealth effects and business investment, may take time. We don’t want to administer too much medicine if we think we haven’t seen all the effects yet.
+
+### 2. Competition policy and corporate profits
+
+Nonfinancial corporate profits as a percent of GDP are at record levels. It’s important to note that wages have lagged income and that the labor share of income has fallen; inflation is reflected more in corporate profits than it is for labor costs. Recent research we’ve put out finds that firms that already had higher pre-pandemic markups—the difference between profits and costs—increased their markups even more during the pandemic [@konczal_prices_2022].
+
+This makes sense outside of our inflation worries. We already had a severe competition crisis in our economy in 2019; while we’ve had a strong link between profits and investments across the middle of the 20th century, in recent decades we’ve seen a huge rise in profits with no comparable rise in investments, a trend even more puzzling and worrying during a period of low interest rates.
+
+But if corporate profits fall, it means we can lower inflation for any level of wage growth. Returning corporate profits to more historical levels, with the labor share recovering to values associated with the pre-pandemic or even earlier decades, would mean inflation can fall more rapidly and we could even sustain higher wage growth [@brainard_staying_2023].
+
+### 3. Investments and housing
+
+It’s important we rebuild our infrastructure to be more resilient, both for the remainder of this recovery and for economic stresses to come. Successful deployment of the Inflation Reduction Act will be important here, for building more semiconductors and for increasing our supply of green energy to address volatility to come.
+
+Housing was a challenge even before the pandemic, and it remains one now. Though housing supply is fundamentally one related to local zoning, there are ways Congress can help secure more affordable housing—by making housing both more available and more affordable.
+
+Thank you for your time, and I look forward to your questions.
+
+## Bibliography
+
