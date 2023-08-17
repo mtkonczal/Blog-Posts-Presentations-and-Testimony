@@ -103,7 +103,7 @@ summary(model2)
 pc_analysis$predicted_1980_2019 <- predict(model, newdata = pc_analysis)
 pc_analysis$predicted_1970_2019 <- predict(model2, newdata = pc_analysis)
 
-pc_analysis %>% filter(year(date)>2000) %>%
+pc_analysis %>% filter(year(date)>1982) %>%
   ggplot(aes(x = date)) +
   geom_line(aes(y = core_pce_changeA, color = "Actual Inflation")) +
   geom_line(aes(y = predicted_1980_2019, color = "Predicted Inflation, 1982-2019")) +
@@ -201,12 +201,5 @@ pc_analysis2 <-
          last_value = if_else(date==max(date), format(date, "%B\n%Y"), as.character(NA))) %>%
   ggplot(aes(avg_v_u, median_cpi, color=pandemic, label=last_value)) + geom_point() +
   geom_path(aes(pandemic_value, median_cpi)) + geom_text_repel(show.legend = FALSE) +
-  labs(title="Sup Larry Ball", subtitle="Figure 3 from the 'Scariest Economics Paper of 2022' (-Jason Furman). I have not done the fancy adjustments yet. Monthly.") +
+  labs(title="What happened?", subtitle="Figure 3 from the 'Scariest Economics Paper of 2022' (-Jason Furman). I have not done the fancy adjustments yet. Monthly.") +
   theme(legend.position = "NONE")
-
-
-
-
-%>%
-  select(date, avg_v_u, v_u_ratio)
-
