@@ -4,6 +4,33 @@ library(tidyverse)
 library(lubridate)
 library(latex2exp)
 library(readxl)
+library(hrbrthemes)
+library(scales)
+
+
+##### SET UP SOME THINGS #####
+theme_lass <-   theme_modern_rc(ticks = TRUE) + theme(legend.position = "none", legend.title = element_blank(),
+                                                      panel.grid.major.y = element_line(size=0.5),
+                                                      panel.grid.minor.y = element_blank(),
+                                                      plot.title.position = "plot",
+                                                      axis.title.x = element_blank(),
+                                                      axis.title.y = element_blank(),
+                                                      plot.title = element_text(size = 25, face="bold"),
+                                                      plot.subtitle = element_text(size=15, color="white"),
+                                                      plot.caption = element_text(size=10, face="italic"),
+                                                      legend.text = element_text(size=12),
+                                                      axis.text.y = element_text(size=12, face="bold"),
+                                                      axis.text.x = element_text(size=12, face="bold"),
+                                                      strip.text = element_text(face = "bold", color="white", hjust = 0.5, size = 10),
+                                                      panel.grid.major.x = element_blank(),
+                                                      panel.grid.minor.x = element_blank(),
+                                                      strip.background = element_blank()) +
+  theme(text = element_text(family = "Larsseit"),
+        plot.title = element_text(family = "Larsseit"),
+        plot.subtitle = element_text(family = "Larsseit"),
+        plot.caption = element_text(family="Larsseit"),
+        strip.text = element_text(family="Larsseit"))
+
 
 # Download data
 getSymbols("EXPINF5YR", src="FRED")  
@@ -266,3 +293,28 @@ ggplot(aes(x = Date)) +
   theme_minimal() +
   theme(legend.position = c(0.5,0.8), plot.title.position = "plot")
 
+
+
+
+long_exp <- read_delim("data/HISTDATA.TXT") %>%
+  select(OBS, PTR) %>%
+  mutate(year = as.numeric(substr(OBS, 1, 4)), quarter = as.numeric(substr(OBS, 6, 6))) %>%
+  mutate(month = quarter*2+quarter-2) %>%
+  mutate(date = as.Date(paste(year, month,1, sep = "-"), "%Y-%m-%d")) %>%
+  select(date, FRB_exp = PTR) %>%
+  mutate(FRB_exp = FRB_exp/100)
+
+exp_breaks <- long_exp %>% filter(month(date)==1)
+exp_breaks <- exp_breaks$date
+exp_breaks <- exp_breaks[seq(1, length(exp_breaks), 3)]
+
+long_exp %>%
+  ggplot(aes(date, FRB_exp)) + geom_line() + theme_lass +
+  scale_y_continuous(labels = percent) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = exp_breaks) +
+  labs(title="Not Expecting Much",
+       subtitle="10-year inflation expectations from FRB/US model's historical data (see caption below).",
+       caption="1991- = Survey of Professional Forecasters (SPF).
+1981 to 1991 = Hoey Survey.
+1968-1981 = Constructed via Kozicki and Tinsley (2001)
+Mike Konczal, Roosevelt Institute")

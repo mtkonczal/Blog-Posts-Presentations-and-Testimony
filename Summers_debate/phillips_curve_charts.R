@@ -58,7 +58,7 @@ long_exp <- read_delim("data/LONGBASE.TXT") %>%
   mutate(month = quarter*2+quarter-2) %>%
   mutate(date = as.Date(paste(year, month,1, sep = "-"), "%Y-%m-%d")) %>%
   select(date, FRB_exp = PTR) %>%
-  filter(year(date) > 1975)
+  filter(year(date) > 1970)
 pc_data <- pc_data %>% left_join(long_exp, by="date")
 
 long_jo <- read_csv("data/historical jolts.csv") %>% select(date = date, job_opening_rate_long = job_opening_rate)
@@ -88,11 +88,12 @@ pc_analysis$unrate_slack = pc_analysis$unrate - pc_analysis$nrou
 start_month <- month(max(pc_analysis$date))
 quarters <- ((seq(start_month, start_month + 9, by=3) - 1) %% 12) + 1
 
-pc_analysis <- pc_analysis %>% filter(month(date) %in% quarters)
-
+pc_analysis <- pc_analysis %>% filter(month(date) %in% quarters) %>%
+  mutate(FRB_post1991 = year(date)>=1992,
+         FRB_post1991 = if_else(FRB_post1991,FRB_exp, as.numeric(NA)))
 #### Section 2: Phillips Curve ####
 # Run regression: PCE_Core_Inflation ~ lagged PCE_Core_Inflation + Expected_Inflation + Noncyclical_Unemployment
-model <- lm(core_pce_changeA ~ lag(core_pce_changeA, 1) + lag(core_pce_changeA, 2) + expinf5yr +
+model <- lm(core_pce_changeA ~ lag(core_pce_changeA, 1) + lag(core_pce_changeA, 2) + FRB_post1991 +
               unrate_slack, data = pc_analysis[pc_analysis$date<"2020-01-01",])
 summary(model)
 
@@ -100,35 +101,52 @@ model2 <- lm(core_pce_changeA ~ lag(core_pce_changeA, 1) + lag(core_pce_changeA,
               unrate_slack, data = pc_analysis[pc_analysis$date<"2020-01-01",])
 summary(model2)
 
+pc_analysis <- pc_analysis %>% mutate(expinf_both = if_else(!is.na(expinf5yr), expinf5yr, FRB_exp))
+
+model3 <- lm(core_pce_changeA ~ lag(core_pce_changeA, 1) + lag(core_pce_changeA, 2) + expinf_both +
+               unrate_slack, data = pc_analysis[pc_analysis$date<"2020-01-01",])
+summary(model3)
+
 pc_analysis$predicted_1980_2019 <- predict(model, newdata = pc_analysis)
 pc_analysis$predicted_1970_2019 <- predict(model2, newdata = pc_analysis)
+pc_analysis$predicted_1970_2019_both <- predict(model3, newdata = pc_analysis)
+
+
+date_breaks <- sort(unique(pc_analysis$date), decreasing = TRUE)
+date_breaks <- date_breaks[seq(1, length(date_breaks), 24)]
 
 pc_analysis %>% filter(year(date)>1982) %>%
   ggplot(aes(x = date)) +
   geom_line(aes(y = core_pce_changeA, color = "Actual Inflation")) +
-  geom_line(aes(y = predicted_1980_2019, color = "Predicted Inflation, 1982-2019")) +
+  geom_line(aes(y = predicted_1970_2019_both, color = "Predicted Inflation, 1982-2019")) +
   geom_line(aes(y = predicted_1970_2019, color = "Predicted Inflation, 1976-2019")) +
   labs(title = "Actual vs. Predicted PCE Core Inflation, Fed's Phillips Curve", y = "Inflation Rate", x = "Date",
        subtitle=TeX(r"(Model is trained on quarterly data from 1982-2019 (red) or 1975-2019 (purple), Fed's model of $\pi_t = \pi^{e}_t + \pi_{t-1} + \pi_{t-2} + (u - u^*)$)"),
        caption="Model from (Yellen 2017). Cleveland Fed 5-year expected inflation used for expectations. u-star from CBO. Mike Konczal, Roosevelt Institute.") +
   scale_color_manual(values = c("Actual Inflation" = "blue", "Predicted Inflation, 1982-2019" = "red", "Predicted Inflation, 1976-2019" = "purple")) +
   theme_classic() +
-  theme(legend.position = c(0.5,0.8), plot.title.position = "plot")
+  theme(legend.position = c(0.5,0.8), plot.title.position = "plot") +
+  scale_x_date(date_labels = "%b\n%Y", breaks=date_breaks)
 
+ggsave("graphics/old_PC.png", dpi="retina", width = 12, height=6.75, units = "in")
 
+date_breaks <- sort(unique(pc_analysis$date), decreasing = TRUE)
+date_breaks <- date_breaks[seq(1, length(date_breaks), 24)]
 
-pc_analysis %>% filter(year(date)>2010) %>%
+pc_analysis %>% #filter(year(date)>2010) %>%
   ggplot(aes(x = date)) +
   geom_line(aes(y = core_pce_changeA, color = "Actual Inflation")) +
-  geom_line(aes(y = predicted_1980_2019, color = "Predicted Inflation")) +
-  geom_line(aes(y = predicted_1970_2019, color = "1970s Predicted Inflation")) +
-  labs(title = "Actual vs. Predicted PCE Core Inflation", y = "Inflation Rate", x = "Date",
-       subtitle=TeX(r"(Predicted is quarterly 1982-2019 (red), 1975-2019 (purple), quarters starting in July, of $\pi_t = \pi^{e}_t + \pi_{t-1} + \pi_{t-2} + (u - u^*)$)"),
-       caption="Cleveland Fed 5-year expected inflation used for expectations. u-star from CBO.") +
-  scale_color_manual(values = c("Actual Inflation" = "blue", "Predicted Inflation" = "red","1970s Predicted Inflation" = "purple")) +
-  theme_minimal() +
-  theme(legend.position = c(0.5,0.8), plot.title.position = "plot")
+  geom_line(aes(y = predicted_1980_2019, color = "Predicted Inflation, 1982- training data")) +
+  geom_line(aes(y = predicted_1970_2019, color = "Predicted Inflation, 1970- training data")) +
+  labs(title = "Hey, We're Doing This! Actual vs. Predicted PCE Core Inflation", y = "Inflation Rate", x = "Date",
+       subtitle=TeX(r"(Predicted is trained on 1982-2019 (red), 1970-2019 (purple), quarterly backwards from July 2023, of $\pi_t = \pi^{e}_t + \pi_{t-1} + \pi_{t-2} + (u - u^*)$)"),
+       caption="Cleveland Fed 5-year expected inflation used for expectations for 1982-; FRB/US data for 1970-. u-star from CBO.") +
+  scale_color_manual(values = c("Actual Inflation" = "blue", "Predicted Inflation, 1982- training data" = "red","Predicted Inflation, 1970- training data" = "purple")) +
+  theme_classic() +
+  theme(legend.position = c(0.5,0.8), plot.title.position = "plot") +
+  scale_x_date(date_labels = "%b\n%Y", breaks=date_breaks)
 
+ggsave("graphics/g1_core.png", dpi="retina", width = 12, height=6.75, units = "in")
 
 #### Jolts Graphic ####
 
