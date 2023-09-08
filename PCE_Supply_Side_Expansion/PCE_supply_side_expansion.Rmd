@@ -5,7 +5,7 @@ author:
 date: |
   | Roosevelt Institute
   |
-  | `r format(Sys.time(), '%B %Y')`
+  | `r format(Sys.time(), '%B %d, %Y')`
 output: pdf_document
 urlcolor: blue
 header-includes:
@@ -46,7 +46,7 @@ cyclical_pce <- read_csv("data/cyclical_pce.csv")
 
 ## Introduction[^1]
 
-[^1]: Mike Konczal is the Director of the Roosevelt Institute's Macroeconomic Analysis team. Special thanks to Sonya Gurwitt for editorial support and Adam Shapiro for comments. Replication code can be found [here](https://github.com/mtkonczal/Prices-Profits-and-Power-Replication-Code).
+[^1]: Mike Konczal is the Director of the Roosevelt Institute's Macroeconomic Analysis team. Special thanks to Sonya Gurwitt for editorial support and Adam Shapiro for comments. Replication code can be found [here](https://github.com/mtkonczal/Blog-Posts-Presentations-and-Testimony/tree/main/PCE_Supply_Side_Expansion).
 
 After two years of persistently rising prices, inflation has finally decelerated in the first half of 2023. The most recent three-month annualized change in the core Personal Consumption Expenditure Price Index (PCE), which excludes volatile energy and food prices, was 2.9 percent---compared with 4.4 percent a year ago or 4.6 percent in January of this year. The deceleration is even more dramatic when it comes to prices faced by consumers: The most recent equivalent number for the Consumer Price Index (CPI) was 3 percent in July, versus 6.4 percent a year ago. This drastic change isn't just the result of specific industries or specific measurements. And while there is still a way to go to bring inflation back to a sustained lower range, and there could be some reversal in declining inflation, the situation is dramatically better now than it was even six months ago.
 
@@ -134,7 +134,7 @@ But as we can see, inflation has officially broken out of the 1970s model range.
 
 ## Supply versus Demand
 
-So, how did this happen? There are generally two explanations mainstream economics uses to describe how inflation could fall while the economy remains strong. The first is that we are expanding the supply of the economy. This explanation would say that we are seeing the end of a supply shock and settling of a period of relative price disturbances that characterized the reopening after the deployment of vaccines. Policymakers are also responding to the international economic consequences of Russia's invasion of Ukraine. Thinking back to an Econ 101 lesson, if increasing supply was the driver of inflation falling, such as in Chart 2, it would result in expanded quantities of items consumed at lower prices.
+So, how did this happen? There are generally two explanations mainstream economics uses to describe how inflation could fall while the economy remains strong. The first is that we are expanding the supply of the economy. This explanation would say that we are seeing the end of a supply shock and settling of a period of relative price disturbances that characterized the reopening after the deployment of vaccines. Policymakers are also responding to the international economic consequences of Russia's invasion of Ukraine. Thinking back to an Econ 101 lesson, if increasing supply was the driver of inflation falling, such as in Figure 2, it would result in expanded quantities of items consumed at lower prices.
 
 ```{r supply_demand chart, results='asis', include=TRUE, fig.align='center', fig.width = 6, fig.height = 3, fig.cap = "Demand Decreasing and Supply Increasing"}
 library(ggplot2)
@@ -244,7 +244,7 @@ graphic_2 <- pce_supply %>%
   theme_classic() + geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   labs(y = "Percentage Point Change in Price (Inflation)",
        x = "Percentage Point Change in Quantity (Real Value)") +
-  facet_wrap(~category) +
+  facet_wrap(~category, scales = "free_x") +
   scale_y_continuous(labels = scales::percent) +
   scale_x_continuous(labels = scales::percent) +
   theme(plot.title.position = "plot", legend.position = c(0.85,0.9)) +  theme(strip.background = element_blank())
