@@ -13,8 +13,6 @@ source("0_b_load_PCE_items.R")
 # Table IDs
 # https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt
 
-#"Such an aggregation leaves 136 categories in the PCE price index and 124
-#categories in the core PCE index."
 # Function to remove outliers for graphics
 remove_outliers <- function(x, multiplier = 1.5) {
   Q1 <- quantile(x, 0.25, na.rm = TRUE)
