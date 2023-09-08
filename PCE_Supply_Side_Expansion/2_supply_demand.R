@@ -85,7 +85,7 @@ recent %>% inner_join(lowest,by="LineDescription") %>%
 
 quandrants_print <- quandrants %>% select(-leading_spaces, -lowest)
 quandrants_print$quadrant <- substr(quandrants_print$quadrant, 2, nchar(quandrants_print$quadrant))
-write_csv(quandrants_print, "quandrants_data.csv")
+write_csv(quandrants_print, "data/quandrants_data.csv")
 
 quandrants_center <- quandrants %>% left_join(pce_sd, by="LineDescription") %>%
   filter(PriceFinal < 0) %>%
