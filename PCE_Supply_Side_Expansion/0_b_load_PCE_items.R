@@ -1,15 +1,17 @@
+# Code to download NIPA tables from BEA.
+# This downloads detailed PCE inflation data from 2020-2023.
+# Make sure to have run: 0_a_helper_functions.R first.
+
+# Written by: Mike Konczal
+# Last modified: 9/1/2023
 library(bea.R)
 library(tidyverse)
 library(lubridate)
 library(scales)
 
-beaKey <- read_csv("/Users/mkonczal/Documents/data_folder/BEA_key/BEA_key.csv")
-beaKey <- as.character(beaKey)
-# Table IDs
-# https://www.bea.gov/system/files/2021-07/TablesRegisterPreview.txt
-
-########### THE BIG ONE
-PCE_Weight <- get_NIPA_data(beaKey, 'U20405', 'M', '2017,2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
+#### Downloads ####
+# This calls a helper function from the other file for years 2020-2023
+PCE_Weight <- get_NIPA_data(beaKey, 'U20405', 'M', '2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
 PCE_Weight <- BEA_date_monthly(PCE_Weight)
 
 GDP_Weight <- PCE_Weight %>% filter(SeriesCode == "DPCERC") %>%
@@ -21,10 +23,10 @@ PCE_Weight <- PCE_Weight %>%
   mutate(PCEweight = DataValue/TotalGDP) %>%
   select(date, LineDescription, PCEweight)
 
-pce <- get_NIPA_data(beaKey, 'U20404', 'M', '2017,2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
+pce <- get_NIPA_data(beaKey, 'U20404', 'M', '2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
 pce <- BEA_date_monthly(pce)
 
-PCE_Q <- get_NIPA_data(beaKey, 'U20403', 'M', '2017,2018,2019,2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
+PCE_Q <- get_NIPA_data(beaKey, 'U20403', 'M', '2020,2021,2022,2023', data_set_name = 'NIUnderlyingDetail')
 PCE_Q <- BEA_date_monthly(PCE_Q) %>% select(LineDescription, date, Quantity = DataValue)
 
 pce <- pce %>%

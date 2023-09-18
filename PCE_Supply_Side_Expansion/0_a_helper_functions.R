@@ -1,7 +1,11 @@
+# Functions to help download BEA data.
+# Written by: Mike Konczal
+# Last modified: 9/1/2023
 library(bea.R)
 library(tidyverse)
 library(lubridate)
 
+# This makes the NIPA API call in a slightly more intuitive framework for automation.
 get_NIPA_data <- function(beaKey, TableName, Frequency, Year, data_set_name = 'NIPA'){
   NIPA_request <- list(
     'UserID' = beaKey ,
@@ -16,6 +20,8 @@ get_NIPA_data <- function(beaKey, TableName, Frequency, Year, data_set_name = 'N
   return(NIPA_data)
 }
 
+# Function to add quarterly dates to a NIPA call.
+# Automate into call in future update.
 BEA_date_quarterly <- function(x){
   x <- x %>%
   mutate(year = substr(TimePeriod, 1, 4)) %>%
@@ -31,6 +37,7 @@ BEA_date_quarterly <- function(x){
   return(x)
 }
 
+# Function to add monthly dates to a NIPA call.
 BEA_date_monthly <- function(x){
   x <- x %>%
     mutate(year = substr(TimePeriod, 1, 4)) %>%
@@ -41,7 +48,8 @@ BEA_date_monthly <- function(x){
   return(x)
 }
 
-
+# Function to draw log-linear trendlines through the NIPA data.
+# Not used in the supply-demand paper.
 draw_ll_Trendline <- function(x, trend_start, trend_end, freq){
   
   ll_list <- unique(x$SeriesCode)

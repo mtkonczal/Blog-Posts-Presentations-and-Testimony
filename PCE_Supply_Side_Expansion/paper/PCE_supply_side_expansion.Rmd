@@ -37,12 +37,12 @@ library(kableExtra)
 ```
 
 ```{r cars}
-chart1 <- read_csv("data/chart1.csv")
-chart2 <- read_csv("data/chart2.csv")
-pce_supply <- read_csv("data/pce_supply.csv")
-pc_analysis <- read_csv("data/pc_analysis.csv")
-cyclical_pce <- read_csv("data/cyclical_pce.csv")
-chart5 <- read_csv("data/alternative_inflation.csv")
+chart1 <- read_csv("../data/chart1.csv")
+chart2 <- read_csv("../data/chart2.csv")
+pce_supply <- read_csv("../data/pce_supply.csv")
+pc_analysis <- read_csv("../data/pc_analysis.csv")
+cyclical_pce <- read_csv("../data/cyclical_pce.csv")
+chart5 <- read_csv("../data/alternative_inflation.csv")
 ```
 
 ## Introduction[^1]
@@ -86,7 +86,7 @@ model <- lm(core_pce_changeA ~ lagged_1 + lagged_2 + FRB_exp +
 model2 <- lm(core_pce_changeA ~ lagged_1 + lagged_2 + FRB_exp +
                unrate_slack, data = pc_analysis[pc_analysis$date<"2020-01-01",])
 
-pc_analysis$predicted_1980_2019 <- predict(model, newdata = pc_analysis)
+pc_analysis$predicted_1992_2019 <- predict(model, newdata = pc_analysis)
 pc_analysis$predicted_1970_2019 <- predict(model2, newdata = pc_analysis)
 
 date_breaks <- sort(unique(pc_analysis$date), decreasing = TRUE)
@@ -95,11 +95,11 @@ date_breaks <- date_breaks[seq(1, length(date_breaks), 12)]
 graphic_1 <- pc_analysis %>% filter(year(date)>2010) %>%
   ggplot(aes(x = date)) +
   geom_line(aes(y = core_pce_changeA/100, color = "Actual Inflation"), size=1.2) +
-  geom_line(aes(y = predicted_1980_2019/100, color = "Predicted Inflation, 1982-2019 training data"),size=0.8) +
+  geom_line(aes(y = predicted_1992_2019/100, color = "Predicted Inflation, 1991-2019 training data"),size=0.8) +
   geom_line(aes(y = predicted_1970_2019/100, color = "Predicted Inflation, 1970-2019 training data"),size=0.8) +
   labs(title = "", y = "PCE Quarterly Inflation Rate", x = "",
        ) +
-  scale_color_manual(values = c("Actual Inflation" = "blue", "Predicted Inflation, 1982-2019 training data" = "red","Predicted Inflation, 1970-2019 training data" = "purple")) +
+  scale_color_manual(values = c("Actual Inflation" = "blue", "Predicted Inflation, 1991-2019 training data" = "red","Predicted Inflation, 1970-2019 training data" = "purple")) +
   theme_classic() +
   theme(legend.position = c(0.5,0.8), plot.title.position = "plot", legend.title = element_blank()) +
   scale_x_date(date_labels = "%b\n%Y", breaks=date_breaks) +
@@ -109,7 +109,7 @@ graphic_1
 
 graphic_1_export <- graphic_1 +
   labs(title="Figure 1: Inflation Fell Against a Persistent Phillips Curve")
-ggsave("graphics/graphic_1_full.png",  width = 10, height=6, dpi="retina")
+ggsave("../graphics/graphic_1_full.png",  width = 10, height=6, dpi="retina")
 
 ```
 
@@ -221,7 +221,7 @@ graphic_2
 
 graphic_2_export <- graphic_2 +
   labs(title="Figure 2: Demand Decreasing and Supply Increasing")
-ggsave("graphics/graphic_2_full.png",  width = 10, height=6, dpi="retina")
+ggsave("../graphics/graphic_2_full.png",  width = 10, height=6, dpi="retina")
 
 ```
 
@@ -270,7 +270,7 @@ graphic_3_export <- graphic_3 +
   labs(title="Figure 3: Inflation Deceleration Is Driven by Expanded Supply, 123 Core PCE Categories",
        subtitle = "6-month Change July 2023 Minus 6-month Change December 2022, for ~123 Core PCE Categories")
 
-ggsave("graphics/graphic_3_full.png",  width = 10, height=6, dpi="retina")
+ggsave("../graphics/graphic_3_full.png",  width = 10, height=6, dpi="retina")
 ```
 In Table 2, location shows the amount of categories in each quadrant weighted by their size, measured as their share of nominal consumption. Change is the weight multiplied by the change in price for each category, added up for each column. And decline shows the relative importance of the change for the two categories that slowed inflation, slowing demand and supply increase. Of the core PCE categories that saw price declines, weighting by their share of nominal consumption, we see that 73 percent came from supply expansion, while 27 percent came from decreasing demand.
 
@@ -318,7 +318,7 @@ graphic_4
 graphic_4 <- graphic_4 + labs(subtitle = "6-month Change July 2023 Minus 6-month Change December 2022, Quantity and Inflation, for 28 Cyclical PCE Categories",
        title="Figure 4: Deceleration Is Driven by Expanded Supply Even with Cyclical Categories")
 
-ggsave("graphics/graphic_4_full.png",  width = 10, height=6, dpi="retina")
+ggsave("../graphics/graphic_4_full.png",  width = 10, height=6, dpi="retina")
 ```
 
 The extent of supply expansion here is even more remarkable: 79 percent of disinflation is driven by supply expansion, higher than the overall basket. This is evidence that disinflation is broad and is happening among categories that are historically sensitive to demand conditions.
@@ -352,7 +352,7 @@ graphic_5
 
 graphic_5_full <- graphic_5 + labs(title="Figure 5: Other Inflation Measures")
 
-ggsave("graphics/graphic_5_full.png",  width = 10, height=6, dpi="retina")
+ggsave("../graphics/graphic_5_full.png",  width = 10, height=6, dpi="retina")
 ```
 As we can see in Figure 5, this rise and fall is true for many of these alternative distributional measures of inflation. As these alternative measures started to pick up at the end of 2021 and into 2022, people assumed that since they were constructed to measure demand pressures, they were in fact measuring excess demand throughout 2022. However, supply shocks can also drive these up too, as, through many measures, they can drive a broader increase and then decrease in price indexes [@blinder_supply-shock_2013]. The mechanisms by which this happened is an important subject for study. But, if true, this means inflation will continue to decline.
 
