@@ -1,0 +1,383 @@
+﻿item_name,weight,year_weight
+All items,100,2022
+Food,13.744,2022
+Food at home,8.52,2022
+Cereals and bakery products,1.107,2022
+Cereals and cereal products,0.356,2022
+Flour and prepared flour mixes,0.06,2022
+Breakfast cereal,0.149,2022
+"Rice, pasta, cornmeal",0.147,2022
+Rice,,2022
+Bakery products,0.752,2022
+Bread,0.211,2022
+White bread,,2022
+Bread other than white,,2022
+"Fresh biscuits, rolls, muffins",0.113,2022
+"Cakes, cupcakes, and cookies",0.184,2022
+Cookies,,2022
+Fresh cakes and cupcakes,,2022
+Other bakery products,0.244,2022
+"Fresh sweetrolls, coffeecakes, doughnuts",,2022
+"Crackers, bread, and cracker products",,2022
+"Frozen and refrigerated bakery products, pies, tarts, turnovers",,2022
+"Meats, poultry, fish, and eggs",1.907,2022
+"Meats, poultry, and fish",1.764,2022
+Meats,1.111,2022
+Beef and veal,0.501,2022
+Uncooked ground beef,0.184,2022
+Uncooked beef roasts,0.074,2022
+Uncooked beef steaks,0.194,2022
+Uncooked other beef and veal,0.049,2022
+Pork,0.36,2022
+"Bacon, breakfast sausage, and related products",0.161,2022
+Bacon and related products,,2022
+Breakfast sausage and related products,,2022
+Ham,0.067,2022
+"Ham, excluding canned",,2022
+Pork chops,0.051,2022
+"Other pork including roasts, steaks, and ribs",0.082,2022
+Other meats,0.25,2022
+Frankfurters,,2022
+Lunchmeats,,2022
+Poultry,0.366,2022
+Chicken,0.296,2022
+Fresh whole chicken,,2022
+Fresh and frozen chicken parts,,2022
+Other uncooked poultry including turkey,0.07,2022
+Fish and seafood,0.286,2022
+Fresh fish and seafood,0.146,2022
+Processed fish and seafood,0.14,2022
+Shelf stable fish and seafood,,2022
+Frozen fish and seafood,,2022
+Eggs,0.143,2022
+Dairy and related products,0.805,2022
+Milk,0.202,2022
+Fresh whole milk,,2022
+Fresh milk other than whole,,2022
+Cheese and related products,0.261,2022
+Ice cream and related products,0.12,2022
+Other dairy and related products,0.221,2022
+Fruits and vegetables,1.424,2022
+Fresh fruits and vegetables,1.076,2022
+Fresh fruits,0.569,2022
+Apples,0.075,2022
+Bananas,0.077,2022
+Citrus fruits,0.163,2022
+"Oranges, including tangerines",,2022
+Other fresh fruits,0.254,2022
+Fresh vegetables,0.507,2022
+Potatoes,0.085,2022
+Lettuce,0.064,2022
+Tomatoes,0.078,2022
+Other fresh vegetables,0.281,2022
+Processed fruits and vegetables,0.348,2022
+Canned fruits and vegetables,0.181,2022
+Canned fruits,,2022
+Canned vegetables,,2022
+Frozen fruits and vegetables,0.102,2022
+Frozen vegetables,,2022
+Other processed fruits and vegetables including dried,0.065,2022
+"Dried beans, peas, and lentils",,2022
+Nonalcoholic beverages and beverage materials,0.983,2022
+Juices and nonalcoholic drinks,0.695,2022
+Carbonated drinks,0.294,2022
+Frozen noncarbonated juices and drinks,0.007,2022
+Nonfrozen noncarbonated juices and drinks,0.394,2022
+Beverage materials including coffee and tea,0.287,2022
+Coffee,0.187,2022
+Roasted coffee,,2022
+Instant coffee,,2022
+Other beverage materials including tea,0.101,2022
+Other food at home,2.294,2022
+Sugar and sweets,0.291,2022
+Sugar and sugar substitutes,0.043,2022
+Candy and chewing gum,0.184,2022
+Other sweets,0.064,2022
+Fats and oils,0.265,2022
+Butter and margarine,0.085,2022
+Butter,,2022
+Margarine,,2022
+Salad dressing,0.061,2022
+Other fats and oils including peanut butter,0.119,2022
+Peanut butter,,2022
+Other foods,1.738,2022
+Soups,0.104,2022
+Frozen and freeze dried prepared foods,0.282,2022
+Snacks,0.376,2022
+"Spices, seasonings, condiments, sauces",0.332,2022
+Salt and other seasonings and spices,,2022
+"Olives, pickles, relishes",,2022
+Sauces and gravies,,2022
+Other condiments,,2022
+Baby food,0.045,2022
+Other miscellaneous foods,0.599,2022
+Prepared salads,,2022
+Food away from home,5.225,2022
+Full service meals and snacks,2.425,2022
+Limited service meals and snacks,2.515,2022
+Food at employee sites and schools,0.076,2022
+Food at elementary and secondary schools,,2022
+Food from vending machines and mobile vendors,0.038,2022
+Other food away from home,0.171,2022
+Energy,8.059,2022
+Energy commodities,4.448,2022
+Fuel oil and other fuels,0.254,2022
+Fuel oil,0.18,2022
+"Propane, kerosene, and firewood",0.073,2022
+Motor fuel,4.195,2022
+Gasoline (all types),4.096,2022
+"Gasoline, unleaded regular",,2022
+"Gasoline, unleaded midgrade",,2022
+"Gasoline, unleaded premium",,2022
+Other motor fuels,0.098,2022
+Energy services,3.611,2022
+Electricity,2.64,2022
+Utility (piped) gas service,0.971,2022
+All items less food and energy,78.197,2022
+Commodities less food and energy commodities,21.026,2022
+Household furnishings and supplies,3.953,2022
+Window and floor coverings and other linens,0.297,2022
+Floor coverings,0.069,2022
+Window coverings,0.057,2022
+Other linens,0.172,2022
+Furniture and bedding,0.959,2022
+Bedroom furniture,0.306,2022
+"Living room, kitchen, and dining room furniture",0.472,2022
+Other furniture,0.171,2022
+Appliances,0.241,2022
+Major appliances,0.077,2022
+Laundry equipment,,2022
+Other appliances,0.161,2022
+Other household equipment and furnishings,0.556,2022
+"Clocks, lamps, and decorator items",0.335,2022
+Indoor plants and flowers,0.099,2022
+Dishes and flatware,0.05,2022
+Nonelectric cookware and tableware,0.072,2022
+"Tools, hardware, outdoor equipment and supplies",0.947,2022
+"Tools, hardware and supplies",0.252,2022
+Outdoor equipment and supplies,0.466,2022
+Housekeeping supplies,0.954,2022
+Household cleaning products,0.344,2022
+Household paper products,0.22,2022
+Miscellaneous household products,0.389,2022
+Apparel,2.458,2022
+Men's and boys' apparel,0.611,2022
+Men's apparel,0.471,2022
+"Men's suits, sport coats, and outerwear",0.076,2022
+"Men's underwear, nightwear, swimwear, and accessories",0.158,2022
+Men's shirts and sweaters,0.115,2022
+Men's pants and shorts,0.116,2022
+Boys' apparel,0.14,2022
+Women's and girls' apparel,0.987,2022
+Women's apparel,0.828,2022
+Women's outerwear,0.06,2022
+Women's dresses,0.089,2022
+Women's suits and separates,0.4,2022
+"Women's underwear, nightwear, swimwear, and accessories",0.27,2022
+Girls' apparel,0.16,2022
+Footwear,0.591,2022
+Men's footwear,0.198,2022
+Boys' and girls' footwear,0.115,2022
+Women's footwear,0.278,2022
+Infants' and toddlers' apparel,0.112,2022
+Jewelry and watches,0.157,2022
+Watches,0.029,2022
+Jewelry,0.128,2022
+Transportation commodities less motor fuel,8.303,2022
+New vehicles,4.06,2022
+New cars,,2022
+New trucks,,2022
+Used cars and trucks,3.726,2022
+Motor vehicle parts and equipment,0.432,2022
+Tires,0.271,2022
+Vehicle accessories other than tires,0.162,2022
+Vehicle parts and equipment other than tires,,2022
+"Motor oil, coolant, and fluids",,2022
+Medical care commodities,1.468,2022
+Medicinal drugs,1.367,2022
+Prescription drugs,0.995,2022
+Nonprescription drugs,0.372,2022
+Medical equipment and supplies,0.101,2022
+Recreation commodities,1.882,2022
+Video and audio products,0.276,2022
+Televisions,0.122,2022
+Other video equipment,0.024,2022
+Audio equipment,0.073,2022
+Recorded music and music subscriptions,0.051,2022
+Pets and pet products,0.572,2022
+Pet food,,2022
+"Purchase of pets, pet supplies, accessories",,2022
+Sporting goods,0.548,2022
+Sports vehicles including bicycles,0.313,2022
+Sports equipment,0.224,2022
+Photographic equipment and supplies,0.021,2022
+Photographic equipment,,2022
+Recreational reading materials,0.096,2022
+Newspapers and magazines,0.057,2022
+Recreational books,0.039,2022
+Other recreational goods,0.37,2022
+Toys,0.286,2022
+"Toys, games, hobbies and playground equipment",,2022
+"Sewing machines, fabric and supplies",0.027,2022
+Music instruments and accessories,0.041,2022
+Education and communication commodities,0.737,2022
+Educational books and supplies,0.086,2022
+College textbooks,,2022
+Information technology commodities,0.651,2022
+"Computers, peripherals, and smart home assistants",0.334,2022
+Computer software and accessories,0.019,2022
+"Telephone hardware, calculators, and other consumer information items",0.297,2022
+Smartphones,,2022
+Alcoholic beverages,0.871,2022
+Alcoholic beverages at home,0.578,2022
+"Beer, ale, and other malt beverages at home",0.221,2022
+Distilled spirits at home,0.104,2022
+Whiskey at home,,2022
+"Distilled spirits, excluding whiskey, at home",,2022
+Wine at home,0.253,2022
+Alcoholic beverages away from home,0.293,2022
+"Beer, ale, and other malt beverages away from home",,2022
+Wine away from home,,2022
+Distilled spirits away from home,,2022
+Other goods,1.354,2022
+Tobacco and smoking products,0.516,2022
+Cigarettes,0.447,2022
+Tobacco products other than cigarettes,0.065,2022
+Personal care products,0.651,2022
+"Hair, dental, shaving, and miscellaneous personal care products",0.336,2022
+"Cosmetics, perfume, bath, nail preparations and implements",0.305,2022
+Miscellaneous personal goods,0.187,2022
+"Stationery, stationery supplies, gift wrap",,2022
+Services less energy services,57.171,2022
+Shelter,32.706,2022
+Rent of shelter,32.346,2022
+Rent of primary residence,7.378,2022
+Lodging away from home,0.925,2022
+"Housing at school, excluding board",0.124,2022
+Other lodging away from home including hotels and motels,0.8,2022
+Owners' equivalent rent of residences,24.043,2022
+Owners' equivalent rent of primary residence,22.795,2022
+Tenants' and household insurance,0.36,2022
+Water and sewer and trash collection services,1.085,2022
+Water and sewerage maintenance,0.779,2022
+Garbage and trash collection,0.306,2022
+Household operations,,2022
+Domestic services,0.242,2022
+Gardening and lawncare services,,2022
+"Moving, storage, freight expense",0.101,2022
+Repair of household items,,2022
+Medical care services,6.832,2022
+Professional services,3.453,2022
+Physicians' services,1.805,2022
+Dental services,0.91,2022
+Eyeglasses and eye care,0.361,2022
+Services by other medical professionals,0.377,2022
+Hospital and related services,2.501,2022
+Hospital services,2.134,2022
+Inpatient hospital services,,2022
+Outpatient hospital services,,2022
+Nursing homes and adult day services,0.205,2022
+Care of invalids and elderly at home,0.162,2022
+Health insurance,0.878,2022
+Transportation services,5.994,2022
+Leased cars and trucks,0.865,2022
+Car and truck rental,0.141,2022
+Motor vehicle maintenance and repair,1.072,2022
+Motor vehicle body work,0.053,2022
+Motor vehicle maintenance and servicing,0.583,2022
+Motor vehicle repair,0.391,2022
+Motor vehicle insurance,2.501,2022
+Motor vehicle fees,0.497,2022
+State motor vehicle registration and license fees,0.288,2022
+Parking and other fees,0.194,2022
+Parking fees and tolls,,2022
+Public transportation,0.918,2022
+Airline fares,0.633,2022
+Other intercity transportation,0.092,2022
+Ship fare,,2022
+Intracity transportation,0.19,2022
+Intracity mass transit,,2022
+Recreation services,3.116,2022
+Video and audio services,1.13,2022
+Cable and satellite television service,1.036,2022
+"Video discs and other media, including rental of video",0.095,2022
+Video discs and other media,,2022
+Rental of video discs and other media,,2022
+Pet services including veterinary,0.521,2022
+Pet services,,2022
+Veterinarian services,,2022
+Photographers and photo processing,0.03,2022
+Other recreation services,1.434,2022
+"Club membership for shopping clubs, fraternal, or other organizations, or participant sports fees",0.633,2022
+Admissions,0.442,2022
+"Admission to movies, theaters, and concerts",,2022
+Admission to sporting events,,2022
+Fees for lessons or instructions,0.172,2022
+Education and communication services,5.262,2022
+"Tuition, other school fees, and childcare",2.496,2022
+College tuition and fees,1.426,2022
+Elementary and high school tuition and fees,0.315,2022
+Day care and preschool,0.628,2022
+Technical and business school tuition and fees,0.038,2022
+Postage and delivery services,0.084,2022
+Postage,0.075,2022
+Delivery services,0.009,2022
+Telephone services,1.768,2022
+Wireless telephone services,1.465,2022
+Residential telephone services,0.303,2022
+Internet services and electronic information providers,0.905,2022
+Other personal services,1.353,2022
+Personal care services,0.534,2022
+Haircuts and other personal care services,0.534,2022
+Miscellaneous personal services,0.819,2022
+Legal services,0.231,2022
+Funeral expenses,0.145,2022
+Laundry and dry cleaning services,0.152,2022
+Apparel services other than laundry and dry cleaning,0.018,2022
+Financial services,0.191,2022
+Checking account and other bank services,,2022
+Tax return preparation and other accounting fees,,2022
+All items less food,86.256,2022
+All items less shelter,67.294,2022
+All items less food and shelter,53.55,2022
+"All items less food, shelter, and energy",45.491,2022
+"All items less food, shelter, energy, and used cars and trucks",41.765,2022
+All items less medical care,91.7,2022
+All items less energy,91.941,2022
+Commodities,39.219,2022
+"Commodities less food, energy, and used cars and trucks",17.3,2022
+Commodities less food,25.474,2022
+Commodities less food and beverages,24.603,2022
+Services,60.781,2022
+Services less rent of shelter,28.435,2022
+Services less medical care services,53.949,2022
+Durables,12.425,2022
+Nondurables,26.794,2022
+Nondurables less food,13.05,2022
+Nondurables less food and beverages,12.179,2022
+"Nondurables less food, beverages, and apparel",9.721,2022
+Nondurables less food and apparel,10.592,2022
+Housing,42.432,2022
+Education and communication,5.999,2022
+Education,2.582,2022
+Communication,3.417,2022
+Information and information processing,3.333,2022
+"Information technology, hardware and services",1.565,2022
+Recreation,4.998,2022
+Video and audio,1.406,2022
+"Pets, pet products and services",1.092,2022
+Photography,0.051,2022
+Food and beverages,14.615,2022
+Domestically produced farm food,7.173,2022
+Other services,9.731,2022
+Apparel less footwear,1.867,2022
+Fuels and utilities,4.949,2022
+Household energy,3.864,2022
+Medical care,8.3,2022
+Transportation,18.492,2022
+Private transportation,17.574,2022
+New and used motor vehicles,8.877,2022
+Utilities and public transportation,8.417,2022
+Household furnishings and operations,4.777,2022
+Other goods and services,2.707,2022
+Personal care,2.191,2022
