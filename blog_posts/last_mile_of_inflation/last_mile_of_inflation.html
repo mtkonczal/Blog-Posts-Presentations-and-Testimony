@@ -97,15 +97,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link href="last_mile_of_inflation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="last_mile_of_inflation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
-<body class="fullcontent">
+<body>
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
-<main class="content" id="quarto-document-content">
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#will-the-last-mile-of-inflation-be-the-hardest" id="toc-will-the-last-mile-of-inflation-be-the-hardest" class="nav-link active" data-scroll-target="#will-the-last-mile-of-inflation-be-the-hardest">Will the Last Mile of Inflation be the Hardest?</a>
+  <ul class="collapse">
+  <li><a href="#phillips-curves" id="toc-phillips-curves" class="nav-link" data-scroll-target="#phillips-curves">Phillips Curves</a>
+  <ul class="collapse">
+  <li><a href="#load-cpi-flat-files" id="toc-load-cpi-flat-files" class="nav-link" data-scroll-target="#load-cpi-flat-files">Load CPI Flat Files</a></li>
+  <li><a href="#run-regressions" id="toc-run-regressions" class="nav-link" data-scroll-target="#run-regressions">Run Regressions</a></li>
+  <li><a href="#graph-index" id="toc-graph-index" class="nav-link" data-scroll-target="#graph-index">Graph Index</a></li>
+  </ul></li>
+  <li><a href="#nonlinear-beveridge-phillips-curve" id="toc-nonlinear-beveridge-phillips-curve" class="nav-link" data-scroll-target="#nonlinear-beveridge-phillips-curve">Nonlinear Beveridge-Phillips Curve</a>
+  <ul class="collapse">
+  <li><a href="#download-necessary-data" id="toc-download-necessary-data" class="nav-link" data-scroll-target="#download-necessary-data">Download Necessary Data</a></li>
+  <li><a href="#run-regressions-1" id="toc-run-regressions-1" class="nav-link" data-scroll-target="#run-regressions-1">Run Regressions</a></li>
+  <li><a href="#draw-graphics" id="toc-draw-graphics" class="nav-link" data-scroll-target="#draw-graphics">Draw Graphics</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -124,13 +147,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="will-the-last-mile-of-inflation-be-the-hardest" class="level2">
-<h2 class="anchored" data-anchor-id="will-the-last-mile-of-inflation-be-the-hardest">Will the Last Mile of Inflation be the Hardest?</h2>
+<section id="will-the-last-mile-of-inflation-be-the-hardest" class="level1">
+<h1>Will the Last Mile of Inflation be the Hardest?</h1>
 <p>Code for the blog post.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Hello.</p>
+<p>Loading and setting up libraries.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
@@ -143,35 +166,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">##### SET UP SOME THINGS #####</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>theme_lass <span class="ot">&lt;-</span>   <span class="fu">theme_modern_rc</span>(<span class="at">ticks =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">size=</span><span class="fl">0.5</span>),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>, <span class="at">color=</span><span class="st">"white"</span>),</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>, <span class="at">face=</span><span class="st">"italic"</span>),</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>, <span class="at">face=</span><span class="st">"bold"</span>),</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color=</span><span class="st">"white"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">strip.background =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">family=</span><span class="st">"Larsseit"</span>),</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">family=</span><span class="st">"Larsseit"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">##### SET UP SOME THINGS #####</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>theme_lass <span class="ot">&lt;-</span> <span class="fu">theme_modern_rc</span>(<span class="at">ticks =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">theme</span>(</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">color =</span> <span class="st">"white"</span>),</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip.background =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Larsseit"</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="load-cpi-flat-files" class="level2">
-<h2 class="anchored" data-anchor-id="load-cpi-flat-files">Load CPI Flat Files</h2>
-<p>Load the CPI</p>
+<section id="phillips-curves" class="level2">
+<h2 class="anchored" data-anchor-id="phillips-curves">Phillips Curves</h2>
+<section id="load-cpi-flat-files" class="level3">
+<h3 class="anchored" data-anchor-id="load-cpi-flat-files">Load CPI Flat Files</h3>
+<p>Load the CPI flat files from the BLS website.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configurations</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
@@ -185,30 +214,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' This function retrieves and processes data from a specified endpoint.</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>download_data <span class="ot">&lt;-</span> <span class="cf">function</span>(endpoint, base_url, user_email) {</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  response <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="fu">paste0</span>(base_url, endpoint), <span class="fu">user_agent</span>(user_email))</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">http_error</span>(response)) {</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Data could not be downloaded from URL: "</span>, <span class="fu">paste0</span>(base_url, endpoint))</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">content</span>(response, <span class="at">as =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fread</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># SECTION 1: READ IN AND CLEAN UP DATA</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>endpoints <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"data.0.Current"</span>,<span class="st">"series"</span>,<span class="st">"item"</span>,<span class="st">"area"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>endpoints <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"data.0.Current"</span>, <span class="st">"series"</span>, <span class="st">"item"</span>, <span class="st">"area"</span>)</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> endpoints){</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(i,<span class="fu">download_data</span>(i,config<span class="sc">$</span>cpi_data_url,config<span class="sc">$</span>user_email))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> endpoints) {</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(i, <span class="fu">download_data</span>(i, config<span class="sc">$</span>cpi_data_url, config<span class="sc">$</span>user_email))</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>data.<span class="fl">0.</span>Current <span class="ot">&lt;-</span> data.<span class="fl">0.</span>Current <span class="sc">%&gt;%</span></span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">as.numeric</span>(value),</span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">series_id =</span> <span class="fu">str_trim</span>(series_id),</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(<span class="fu">substr</span>(period, <span class="dv">2</span>,<span class="dv">3</span>), <span class="st">"01"</span>, year, <span class="at">sep=</span><span class="st">"/"</span>), <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(<span class="fu">substr</span>(period, <span class="dv">2</span>, <span class="dv">3</span>), <span class="st">"01"</span>, year, <span class="at">sep =</span> <span class="st">"/"</span>), <span class="st">"%m/%d/%Y"</span>)</span>
 <span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> series <span class="sc">%&gt;%</span></span>
@@ -230,62 +259,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>cpi_data<span class="sc">$</span>weight <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(cpi_data<span class="sc">$</span>weight_2023), cpi_data<span class="sc">$</span>weight_2023, cpi_data<span class="sc">$</span>weight)</span>
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up the environment</span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(data.<span class="fl">0.</span>Current,series,item,area,cpi_weights,cpi_weights_2023)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(data.<span class="fl">0.</span>Current, series, item, area, cpi_weights, cpi_weights_2023)</span>
 <span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  cpi <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(period <span class="sc">!=</span> <span class="st">"M13"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(seasonal <span class="sc">==</span> <span class="st">"S"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(item_name) <span class="sc">%&gt;%</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Pchange1 =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Pchange1a =</span> (<span class="dv">1</span> <span class="sc">+</span> Pchange1)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Wchange1 =</span> (Pchange1<span class="sc">*</span>weight)<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Wchange1a =</span> (<span class="dv">1</span> <span class="sc">+</span> Wchange1)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Pchange3 =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value, <span class="dv">3</span>)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Pchange3a =</span> (<span class="dv">1</span> <span class="sc">+</span> Pchange3)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Wchange3 =</span> (Pchange3<span class="sc">*</span>weight)<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Wchange3a =</span> (<span class="dv">1</span> <span class="sc">+</span> Wchange3)<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Pchange12 =</span> (value<span class="sc">/</span><span class="fu">lag</span>(value, <span class="dv">12</span>)<span class="sc">-</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Wchange12 =</span> (Pchange12<span class="sc">*</span>weight)<span class="sc">/</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>cpi <span class="ot">&lt;-</span> cpi_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(period <span class="sc">!=</span> <span class="st">"M13"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(seasonal <span class="sc">==</span> <span class="st">"S"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(item_name) <span class="sc">%&gt;%</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange1 =</span> (value <span class="sc">/</span> <span class="fu">lag</span>(value) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange1a =</span> (<span class="dv">1</span> <span class="sc">+</span> Pchange1)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Wchange1 =</span> (Pchange1 <span class="sc">*</span> weight) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Wchange1a =</span> (<span class="dv">1</span> <span class="sc">+</span> Wchange1)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3 =</span> (value <span class="sc">/</span> <span class="fu">lag</span>(value, <span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange3a =</span> (<span class="dv">1</span> <span class="sc">+</span> Pchange3)<span class="sc">^</span><span class="dv">12</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Wchange3 =</span> (Pchange3 <span class="sc">*</span> weight) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Wchange3a =</span> (<span class="dv">1</span> <span class="sc">+</span> Wchange3)<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pchange12 =</span> (value <span class="sc">/</span> <span class="fu">lag</span>(value, <span class="dv">12</span>) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Wchange12 =</span> (Pchange12 <span class="sc">*</span> weight) <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="item-level-phillips-curve" class="level2">
-<h2 class="anchored" data-anchor-id="item-level-phillips-curve">Item Level Phillips Curve</h2>
+<section id="run-regressions" class="level3">
+<h3 class="anchored" data-anchor-id="run-regressions">Run Regressions</h3>
 <p>Let’s run item level Phillips Curves.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(<span class="st">"UNRATE"</span>, <span class="at">src=</span><span class="st">"FRED"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(<span class="st">"UNRATE"</span>, <span class="at">src =</span> <span class="st">"FRED"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "UNRATE"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">date =</span> <span class="fu">index</span>(UNRATE), unrate <span class="ot">&lt;-</span> UNRATE[,<span class="dv">1</span>]))</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">date =</span> <span class="fu">index</span>(UNRATE), unrate <span class="ot">&lt;-</span> UNRATE[, <span class="dv">1</span>]))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(unrate) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(unrate))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(<span class="st">"NROU"</span>, <span class="at">src=</span><span class="st">"FRED"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">getSymbols</span>(<span class="st">"NROU"</span>, <span class="at">src =</span> <span class="st">"FRED"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "NROU"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nrou <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">date =</span> <span class="fu">index</span>(NROU), NROU <span class="ot">&lt;-</span> NROU[,<span class="dv">1</span>]))</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nrou <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">date =</span> <span class="fu">index</span>(NROU), NROU <span class="ot">&lt;-</span> NROU[, <span class="dv">1</span>]))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(nrou) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(nrou))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> unrate <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(nrou, <span class="at">by=</span><span class="st">"date"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> unrate <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(nrou, <span class="at">by =</span> <span class="st">"date"</span>)</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># NROU is quarterly, push the values forward.</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>unrate<span class="sc">$</span>nrou <span class="ot">&lt;-</span> <span class="fu">na.locf</span>(unrate<span class="sc">$</span>nrou, <span class="at">na.rm =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>unrate<span class="sc">$</span>u_gap <span class="ot">&lt;-</span> unrate<span class="sc">$</span>unrate <span class="sc">-</span> unrate<span class="sc">$</span>nrou</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> unrate <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">unrate =</span> unrate<span class="sc">/</span><span class="dv">100</span>, <span class="at">nrou =</span> nrou<span class="sc">/</span><span class="dv">100</span>, <span class="at">u_gap =</span> u_gap<span class="sc">/</span><span class="dv">100</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>unrate <span class="ot">&lt;-</span> unrate <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">unrate =</span> unrate <span class="sc">/</span> <span class="dv">100</span>, <span class="at">nrou =</span> nrou <span class="sc">/</span> <span class="dv">100</span>, <span class="at">u_gap =</span> u_gap <span class="sc">/</span> <span class="dv">100</span>)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>cpi_lowest <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/cpi_lowest_prices.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(lowest <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>cpi_analysis <span class="ot">&lt;-</span> cpi <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(unrate, <span class="at">by =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> cpi_lowest<span class="sc">$</span>item_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>cpi_analysis <span class="ot">&lt;-</span> cpi <span class="sc">%&gt;%</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(unrate, <span class="at">by =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> cpi_lowest<span class="sc">$</span>item_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cpi_lm <span class="ot">&lt;-</span> cpi_analysis <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2000-01-01"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># All items</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cpi_lm <span class="ot">&lt;-</span> cpi_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2000-01-01"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(item_name) <span class="sc">%&gt;%</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Regression: inflation = lagged inflation + unemployment gap</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="fu">tidy</span>(<span class="fu">lm</span>(Pchange1a <span class="sc">~</span> <span class="fu">lag</span>(Pchange1a) <span class="sc">+</span> <span class="fu">I</span>(unrate <span class="sc">-</span> nrou), <span class="at">data =</span> .))) <span class="sc">%&gt;%</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter for statistically significant negative esimates on unemployment gap</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"I(unrate - nrou)"</span>, statistic <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">1.95</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(statistic)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cpi_lm <span class="sc">%&gt;%</span> <span class="fu">select</span>(item_name, term, estimate, statistic), <span class="at">n=</span><span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"I(unrate - nrou)"</span>, statistic <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">1.95</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(statistic)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cpi_lm <span class="sc">%&gt;%</span> <span class="fu">select</span>(item_name, term, estimate, statistic), <span class="at">n =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 16 × 4
 # Groups:   item_name [16]
@@ -309,11 +340,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 16 Wine at home                                 I(unrate - n…   -0.312     -1.99</code></pre>
 </div>
 </div>
+</section>
+<section id="graph-index" class="level3">
+<h3 class="anchored" data-anchor-id="graph-index">Graph Index</h3>
+<p>Let’s draw graphs of each item.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>housing <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Owners' equivalent rent of primary residence"</span>,<span class="st">"Rent of primary residence"</span>)</span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>housing <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Owners' equivalent rent of primary residence"</span>, <span class="st">"Rent of primary residence"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> cpi <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filter(item_name %in% cpi_lm$item_name, !(item_name %in% housing), year(date) &gt; 2014) %&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> cpi_lm<span class="sc">$</span>item_name, <span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2014</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter out housing categories</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(item_name <span class="sc">%in%</span> cpi_lm<span class="sc">$</span>item_name, <span class="sc">!</span>(item_name <span class="sc">%in%</span> housing), <span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2014</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> weight <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
@@ -324,133 +359,388 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>index <span class="sc">%&gt;%</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date, changeWA)) <span class="sc">+</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Demand Sensitive Items Also Reversing with Unemployment Low"</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Lowest level CPI items with a statistically significant negative relationship between</span><span class="sc">\n</span><span class="st">inflation and unemployment gap + previous inflation, bundled. 1-month change annualized."</span>,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Author's calculations. Mike Konczal."</span></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b</span><span class="sc">\n</span><span class="st">%Y"</span>) <span class="sc">+</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2D779C"</span>, <span class="st">"#A4CCCC"</span>)) <span class="sc">+</span></span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>index_dates <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">max</span>(index<span class="sc">$</span>date), <span class="at">length.out =</span> <span class="dv">20</span>, <span class="at">by =</span> <span class="fu">paste0</span>(<span class="st">"-"</span>, <span class="dv">24</span>, <span class="st">" months"</span>))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>index <span class="sc">%&gt;%</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date, changeWA)) <span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Demand Sensitive Items Disinflating Over Past Year"</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Lowest level CPI items with a statistically significant negative relationship between</span><span class="sc">\n</span><span class="st">inflation and unemployment gap + previous inflation, bundled. 1-month change annualized."</span>,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Author's calculations. Mike Konczal."</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b</span><span class="sc">\n</span><span class="st">%Y"</span>, <span class="at">labels =</span> index_dates) <span class="sc">+</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2D779C"</span>, <span class="st">"#A4CCCC"</span>)) <span class="sc">+</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="last_mile_of_inflation_files/figure-html/draw_image-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/demand_index.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">dpi =</span> <span class="st">"retina"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="nonlinear-beveridge-phillips-curve" class="level2">
+<h2 class="anchored" data-anchor-id="nonlinear-beveridge-phillips-curve">Nonlinear Beveridge-Phillips Curve</h2>
+<section id="download-necessary-data" class="level3">
+<h3 class="anchored" data-anchor-id="download-necessary-data">Download Necessary Data</h3>
+<p>We write a function that takes in an array of FRED variables, loops through them, downloading and formatting them. We then rename them, clean up percentages and create a new v/u variable.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cpi_lm <span class="ot">&lt;-</span> cpi <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(unrate, <span class="at">by =</span> <span class="st">"date"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="st">"2000-01-01"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># All items</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(item_name) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Regression: inflation = lagged inflation + unemployment gap</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="fu">tidy</span>(<span class="fu">lm</span>(Pchange1a <span class="sc">~</span> <span class="fu">lag</span>(Pchange1a) <span class="sc">+</span> <span class="fu">I</span>(unrate <span class="sc">-</span> nrou), <span class="at">data =</span> .))) <span class="sc">%&gt;%</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter for statistically significant negative esimates on unemployment gap</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"I(unrate - nrou)"</span>, statistic <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">1.95</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(statistic)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cpi_lm <span class="sc">%&gt;%</span> <span class="fu">select</span>(item_name, term, estimate, statistic), <span class="at">n =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 41 × 4
-# Groups:   item_name [41]
-   item_name                                        term      estimate statistic
-   &lt;chr&gt;                                            &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;
- 1 Rent of shelter                                  I(unrate…   -0.319     -5.65
- 2 Shelter                                          I(unrate…   -0.316     -5.61
- 3 Services less energy services                    I(unrate…   -0.243     -5.32
- 4 Services                                         I(unrate…   -0.281     -5.25
- 5 Services less medical care services              I(unrate…   -0.284     -4.97
- 6 Housing                                          I(unrate…   -0.296     -4.67
- 7 Rent of primary residence                        I(unrate…   -0.146     -4.29
- 8 Personal care                                    I(unrate…   -0.327     -4.11
- 9 Owners' equivalent rent of primary residence     I(unrate…   -0.115     -3.64
-10 Owners' equivalent rent of residences            I(unrate…   -0.114     -3.63
-11 Day care and preschool                           I(unrate…   -0.324     -3.39
-12 Miscellaneous personal services                  I(unrate…   -0.397     -3.34
-13 Laundry and dry cleaning services                I(unrate…   -0.413     -3.32
-14 Recreation                                       I(unrate…   -0.284     -3.28
-15 Motor vehicle maintenance and repair             I(unrate…   -0.402     -3.24
-16 Purchase of pets, pet supplies, accessories      I(unrate…   -0.848     -2.96
-17 Services less rent of shelter                    I(unrate…   -0.245     -2.96
-18 Other goods                                      I(unrate…   -0.438     -2.79
-19 Other food away from home                        I(unrate…   -0.412     -2.77
-20 Pets and pet products                            I(unrate…   -0.535     -2.72
-21 Pets, pet products and services                  I(unrate…   -0.371     -2.70
-22 Full service meals and snacks                    I(unrate…   -0.155     -2.58
-23 Pet services including veterinary                I(unrate…   -0.393     -2.53
-24 Elementary and high school tuition and fees      I(unrate…   -0.213     -2.51
-25 Other recreation services                        I(unrate…   -0.480     -2.51
-26 All items less food and energy                   I(unrate…   -0.106     -2.47
-27 Electricity                                      I(unrate…   -0.721     -2.43
-28 Garbage and trash collection                     I(unrate…   -0.318     -2.33
-29 Legal services                                   I(unrate…   -0.772     -2.27
-30 Funeral expenses                                 I(unrate…   -0.201     -2.25
-31 Motor vehicle repair                             I(unrate…   -0.512     -2.15
-32 Other services                                   I(unrate…   -0.126     -2.13
-33 Pet services                                     I(unrate…   -0.391     -2.10
-34 Other dairy and related products                 I(unrate…   -0.678     -2.07
-35 Alcoholic beverages                              I(unrate…   -0.160     -2.06
-36 Veterinarian services                            I(unrate…   -0.359     -2.01
-37 Tax return preparation and other accounting fees I(unrate…   -1.01      -2.00
-38 Pet food                                         I(unrate…   -0.425     -1.99
-39 Wine at home                                     I(unrate…   -0.312     -1.99
-40 Alcoholic beverages at home                      I(unrate…   -0.200     -1.98
-41 Recreation services                              I(unrate…   -0.303     -1.96</code></pre>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for downloading data from FRED</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>prep_FRED_data <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">getSymbols</span>(x, <span class="at">src =</span> <span class="st">"FRED"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">get</span>(x)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">Date =</span> <span class="fu">index</span>(df))) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">setNames</span>(<span class="fu">list</span>(<span class="fu">as.numeric</span>(df[, x])), x))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(df))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># List of variables to download</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>fred_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"UNRATE"</span>, <span class="st">"CPILFESL"</span>, <span class="st">"JTSJOR"</span>, <span class="st">"JTSQUR"</span>, <span class="st">"PCEPILFE"</span>, <span class="st">"JTSQUL"</span>, <span class="st">"PAYEMS"</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Download process, doing some manipulations so the characters become variable names</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> fred_variables) {</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_FRED_data</span>(i)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">prep_FRED_data</span>(i)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">tolower</span>(i), data, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span>(data)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>pc_data <span class="ot">&lt;-</span> <span class="fu">get</span>(<span class="fu">tolower</span>(fred_variables[<span class="dv">1</span>]))</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Joining them all into one dataset. This dataset is monthly, with quarterly values missing dates as NA.</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> fred_variables[<span class="sc">-</span><span class="dv">1</span>]) {</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  pc_data <span class="ot">&lt;-</span> <span class="fu">full_join</span>(pc_data, <span class="fu">get</span>(<span class="fu">tolower</span>(i)), <span class="at">by =</span> <span class="st">"date"</span>)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>pc_data <span class="ot">&lt;-</span> pc_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">core_cpi =</span> cpilfesl,</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">job_openings =</span> jtsjor,</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">quits =</span> jtsqur,</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">core_pce =</span> pcepilfe,</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">quits_level =</span> jtsqul,</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">employment_level =</span> payems</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">core_cpi =</span> (core_cpi <span class="sc">/</span> <span class="fu">lag</span>(core_cpi, <span class="dv">3</span>))<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">core_pce =</span> (core_pce <span class="sc">/</span> <span class="fu">lag</span>(core_pce, <span class="dv">3</span>))<span class="sc">^</span><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">v_u =</span> job_openings <span class="sc">/</span> unrate,</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">quits =</span> quits <span class="sc">/</span> <span class="dv">100</span>,</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">my_quits =</span> quits_level <span class="sc">/</span> employment_level</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>core_cpi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="run-regressions-1" class="level3">
+<h3 class="anchored" data-anchor-id="run-regressions-1">Run Regressions</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function for downloading data from FRED</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>prep_FRED_data <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">getSymbols</span>(x, <span class="at">src=</span><span class="st">"FRED"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">get</span>(x)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">data.frame</span>(<span class="at">Date =</span> <span class="fu">index</span>(df))) <span class="sc">%&gt;%</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">setNames</span>(<span class="fu">list</span>(<span class="fu">as.numeric</span>(df[, x])), x))</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(df))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># List of variables to download</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>fred_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"UNRATE"</span>,<span class="st">"CPILFESL"</span>,<span class="st">"JTSJOR"</span>,<span class="st">"JTSQUR"</span>,<span class="st">"PCEPILFE"</span>,<span class="st">"JTSQUL"</span>,<span class="st">"PAYEMS"</span>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Download process, doing some manipulations so the characters become variable names</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> fred_variables){</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep_FRED_data</span>(i)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">prep_FRED_data</span>(i)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">tolower</span>(i), data, <span class="at">envir =</span> .GlobalEnv)</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span>(data)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>pc_data <span class="ot">&lt;-</span> <span class="fu">get</span>(<span class="fu">tolower</span>(fred_variables[<span class="dv">1</span>]))</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Joining them all into one dataset. This dataset is monthly, with quarterly values missing dates as NA.</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> fred_variables[<span class="sc">-</span><span class="dv">1</span>]) {</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  pc_data <span class="ot">&lt;-</span> <span class="fu">full_join</span>(pc_data, <span class="fu">get</span>(<span class="fu">tolower</span>(i)), <span class="at">by=</span><span class="st">"date"</span>)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>pc_data <span class="ot">&lt;-</span> pc_data <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(date) <span class="sc">%&gt;%</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">core_cpi =</span> cpilfesl,</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">job_openings =</span> jtsjor,</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">quits =</span> jtsqur,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">core_pce =</span> pcepilfe,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">quits_level =</span> jtsqul,</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">employment_level =</span> payems) <span class="sc">%&gt;%</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">core_cpi =</span> (core_cpi<span class="sc">/</span><span class="fu">lag</span>(core_cpi,<span class="dv">3</span>))<span class="sc">^</span><span class="dv">4-1</span>,</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">core_pce =</span> (core_pce<span class="sc">/</span><span class="fu">lag</span>(core_pce,<span class="dv">3</span>))<span class="sc">^</span><span class="dv">4-1</span>,</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">v_u =</span> job_openings<span class="sc">/</span>unrate,</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">quits =</span> quits<span class="sc">/</span><span class="dv">100</span>,</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">my_quits =</span> quits_level<span class="sc">/</span>employment_level) <span class="sc">%&gt;%</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>core_cpi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pc_data_all <span class="ot">&lt;-</span> pc_data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">core_pce_all =</span> core_pce)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pc_data_pre_2019 <span class="ot">&lt;-</span> pc_data <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">core_pce_pre_2019 =</span> core_pce) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2019</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_pre_2019 <span class="sc">~</span> quits, <span class="at">data =</span> pc_data_pre_2019)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_pre_2019 <span class="sc">~</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data_pre_2019)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_pre_2019 <span class="sc">~</span> quits <span class="sc">+</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data_pre_2019)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_all <span class="sc">~</span> quits, <span class="at">data =</span> pc_data_all)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_all <span class="sc">~</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data_all)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>m6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce_all <span class="sc">~</span> quits <span class="sc">+</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(m1, m2, m3, m4, m5, m6,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"html"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dep.var.labels =</span> <span class="fu">c</span>(<span class="st">"2000 to 2019"</span>, <span class="st">"2000 to 2023"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">header =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Regression Results for Quits and 3-Month Core Inflation"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># the next line doesn't work in html formatting?</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#covariate.labels = c("$quits$", "$quits^2"),</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">no.space =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">omit.stat =</span> <span class="fu">c</span>(<span class="st">"f"</span>, <span class="st">"ser"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<table style="text-align:center">
+<caption>
+<strong>Regression Results for Quits and 3-Month Core Inflation</strong>
+</caption>
+<tbody><tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="6">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="3">
+2000 to 2019
+</td>
+<td colspan="3">
+2000 to 2023
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+<td>
+(6)
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+quits
+</td>
+<td>
+0.560<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+1.200
+</td>
+<td>
+2.124<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+-8.785<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.145)
+</td>
+<td>
+</td>
+<td>
+(1.833)
+</td>
+<td>
+(0.154)
+</td>
+<td>
+</td>
+<td>
+(1.048)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+I(quits2)
+</td>
+<td>
+</td>
+<td>
+15.009<sup>***</sup>
+</td>
+<td>
+-17.403
+</td>
+<td>
+</td>
+<td>
+55.388<sup>***</sup>
+</td>
+<td>
+267.453<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+(3.928)
+</td>
+<td>
+(49.661)
+</td>
+<td>
+</td>
+<td>
+(3.541)
+</td>
+<td>
+(25.482)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+0.006<sup>**</sup>
+</td>
+<td>
+0.012<sup>***</sup>
+</td>
+<td>
+0.001
+</td>
+<td>
+-0.022<sup>***</sup>
+</td>
+<td>
+-0.002
+</td>
+<td>
+0.085<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.003)
+</td>
+<td>
+(0.002)
+</td>
+<td>
+(0.017)
+</td>
+<td>
+(0.003)
+</td>
+<td>
+(0.002)
+</td>
+<td>
+(0.011)
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+229
+</td>
+<td>
+229
+</td>
+<td>
+229
+</td>
+<td>
+273
+</td>
+<td>
+273
+</td>
+<td>
+273
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.062
+</td>
+<td>
+0.060
+</td>
+<td>
+0.062
+</td>
+<td>
+0.413
+</td>
+<td>
+0.474
+</td>
+<td>
+0.583
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.058
+</td>
+<td>
+0.056
+</td>
+<td>
+0.054
+</td>
+<td>
+0.411
+</td>
+<td>
+0.473
+</td>
+<td>
+0.580
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="6" style="text-align:right">
+<sup><em></em></sup><em>p&lt;0.1; <sup><strong></strong></sup><strong>p&lt;0.05; <sup></sup></strong></em>p&lt;0.01
+</td>
+</tr>
+
+</tbody></table>
+</section>
+<section id="draw-graphics" class="level3">
+<h3 class="anchored" data-anchor-id="draw-graphics">Draw Graphics</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>jo_pc_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> <span class="fu">I</span>(v_u<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jo_pc_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>jo_pc_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> <span class="fu">I</span>(v_u<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jo_pc_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -471,48 +761,48 @@ Residual standard error: 0.009349 on 271 degrees of freedom
 Multiple R-squared:  0.4427,    Adjusted R-squared:  0.4406 
 F-statistic: 215.2 on 1 and 271 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#jolts_pc_lm &lt;- lm(core_cpi ~ v_u + supply_chains, data=jolts_pc)</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(jolts_pc_lm)</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>pc_data<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(jo_pc_lm, pc_data)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent =</span> date <span class="sc">&gt;</span> <span class="fu">max</span>(date) <span class="sc">%m-%</span> <span class="fu">months</span>(<span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent_v_u =</span> <span class="fu">if_else</span>(recent, v_u, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b,</span><span class="sc">\n</span><span class="st">%Y"</span>), <span class="fu">as.character</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2021</span>, <span class="st">"2021-"</span>, <span class="st">"2000-2020"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), v_u, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(v_u, core_pce, <span class="at">label =</span> label)) <span class="sc">+</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(v_u, predicted), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(recent_v_u, core_pce), <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(last_value, core_pce), <span class="at">color =</span> <span class="st">"pink"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sliding off the Nonlinear Beveridge-Phillips Curve"</span>,</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Vacancies-to-Unemployment Ratio, 2000 - Current"</span>,</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Vacancy-to-unemployment ratio"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Mike Konczal, Roosevelt Institute"</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jolts_pc_lm &lt;- lm(core_cpi ~ v_u + supply_chains, data=jolts_pc)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(jolts_pc_lm)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>pc_data<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(jo_pc_lm, pc_data)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent =</span> date <span class="sc">&gt;</span> <span class="fu">max</span>(date) <span class="sc">%m-%</span> <span class="fu">months</span>(<span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent_v_u =</span> <span class="fu">if_else</span>(recent, v_u, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b,</span><span class="sc">\n</span><span class="st">%Y"</span>), <span class="fu">as.character</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2021</span>, <span class="st">"2021-"</span>, <span class="st">"2000-2020"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), v_u, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(v_u, core_pce, <span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(v_u, predicted), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(recent_v_u, core_pce), <span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">color =</span> <span class="st">"pink"</span>) <span class="sc">+</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(last_value, core_pce), <span class="at">color =</span> <span class="st">"pink"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sliding off the Nonlinear Beveridge-Phillips Curve"</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Vacancies-to-Unemployment Ratio, 2000 - Current"</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Vacancy-to-unemployment ratio"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Mike Konczal, Roosevelt Institute"</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="last_mile_of_inflation_files/figure-html/draw_images_openings-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_jo.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height=</span><span class="dv">12</span>, <span class="at">dpi=</span><span class="st">"retina"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_jo.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">dpi =</span> <span class="st">"retina"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>jo_pc_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> my_quits <span class="sc">+</span> <span class="fu">I</span>(my_quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jo_pc_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>jo_pc_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> my_quits <span class="sc">+</span> <span class="fu">I</span>(my_quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> pc_data)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jo_pc_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -534,92 +824,85 @@ Residual standard error: 0.008014 on 270 degrees of freedom
 Multiple R-squared:  0.5919,    Adjusted R-squared:  0.5889 
 F-statistic: 195.8 on 2 and 270 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#jolts_pc_lm &lt;- lm(core_cpi ~ v_u + supply_chains, data=jolts_pc)</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(jolts_pc_lm)</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>pc_data<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(jo_pc_lm, pc_data)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent =</span> date <span class="sc">&gt;</span> <span class="fu">max</span>(date) <span class="sc">%m-%</span> <span class="fu">months</span>(<span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent_quits =</span> <span class="fu">if_else</span>(recent, my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b,</span><span class="sc">\n</span><span class="st">%Y"</span>), <span class="fu">as.character</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2021</span>, <span class="st">"2021-"</span>, <span class="st">"2000-2020"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(my_quits, core_pce, <span class="at">label =</span> label)) <span class="sc">+</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(my_quits, predicted), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(recent_quits, core_pce), <span class="at">color =</span> <span class="st">"palegreen"</span>) <span class="sc">+</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">color =</span> <span class="st">"palegreen"</span>) <span class="sc">+</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(last_value, core_pce), <span class="at">color =</span> <span class="st">"palegreen"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Back to where we started?"</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Quits, 2000 - Current, Regression line is quits + quits^2."</span>,</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Quits Rate"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Quits rate taken as quits level over CES employment level. Mike Konczal, Roosevelt Institute"</span></span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jolts_pc_lm &lt;- lm(core_cpi ~ v_u + supply_chains, data=jolts_pc)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(jolts_pc_lm)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>pc_data<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(jo_pc_lm, pc_data)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent =</span> date <span class="sc">&gt;</span> <span class="fu">max</span>(date) <span class="sc">%m-%</span> <span class="fu">months</span>(<span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">recent_quits =</span> <span class="fu">if_else</span>(recent, my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b,</span><span class="sc">\n</span><span class="st">%Y"</span>), <span class="fu">as.character</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(<span class="fu">year</span>(date) <span class="sc">&gt;=</span> <span class="dv">2021</span>, <span class="st">"2021-"</span>, <span class="st">"2000-2020"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(my_quits, core_pce, <span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(my_quits, predicted), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(recent_quits, core_pce), <span class="at">color =</span> <span class="st">"palegreen"</span>) <span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">color =</span> <span class="st">"palegreen"</span>) <span class="sc">+</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(last_value, core_pce), <span class="at">color =</span> <span class="st">"palegreen"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Back to where we started?"</span>,</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Quits, 2000 - Current, Regression line is quits + quits^2."</span>,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Quits Rate"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Quits rate taken as quits level over CES employment level. Mike Konczal, Roosevelt Institute"</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="last_mile_of_inflation_files/figure-html/draw_images_quits-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_quits.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height=</span><span class="dv">12</span>, <span class="at">dpi=</span><span class="st">"retina"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2019</span> <span class="sc">|</span> date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b, %Y"</span>), <span class="fu">if_else</span>(<span class="fu">year</span>(date)<span class="sc">==</span><span class="dv">2019</span>, <span class="st">"2019"</span>, <span class="st">"2000-2018"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(my_quits, core_pce)) <span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Back to where we started?"</span>,</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Quits, 2000 - Current, Regression line is quits + quits^2."</span>,</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Quits Rate"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Quits rate taken as quits level over CES employment level. Mike Konczal, Roosevelt Institute"</span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.91</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_quits.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">dpi =</span> <span class="st">"retina"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>pc_data <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&lt;=</span> <span class="dv">2019</span> <span class="sc">|</span> date <span class="sc">==</span> <span class="fu">max</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">color_pandemic =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b, %Y"</span>), <span class="fu">if_else</span>(<span class="fu">year</span>(date) <span class="sc">==</span> <span class="dv">2019</span>, <span class="st">"2019"</span>, <span class="st">"2000-2018"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), <span class="fu">format</span>(date, <span class="st">"%b,</span><span class="sc">\n</span><span class="st">%Y"</span>), <span class="fu">as.character</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">last_value =</span> <span class="fu">if_else</span>(date <span class="sc">==</span> <span class="fu">max</span>(date), my_quits, <span class="fu">as.double</span>(<span class="cn">NA</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(my_quits, core_pce, <span class="at">label=</span>label, <span class="at">color =</span> color_pandemic)) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  theme_lass <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="last_mile_of_inflation_files/figure-html/draw_images_quits-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_pre_quits.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height=</span><span class="dv">12</span>, <span class="at">dpi=</span><span class="st">"retina"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Back to where we started? 2000 to 2019 values and most recent value"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"3-month core PCE change versus Quits, 2000 - Current, Regression line is quits + quits^2."</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Quits Rate"</span>, <span class="at">y =</span> <span class="st">"3-month core PCE change"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"BLS, Seasonally Adjusted, Quits rate taken as quits level over CES employment level. Mike Konczal, Roosevelt Institute"</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">20</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="dv">3</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.91</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> quits, <span class="at">data=</span>pc_data[pc_data<span class="sc">$</span>date<span class="sc">&lt;</span><span class="st">"2020-01-01"</span>,])</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data[pc_data<span class="sc">$</span>date<span class="sc">&lt;</span><span class="st">"2020-01-01"</span>,])</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> quits <span class="sc">+</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data[pc_data<span class="sc">$</span>date<span class="sc">&lt;</span><span class="st">"2020-01-01"</span>,])</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> quits, <span class="at">data=</span>pc_data)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">lm</span>(core_pce <span class="sc">~</span> quits <span class="sc">+</span> <span class="fu">I</span>(quits<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>pc_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"graphics/jolts_PC_pre_quits.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">dpi =</span> <span class="st">"retina"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>stargazer(a,b,c,d,e,f, type = “latex”, column.labels = c(“1992-2019”,“1971-2019”), dep.var.labels = c(“<span class="math inline">\(\\pi_{PCE}\)</span>”), header=FALSE, title=“Regression Results for Quits and 3-Month Core Inflation”) # covariate.labels = c(“<span class="math inline">\(\\pi_{t-1}\)</span>”, “<span class="math inline">\(\\pi_{t-2}\)</span>”, “<span class="math inline">\(\\pi^e_t\)</span>”, “<span class="math inline">\((u - u^*)\)</span>”), # no.space = TRUE, omit.stat=c(“f”, “ser”), # column.sep.width = “3pt”, # font.size = “small”)</p>
+</section>
+</section>
 </section>
 
 </main>
