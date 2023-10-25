@@ -206,8 +206,8 @@ index <- cpi %>%
 index_dates <- seq(max(index$date), length.out = 20, by = paste0("-", 24, " months"))
 index %>%
   ggplot(aes(date, changeWA)) +
-  geom_line(size = 2) +
-  theme_classic() +
+  geom_line(linewidth = 2) +
+  theme_lass +
   labs(
     x = "", y = "",
     title = "Demand Sensitive Items Disinflating Over Past Year",
@@ -217,7 +217,7 @@ index %>%
   theme(panel.grid.major.y = element_line(size = 0.5)) +
   theme(plot.title.position = "plot") +
   scale_y_continuous(labels = percent) +
-  scale_x_date(date_labels = "%b\n%Y", labels = index_dates) +
+  scale_x_date(date_labels = "%b\n%Y", breaks = index_dates) +
   scale_color_manual(values = c("#2D779C", "#A4CCCC")) +
   theme(legend.position = c(0.35, 0.9))
 
@@ -281,6 +281,7 @@ pc_data <- pc_data %>%
 ```
 
 ### Run Regressions
+
 ```{r equations}
 pc_data_all <- pc_data %>% mutate(core_pce_all = core_pce)
 pc_data_pre_2019 <- pc_data %>%
@@ -309,8 +310,8 @@ stargazer(m1, m2, m3, m4, m5, m6,
 )
 ```
 
-
 ### Draw Graphics
+
 ```{r draw_images_openings}
 
 jo_pc_lm <- lm(core_pce ~ I(v_u^2), data = pc_data)
@@ -410,10 +411,10 @@ pc_data %>%
   geom_point(size=2) +
   scale_y_continuous(labels = percent) +
   scale_x_continuous(labels = percent) +
-  geom_text_repel()
+  geom_text_repel(show.legend = FALSE) +
   labs(
-    title = "Back to where we started? 2000 to 2019 values and most recent value",
-    subtitle = "3-month core PCE change versus Quits, 2000 - Current, Regression line is quits + quits^2.",
+    title = "The Flat Phillips Curve",
+    subtitle = "3-month core PCE change versus Quits.",
     x = "Quits Rate", y = "3-month core PCE change",
     caption = "BLS, Seasonally Adjusted, Quits rate taken as quits level over CES employment level. Mike Konczal, Roosevelt Institute"
   ) +
