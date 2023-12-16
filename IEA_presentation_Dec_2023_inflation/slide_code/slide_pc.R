@@ -14,16 +14,6 @@ library(ggrepel)
 
 #### SECTION 1: Preparing Data ####
 
-# Function for downloading data from FRED
-prep_FRED_data <- function(x) {
-  getSymbols(x, src="FRED")
-  df <- get(x)
-  df <- as_tibble(data.frame(Date = index(df))) %>%
-    bind_cols(setNames(list(as.numeric(df[, x])), x))
-  colnames(df) <- tolower(colnames(df))
-  return(df)
-}
-
 # List of variables to download
 fred_variables <- c("EXPINF5YR","UNRATE","NROU","PCEPILFE","MICH","GDP","JTSJOR","MEDCPIM158SFRBCLE")
 

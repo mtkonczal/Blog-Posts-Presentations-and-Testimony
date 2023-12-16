@@ -2,7 +2,9 @@
 title: "Supply and Demand in the Great Disinflation"
 subtitle: "The Debate Over Post-Pandemic Inflation"
 author: "Mike Konczal, Roosevelt Institute"
-date: "December 15, 2023"
+date: |
+  | December 15, 2023
+  | Panel at International Economic Association's World Congress 2023
 output: 
   beamer_presentation:
     theme: "metropolis"
@@ -59,9 +61,13 @@ This presentation takes a tour through the wild swings in what people thought ab
 
 4.  Remaining Questions
 
+It finds that the large majority of the disinflation in 2023 was driven by supply-side expansion, consistent with inflation driven by reopening pressures.
+
+# But First: Recap
+
 ## But First: Recap
 
-### Historic Disinflation - Since 2021
+### Historic disinflation - since 2021
 
 Inflation falls dramatically, while unemployment is below 4 percent the last two years.
 
@@ -73,7 +79,7 @@ slide1
 
 ## But First: Recap
 
-### Historic Disinflation - Since 1961
+### Historic disinflation - since 1961
 
 We haven't seen this level of disinflation without much higher unemployment recently.
 
@@ -84,7 +90,7 @@ slide2
 
 ## But First: Recap
 
-### Historic Disinflation - Not since late 1940s and early 1950s
+### Historic disinflation - not since late 1940s and early 1950s
 
 A period also remembered for reopenings and supply chains; this was the original comparison point in 2021.
 
@@ -92,6 +98,8 @@ A period also remembered for reopenings and supply chains; this was the original
 source("slide_code/slide_3.R")
 slide3
 ```
+
+# Transitory Inflation in 2021
 
 ## Transitory Inflation in 2021
 
@@ -153,6 +161,30 @@ In 2021, it was the idea that inflation would be:
 
 ## Transitory Inflation in 2021
 
+### Was it plausible?
+
+After pandemic, major shift in spending from services to goods.
+
+```{r shift_chart, fig.height=5, fig.width=10, fig.align='center'}
+source("slide_code/slide_goods_services.R")
+graphic_shift
+```
+
+## Transitory Inflation in 2021
+
+### Was it plausible?
+
+Within 2021, inflation did look uniquely contained to goods.
+
+```{r stacked_chart, fig.height=5, fig.width=10, fig.align='center'}
+source("slide_code/slide_stacked.R")
+stacked_chart
+```
+
+## Transitory Inflation in 2021
+
+### What happened?
+
 | Year over Year Change          | 2019 | August, 2021 |
 |--------------------------------|------|--------------|
 | Trimmed Mean PCE               | 2    | 2.3          |
@@ -162,12 +194,16 @@ In 2021, it was the idea that inflation would be:
 
 ## Transitory Inflation in 2021
 
+### What happened?
+
 | Year over Year Change          | 2019 | August, 2021 | August, 2022 |
 |--------------------------------|------|--------------|--------------|
 | Trimmed Mean PCE               | 2    | 2.3          | 4.7          |
 | Core CPI Services              | 3.1  | 2.7          | 6.1          |
 | Cyclically-sensitive inflation | 2    | 3.1          | 6.5          |
 |                                |      | Yay!         | Yikes!       |
+
+# Persistent Inflation in 2022
 
 ## Persistent Inflation in 2022
 
@@ -252,13 +288,13 @@ In 2022, it was the idea that:
 
 -   That delta was entrenched and required higher unemployment to shift (sacrifice ratio).
 
-- Higher nominal wages would persist without an increase in unemployment.
+-   Higher nominal wages would persist without an increase in unemployment.
 
 -   NAIRU had increased as a result of a shifted Beveridge Curve.
 
 ## Persistent Inflation in 2022
 
-### Peristenct ideas don't pan out
+### Persistent ideas don't pan out
 
 2023 went in a different direction however:
 
@@ -267,6 +303,8 @@ In 2022, it was the idea that:
 -   Nominal wages slowed while real wages increased.
 
 -   Inflation falls too fast to be consistent with these stories.
+
+# The Great Disinflation of 2023
 
 ## The Great Disinflation of 2023
 
@@ -284,8 +322,8 @@ Two relevant stories for disinflation in 2023:
 
 Following Shapiro (2022), we can decompose changes in nominal spending into their quantity and price components.
 
-- If prices slow while quantity increases, consistent with a supply increase (supply curve shifting out).
-- If prices slow while quantity decreases, consistent with a demand decrease (demand curve shifting in).
+-   If prices slow while quantity increases, consistent with a supply increase (supply curve shifting out).
+-   If prices slow while quantity decreases, consistent with a demand decrease (demand curve shifting in).
 
 ## The Great Disinflation of 2023
 
@@ -293,15 +331,15 @@ Following Shapiro (2022), we can decompose changes in nominal spending into thei
 
 We can take individual category items from PCE.
 
-- Take change in six-month inflation, July 2023 versus December 2022.
+-   Take change in six-month inflation, July 2023 versus December 2022.
 
-- 131 distinct, non-overlapping item categories.
+-   131 distinct, non-overlapping item categories.
 
-- 'Level 4' categorization system, or four levels down within the underlying NIPA categories.
+-   'Level 4' categorization system, or four levels down within the underlying NIPA categories.
 
-- Sample categories: child care, used autos, wine, dental services, air transportation.
+-   Sample categories: child care, used autos, wine, dental services, air transportation.
 
-- Representing around 100 percent of nominal spending in the economy.
+-   Representing around 100 percent of nominal spending in the economy.
 
 ## The Great Disinflation of 2023
 
@@ -319,7 +357,6 @@ source("slide_code/slide_5.R")
 slide5
 ```
 
-
 ## The Great Disinflation of 2023
 
 ```{r table_supply, results='asis', include=TRUE, fig.align='center', fig.width=10}
@@ -331,12 +368,12 @@ chart1 %>%
   kable_styling(latex_options = c("striped","scale_down")) %>%
   add_header_above(header = c(" " = 1, "Core Items" = 3, "Goods" = 3, "Services" = 3))
 ```
-
+\small
 -   73 percent from expanding supply; 27 percent from declining demand.
 
 -   Also true of services, where 66 percent of disinflation in services associated with supply expansion.
 
--   Robust to several measures of time-length and comparsion points.
+-   Supply expansion drives the large majority of disinflation across measures of time-length and comparsion points.
 
 ## The Great Disinflation of 2023
 
@@ -348,7 +385,7 @@ There's two arguments for why disinflation might become harder:
 
 -   Disinflation is driven by the lowest-hanging fruit, or categories that aren't sensitive to demand.
 
-(Though inflation in this rate might be better than a 2 percent target.)
+(Though inflation in this range might be better than a 2 percent target.)
 
 ## The Great Disinflation of 2023
 
@@ -357,22 +394,20 @@ Recent disinflation is broad, and not driven by negative tail values.
 ![](graphics/Distribution.png)
 
 ## The Great Disinflation of 2023
-
+\small
 ### Is disinflation occuring only in demand-insensitive categories?
 
-- Let's make a basket of the most demand sensitive categories.
+- Measures that exclude outliers (e.g. median CPI) also falling.
 
--   Take 179 individual CPI spending category inflation rates since 2000.
+-   Let's check ourselves by making a basket of the most demand sensitive categories.
 
-- Put each under an aggressive accelerationist Phillips Curve: 
+-   Take 179 individual CPI spending category inflation rates since 2000, and put each under an accelerationist Phillips Curve:
 
 $$\pi_{i,t} = \pi_{i,t-1} + \beta(u - u^*)$$
 
-- Only select items where $\beta$ has a t-statistic less than -2.
+-   Only select items where $\beta$ has a t-statistic less than -2.
 
-- 16 categories, including housing, day care, motor vehicle repair, restaurants, funeral expenses, and wine at home.
-
-- Excluding housing, demand-sensitive basket is 9 percent of consumption.
+-   16 categories, including housing, day care, motor vehicle repair, restaurants, funeral expenses, and wine at home. Excluding housing, demand-sensitive basket is 9 percent of consumption.
 
 ## Inflation in 2023: Not by demand insensitive categories.
 
@@ -384,6 +419,29 @@ Even with recent pickup, this small basket has fallen just as fast as overall in
 
 source("slide_code/slide_demand.R")
 slide_demand
+```
+
+# Remaining Questions
+
+## Remaining Questions
+
+### Revisiting goods and services shift
+
+Goods shifting out and then up should animate interest in "convex supply curves."
+
+```{r convex_goods, fig.height=5, fig.width=10, fig.align='center'}
+source("slide_code/slide_convex.R")
+convex_curve_goods
+```
+
+## Remaining Questions
+
+### Revisiting goods and services shift
+
+Nominal rigidities put a floor under services's price level during pandemic. How should we understand the following pick-up inflation?
+
+```{r convex_services, fig.height=5, fig.width=10, fig.align='center'}
+convex_curve_services
 ```
 
 ## Remaining Questions
@@ -401,4 +459,3 @@ slide_demand
 -   Can housing policy be better?
 
 -   First inflation period with modern 'expectations' macroeconomic theory. A strength, or weakness?
-
