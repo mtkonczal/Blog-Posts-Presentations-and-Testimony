@@ -275,7 +275,7 @@ cat(star_model, sep='\n')
 Accelerationist Phillips Curve: inflation is simply previous inflation plus deviations in potential unemployment or output. $$ \pi_{t} = \pi_{t-1} - \beta(u - u^*)$$
 
 -   Underlying inflation is 4.5 percent.
--   the sacrific ratio $1/\beta$ is 2.
+-   the sacrifice ratio $1/\beta$ is 2.
 -   and NAIRU is 5 percent. $$ \pi_{t} = \pi_{t-1} - \beta(u - u^*)$$ $$2 = 4.5 - 0.5(u - 5)$$ $$-2.5 = -0.5u + 2.5$$ $$u = 10$$
 
 ## Persistent Inflation in 2022

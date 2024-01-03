@@ -18,7 +18,7 @@ library(scales)
   pce_2023 <- prep_FRED_data("PCEPI")  %>% rename(value = pcepi) %>%
     filter(date >= "2022-12-01") %>%
     mutate(YoY = value[date == max(date)]/ value[date == min(date)],
-           YoY = YoY^(12/10) -1) %>%
+           YoY = YoY^(12/11) -1) %>%
     filter( date == max(date))
   long_core_pce <- prep_FRED_data("DPCERG3A086NBEA")  %>% rename(value = dpcerg3a086nbea) %>%
     mutate(YoY = value/lag(value,1) - 1)
@@ -46,7 +46,7 @@ slide3 <- long_data %>%
   theme(text = element_text(size = 20)) +
     geom_text_repel(size = 10) +
     #geom_line(aes(unrate, predicted), color="#FC8D62") +
-  labs(subtitle = "Change in year-over-year headline PCE growth from one year ago, 1948-2023",
+  labs(subtitle = "Change in year-over-year headline PCE growth from one year ago, 1948-2023, 2023 annualized through November.",
        x = "Unemployment Rate",
        y = "") +
     scale_x_continuous(label=percent) +
@@ -55,7 +55,7 @@ slide3 <- long_data %>%
     theme(legend.position = "none",
           plot.title.position = "plot")
 
-
+slide3 <- slide3 + labs(title="There were two stories: which one was right?")
 
 slide3 <- slide3 +  theme(
   panel.background = element_rect(fill='transparent'),
