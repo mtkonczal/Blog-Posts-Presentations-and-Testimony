@@ -13,10 +13,37 @@ library(ggrepel)
 source("0_load_functions.R")
 source("0_prepare_data.R")
 
-# Get the 4 quarters that move off the maximum date.
 
 # Create lagged variables so they aren't cut off when we start in 1992.
-centered_pc <- center_mean(pc_analysis %>% select(date, v_u_squared, FRB_exp, RFIM, quit_rate, gscpi) %>% na.omit()) %>% na.omit()
+centered_pc <- center_mean(pc_analysis %>% select(date, unrate_slack, v_u_squared, FRB_exp, RFIM, quit_rate, gscpi) %>% na.omit()) %>% na.omit()
+centered_pc <- centered_pc %>% left_join(pc_analysis %>% select(date, core_pce_changeA) %>%
+                                           mutate(core_pce_changeA = core_pce_changeA - 2,
+                                                  lagged_1 = lag(core_pce_changeA,1),
+                                                  lagged_2 = lag(core_pce_changeA,2)),
+                                         by="date") %>%
+  mutate(slack_chain = v_u_squared*gscpi,
+         slack_lag1 = lag(unrate_slack, 1),
+         slack_lag2 = lag(unrate_slack, 2),
+         slack_lag3 = lag(unrate_slack, 3))
+
+
+pc_vu_analysis_model <- lm(core_pce_changeA ~ offset(lagged_1) + I(lagged_2 - lagged_1) + I(FRB_exp - lagged_1) + RFIM + slack_chain +
+                             v_u_squared + quit_rate + gscpi + unrate_slack, data = centered_pc %>% filter(year(date) <= 2019))
+summary(pc_vu_analysis_model)
+
+analysis_model <- adjusted_model_expectations(pc_vu_analysis_model)
+
+#pc_vu_analysis_model <- lm(core_pce_changeA ~ lagged_1 + lagged_2 + FRB_exp + RFIM +
+#                             v_u_squared + quit_rate + gscpi, data = centered_pc)
+summary(pc_vu_analysis_model)
+contributions <- predict_contributions(centered_pc, analysis_model)
+
+draw_contribution(contributions, centered_pc)
+
+
+
+#### Model 2 ####
+centered_pc <- center_mean(pc_analysis %>% select(date, unrate_slack, FRB_exp, unrate_slack, RFIM) %>% na.omit())
 centered_pc <- centered_pc %>% left_join(pc_analysis %>% select(date, core_pce_changeA) %>%
                                            mutate(core_pce_changeA = core_pce_changeA - 2,
                                                   lagged_1 = lag(core_pce_changeA,1),
@@ -24,30 +51,13 @@ centered_pc <- centered_pc %>% left_join(pc_analysis %>% select(date, core_pce_c
                                          by="date")
 
 
-pc_vu_analysis_model <- lm(core_pce_changeA ~ lagged_1 + lagged_2 + FRB_exp + RFIM +
-                             v_u_squared + quit_rate + gscpi, data = centered_pc)
+pc_vu_analysis_model <- lm(core_pce_changeA ~ offset(lagged_1) + I(lagged_2 - lagged_1) + I(FRB_exp - lagged_1) + unrate_slack + RFIM, data = centered_pc %>% filter(year(date)<2020))
 summary(pc_vu_analysis_model)
 
-tester <- predict_contributions(centered_pc, pc_vu_analysis_model)
+analysis_model <- adjusted_model_expectations(pc_vu_analysis_model)
+contributions <- predict_contributions(centered_pc, analysis_model)
 
-
-tester %>% filter(year(date)> 2015) %>% left_join(centered_pc %>% select(date, core_pce_changeA), by="date") %>%
-  ggplot(aes(x = date, y = contribution, fill = variable)) +
-  geom_bar(stat = "identity", position = "stack") +
-  scale_fill_brewer(palette = "Paired") +
-  theme_classic() +
-  geom_line(aes(date, core_pce_changeA), color="#2D779C", size=1.2) + 
-  theme(text=element_text(size=24)) +
-  labs(fill = "Variable", x = "Time", y = "Contribution") +
-  guides(size = FALSE) +
-  labs(subtitle = "Decomposed Phillips Curve regression for core PCE's difference from 2 percent, quarterly, model trained on data from 2001-2023.\nBlue line is actual value.",
-       caption = "Mike Konczal, Roosevelt Institute.") +
-  scale_x_date(date_labels = "%b\n%Y", breaks=date_breaks) +
-  theme(plot.title.position = "plot",
-        plot.subtitle=element_text(size=17),
-        legend.position = c(0.35, 0.75),
-        legend.title = element_blank())
-
+draw_contribution(contributions, centered_pc)
 
 centered_pc$pc_v_u_predicted <- predict(pc_vu_analysis_model, newdata = centered_pc)
 
