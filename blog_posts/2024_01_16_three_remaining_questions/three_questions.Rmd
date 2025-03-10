@@ -1,0 +1,30 @@
+---
+title: "three_remaining_questions"
+author: "Mike Konczal"
+date: "`r Sys.Date()`"
+header-includes:
+  - \usepackage{xcolor}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+$$ y_t=A -a_1r_{t-1} \tag{\textit{IS} equation}$$
+$$\pi_t=\pi_{t-1}+a_2(y_t -y_e) + v_t \tag{Phillips Curve}$$
+$$r_s=\frac{(A - y_e)}{a_1}$$
+$$L=(y_t-y_e)^2 + b(\pi_t - \pi^T)^2 \tag{CB function}$$
+$$r_t = r_s + a_3(\pi_t-\pi^T) \tag{Interest-rate rule}$$
+where $y$, $A$, $r$, $\pi$, $y_e$, $r_s$, $\pi^T$, and $v_t$ are real output, autonomous demand (times the multiplier), the real interest rate, inflation, equilibrium output, the stabilising real interest rate, the inflation target, and supply shocks respectively. Repeated substitution into CB function gives the interest-rate rule with $a_3 = \frac{1}{a_1(\frac{1}{a_2 b} + a_2)} > 0$.
+
+
+
+
+\newpage
+
+
+
+
+$$\underbrace{\pi_t}_{\text{inflation}} = \underbrace{E[\pi_{t}]}_{\text{expected inflation}} + \underbrace{\beta \tilde{y_t}}_{\text{output gap}} + \underbrace{v_t}_{\text{shocks}}$$
