@@ -82,7 +82,7 @@ ces %>% filter(seasonal == "S",
        y = "",
        x = "",
        title = "Figure 5: The 2024 Labor Market Leveling Out in Cyclical Activity",
-       caption = "252 Diffusion sub-industries correlated against unemployment changes. BLS. Mike Konczal") +
+       caption = "250 Diffusion sub-industries correlated against unemployment changes. BLS. Mike Konczal") +
   theme(plot.title.position = "plot")
 
 
