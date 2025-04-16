@@ -20,7 +20,7 @@ plot_data <- diff_annual %>%
   pivot_longer(cols = -year, names_to = "Sector", values_to = "Jobs") %>%
   mutate(Sector = factor(Sector,
                          levels = c("edu_diff", "government_diff", "health_diff", "total_diff_sub"),
-                         labels = c("Private Education", "Government", "Health Care", "Rest of Economy")))
+                         labels = c("Private Education", "Government", "Health Services", "Rest of Economy")))
 
 # Create stacked bar chart
 ggplot(plot_data, aes(x = factor(year), y = Jobs, fill = Sector)) +
@@ -35,7 +35,7 @@ ggplot(plot_data, aes(x = factor(year), y = Jobs, fill = Sector)) +
   scale_fill_manual(values = c(
     "Private Education" = "#8d99ae",
     "Government" = "#2a9d8f",
-    "Health Care" = "#6a4c93",
+    "Health Services" = "#6a4c93",
     "Rest of Economy" = "#264653"
   )) +
   scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.1))) +
