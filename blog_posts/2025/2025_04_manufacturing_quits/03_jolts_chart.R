@@ -118,9 +118,6 @@ gg +
     subtitle = "Relative change from 2019 to 2022, annual averages, percentage.",
     caption = "Source: BLS JOLTS. Annual averages (M13) used. Calculations by Mike Konczal"
   ) +
-  theme(plot.title.position = "plot",
-        plot.title = element_text(size = 10),
-        plot.caption = element_text(size = 6),
-        plot.subtitle = element_text(size = 10))
+  theme(plot.title.position = "plot")
 
 ggsave("graphics/g4_jolts_chart.png", width = 2800, height = 2190, dpi = 300, units = "px")
