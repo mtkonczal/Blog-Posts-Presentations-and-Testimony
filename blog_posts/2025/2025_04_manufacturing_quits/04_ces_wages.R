@@ -49,7 +49,7 @@ jobs_chart2 %>%
   gt(groupname_col = "chart_type") %>%
   row_group_order(groups = c("Total", "Goods and Services")) %>%
   tab_header(title = "Figure 5: Slight Majority of Jobs Pay More Than Manufacturing",
-             subtitle = "Values are average within 2024.") %>%
+             subtitle = "Values are average within 2024. Jobs in thousands.") %>%
   cols_label(
     industry_name = "",
     total_jobs = "Total Jobs",
@@ -69,6 +69,11 @@ jobs_chart2 %>%
   tab_style(
     style = cell_fill(color = "lightyellow"),
     locations = cells_body(
-      rows = industry_name == "Manufacturing"
+      rows = industry_name %in% c("Manufacturing","Total private")
     )
+  ) %>%
+  fmt_number(                # <-- add this
+    columns  = total_jobs,
+    decimals = 0,            # no decimal places
+    sep_mark = ","           # use commas as thousands separator
   )
