@@ -6,7 +6,7 @@ library(janitor)
 library(haven)      # labelled → factor
 
 # ── 1.  Read the CPS Basic-Monthly extract (2015, 2019, 2024) ────────────────
-cps <- read_ipums_micro("cps_00003.xml") %>% 
+cps <- read_ipums_micro("/Users/mtkonczal/Documents/data_folder/cps_00003.xml") %>% 
   clean_names()
 
 # ── 2.  Prep: keep cohort & two target years ────────────────────────────────
@@ -57,8 +57,19 @@ ind_neg <- cps_small %>%
   make_change_table(ind_lbl) %>%
   mutate(type = "Industry")
 
+round_tbl <- function(df) {
+  df %>% 
+    mutate(
+      across(c(y2019, y2024, change), ~ round(.x)),   
+      pct_change = round(pct_change, 1)                   # 0.1 pp
+    )
+}
+
+occ_neg  <- occ_neg  %>% round_tbl()
+ind_neg  <- ind_neg  %>% round_tbl()
+
 # ── 6.  Inspect results ─────────────────────────────────────────────────────
 occ_neg %>% arrange(pct_change) %>% print(n = 20)   # worst-hit occupations
 ind_neg %>% arrange(pct_change) %>% print(n = 20)   # worst-hit industries
 
-write_csv(rbind(occ_neg, ind_neg), "output/negative_growth_22_27_BA_plus.csv")
+write_csv(rbind(occ_neg, ind_neg) %>% arrange(change), "output/negative_growth_22_27_BA_plus.csv")
