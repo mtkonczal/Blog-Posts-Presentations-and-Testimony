@@ -128,3 +128,4 @@ ggplot(plot_df,
     plot.caption        = element_text(size = 8, hjust = 0)
   )
 
+ggsave("graphics/big_image.png", width = 20, height = 9, dpi = "retina")
