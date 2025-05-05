@@ -4,6 +4,7 @@ library(lubridate)
 library(slider)   # for slide_dbl()
 library(zoo)      # rollapplyr() – easier for 2-var correlations
 library(showtext) # optional font for social media images
+library(govMacroTools)
 font_add_google("Roboto Condensed", "roboto"); showtext_auto()
 
 # ── 1.  Data ────────────────────────────────────────────────────────────────
