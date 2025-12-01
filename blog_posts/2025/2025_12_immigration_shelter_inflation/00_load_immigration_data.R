@@ -22,13 +22,13 @@ fetch_year <- function(yr) {
     variables = vars,
     output = "wide"
   ) %>%
-    select(-NAME) %>%
+    # keep NAME and GEOID
     # keep only estimate columns: rentE, hh_incomeE, etc.
-    select(GEOID, ends_with("E")) %>%
+    select(GEOID, NAME, ends_with("E")) %>%
     # strip "E" so rentE -> rent, hh_incomeE -> hh_income
-    rename_with(~ sub("E$", "", .x), -GEOID) %>%
+    rename_with(~ sub("E$", "", .x), -c(GEOID, NAME)) %>%
     # add year prefix: rent -> y2024_rent, etc.
-    rename_with(~ paste0("y", yr, "_", .x), -GEOID)
+    rename_with(~ paste0("y", yr, "_", .x), -c(GEOID, NAME))
 }
 
 # --- 3. Download All Snapshots ---
@@ -52,7 +52,8 @@ create_period <- function(data_start, data_end, start_year, end_year) {
   fb_end <- paste0("y", end_year, "_foreign_born")
 
   data_start %>%
-    inner_join(data_end, by = "GEOID") %>%
+    # join on GEOID and NAME so names are consistent over time
+    inner_join(data_end, by = c("GEOID", "NAME")) %>%
     mutate(
       period = paste0(start_year, "-", end_year),
 
@@ -73,6 +74,7 @@ create_period <- function(data_start, data_end, start_year, end_year) {
     ) %>%
     select(
       GEOID,
+      NAME,
       period,
       delta_rent,
       delta_income,

@@ -48,8 +48,8 @@ plot_data <- trend_data %>%
   mutate(
     metric = recode(
       metric_code,
-      rent_growth = "Rent: Year-over-Year Growth",
-      home_value_growth = "Home Values: Year-over-Year Growth",
+      rent_growth = "Median Rent: Year-over-Year Growth",
+      home_value_growth = "Median Home Values: Year-over-Year Growth",
       immigrant_inflow = "Immigrant Inflow: Share of Population"
     ),
     metric = factor(
@@ -77,11 +77,11 @@ ggplot(plot_data, aes(x = year, y = value)) +
   scale_x_continuous(breaks = c(2017, 2018, 2019, 2022, 2023, 2024)) +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(
-    title = "Rent and Home-Price Growth Spiked Before Immigration Inflow",
-    subtitle = "Comparing Rent and Median Home-Value Growth vs. Immigration Inflow",
+    title = "Figure 1: Rent and Home-Price Growth Spiked Before Immigration Inflow",
+    subtitle = "Comparing Rent and Median Home-Value Growth vs. Immigration Inflow, Entire USA",
     x = NULL,
     y = NULL,
-    caption = "Source: ACS 1-year estimates. 2020 is missing; 2021 is removed. Mike Konczal"
+    caption = "Source: ACS 1-year estimates. 2020 not recorded in ACS; 2021 is thereby missing. Mike Konczal"
   ) +
   theme_minimal(base_size = 12) +
   theme(
