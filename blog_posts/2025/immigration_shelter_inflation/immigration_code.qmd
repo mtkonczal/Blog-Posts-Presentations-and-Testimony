@@ -1,0 +1,73 @@
+---
+title: "Did Early 2020s Immigration Increase Rents?"
+author: "Mike Konczal"
+format: 
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+date: today
+date-format: MMM D, YYYY
+execute:
+  echo: false          # hide code by default
+  message: false       # suppress messages
+  warning: false       # suppress warnings
+---
+
+First we download and save the data, execute 00_load_immigration_data.R first.
+
+```{r load_data}
+library(tidyverse)
+library(tinyplot)
+library(stargazer)
+
+panel_5yr <- read_rds("data_immigration_rent_panel_2010s.rds")
+
+current_period <- panel_5yr %>%
+  filter(period == "2019-2024")
+
+old_period <- panel_5yr %>%
+  filter(period != "2019-2024")
+
+
+```
+
+## Regression Results
+
+```{r regressions, results="asis"}
+# --- PREP FOR STARGAZER ---
+m1 <- lm(delta_rent ~ immigrant_inflow + delta_income + factor(period), 
+                weights = pop_weight, data = old_period)
+
+m2 <- lm(delta_rent ~ immigrant_inflow + delta_income, 
+                weights = pop_weight, data = current_period)
+
+m3 <- lm(delta_rent ~ delta_foreign_log + delta_income, 
+                weights = pop_weight, data = current_period)
+
+stargazer(m1, m2, m3, type = "html",
+          # 1. Promote "Rent Growth" to the column labels
+          column.labels = c("Rent Growth (2010-2019)", "Rent Growth (2019-2024)", "Rent Growth (2019-2024)"),
+          
+          # 2. Use column.separate to FORCE the underline break (1 column then 4 columns)
+
+                    covariate.labels = c(
+            "Immigrant Inflow",
+            "Log Growth of Immigrants",
+            "Income Growth",
+            "Constant"
+          ),
+          
+          # 3. Turn off the default Dependent Variable label to avoid the continuous line
+          dep.var.labels.include = FALSE,
+          
+          star.cutoffs = c(0.05, 0.01, 0.001),
+          omit.stat = c("f", "ser"),
+          omit = "period",
+          
+          # 4. Move the specific Model Names to the bottom for clarity
+          add.lines = list(
+            c("Period Fixed Effects", "Yes", "No", "No")
+          )
+)
+```
