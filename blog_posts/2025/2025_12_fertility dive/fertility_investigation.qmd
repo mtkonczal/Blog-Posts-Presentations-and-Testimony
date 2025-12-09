@@ -35,7 +35,7 @@ library(janitor)
 library(scales)
 library(ggrepel)
 
-ddi <- read_ipums_ddi("../../data_folder/cps_00027.xml")
+ddi <- read_ipums_ddi("../../../../../data_folder/cps_00027.xml")
 data <- read_ipums_micro(ddi)
 ```
 
@@ -145,28 +145,36 @@ total_by_year <- data %>%
 
 print(total_by_year, n = 30)
   
-  total_by_year %>%
+total_by_year %>%
   ggplot(aes(YEAR, avg_no_children)) +
-  geom_line(size = 1, color="#d95f02") +
+  geom_line(size = 1, color = "#d95f02") +
+  scale_y_continuous(
+    breaks = c(
+      seq(floor(min(total_by_year$avg_no_children)), 1.7, by = 0.5),
+      c(1.8, 1.9, 2.0, 2.1),
+      seq(2.2, ceiling(max(total_by_year$avg_no_children)), by = 0.4)
+    ),
+    minor_breaks = NULL
+  ) +
   labs(
     title = "Figure 2: The Fall in Fertility Happened Earlier",
-    subtitle = "Average number of children for women 41-44",
-    x = "Age",
+    subtitle = "Average number of children for women 41–44",
+    x = "Year",
     y = "Average number of children",
-    color = "Year",
-    caption = "BLS CPS Fertility Supplement via IPUMS; Mike Konczal"
+    caption = "Updated for better y-axis labels. BLS CPS Fertility Supplement via IPUMS; Mike Konczal"
   ) +
   theme_classic(base_size = 13) +
   theme(
-    axis.line = element_line(linewidth = 0.25),                     # keep both axes
-    panel.grid.major.y = element_line(color = "gray85", linewidth = 0.25), 
-    panel.grid.major.x = element_line(color = "gray85", linewidth = 0.25), 
+    axis.line = element_line(linewidth = 0.25),
+    panel.grid.major.y = element_line(color = "gray85", linewidth = 0.25),
+    panel.grid.major.x = element_line(color = "gray85", linewidth = 0.25),
     panel.grid.minor.y = element_blank(),
     panel.grid.minor.x = element_blank(),
     plot.title = element_text(face = "bold"),
     legend.position = "top",
     plot.title.position = "plot"
   )
+
 ```
 
 Is this all immigration? No.
