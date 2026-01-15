@@ -7,6 +7,7 @@ format:
   html:
     code-fold: true
     code-summary: "Show code"
+bibliography: references.bib
 execute:
   echo: true
   message: false
@@ -16,27 +17,20 @@ execute:
 ```{r load_data}
 library(tidyverse)
 
-cex <- read_csv("data/cex_data.csv")
+cex <- read_csv("data/cex_data.csv") %>% filter(demographics_text != "Age of reference person")
 ```
 
 ## Introduction
 
-The Bureau of Labor Statistics Consumer Expenditure Survey (BLS CEX) is a nationally representative survey of consumer units that reports annual spending by detailed category. It is the primary federal source for household expenditure patterns and is widely used to understand cost burdens, to inform CPI weights, and to benchmark how budgets shift over time. The CEX makes it possible to compare budget shares across time and across demographic groups such as income quintiles and the age of the reference person.
+Since the pandemic and the recovery, people have been very pessimistic about the economy. There are many arguments for why this 'vibecession' happened and continues, including higher interest rates [@bolhuis2024], the struggle people face to ensure that their incomes and wages keep up with inflation [@guerreiro2024], that higher inflation also can make housing harder to afford even if incomes keep up [@macgee2025], and the difficulty of planning under inflation [@stantcheva2024]. But one other thing might matter: people in the bottom half of the income distribution are spending a higher percent of their expenditures on essentials.
 
-The latest summary statistics for 2024 came out in December 2025, delayed because of the government shutdown. This data helps explain the "vibescession" and other reasons why people's experiences of the economy have been poor even when aggregate income growth keeps pace with inflation. We can see that a rising share of budgets devoted to necessities can make households feel worse off.
+The Bureau of Labor Statistics Consumer Expenditure Survey (BLS CEX) is a nationally representative survey of consumer units that reports annual spending by detailed category. It is the primary federal source for household expenditure patterns and is widely used to understand cost burdens, to inform CPI weights, and to benchmark how budgets shift over time. The CEX makes it possible to compare budget shares across time and across demographic groups such as income quintiles.
 
-## Summary
-
-This report checks whether core essentials and essentials have become a larger share of total expenditures. It compares:
-
--   2019 vs 2024
--   the 2016-2019 average vs the 2023-2024 average
-
-Results are shown for overall consumer units, the available age category, and income quintiles.
+The latest data for 2024 came out in December 2025, delayed because of the government shutdown. This data can help explain why people's experiences of the economy have been poor even when aggregate income growth keeps pace with inflation. A rising share of budgets devoted to necessities will make households feel worse off.
 
 ## Method
 
-Core essentials are defined as Food at home and Housing. Essentials add Healthcare and Transportation to the core set. Budget shares are computed by summing category expenditures and dividing by total expenditures ("Average annual expenditures") for each group across years.
+We define core essentials as 'food at home' and 'housing.' We also check a broader essentials category by adding healthcare and transportation to the core set. Budget shares are computed by summing category expenditures and dividing by total expenditures ("average annual expenditures") for each group across years.
 
 ```{r essentials_setup}
 core_essentials <- c("Food at home", "Housing")
@@ -132,30 +126,9 @@ overall <- summarize_group(
   "Quintiles of income before taxes",
   "All Consumer Units"
 )
-
-overall %>%
-  format_table() %>%
-  select(type, `2019`, `2024`, `chg 19-24`, `avg 16-19`, `avg 23-24`, `chg avg`) %>%
-  knitr::kable()
 ```
 
-Essentials are slightly higher in 2024 than 2019 for overall consumer units, and the 2023-2024 average is modestly above 2016-2019.
-
-### Age (Reference person from age 25 to 34)
-
-```{r age_results}
-age <- summarize_group(
-  "Age of reference person",
-  "Reference person from age 25 to 34"
-)
-
-age %>%
-  format_table() %>%
-  select(type, `2019`, `2024`, `chg 19-24`, `avg 16-19`, `avg 23-24`, `chg avg`) %>%
-  knitr::kable()
-```
-
-It seems like this won't hold for the young and anxious, here ages 25-34. So we should exclude this from the analysis.
+Essentials are modestly higher in 2024 than 2019 for overall consumer units, and the 2023-2024 average sits above 2016-2019.
 
 ### Income Quintiles
 
@@ -179,19 +152,11 @@ income_order <- c(
   "Highest 20 percent income quintile"
 )
 
-income %>%
-  mutate(characteristics_text = factor(characteristics_text, levels = income_order)) %>%
-  arrange(characteristics_text, essentials_type) %>%
-  format_table() %>%
-  select(group, type, `2019`, `2024`, `chg 19-24`, `avg 16-19`, `avg 23-24`, `chg avg`) %>%
-  knitr::kable()
 ```
 
-The lowest two income quintiles show the largest increases since 2019, while the highest quintile is flat to slightly down. The overall pattern suggests an increase in cost burden for essentials concentrated in the lower-middle of the income distribution. Here it is with details, for the years 2019 and 2024, as well as the average across 2016-2019 and 2023-2024.
+The lowest two income quintiles show the largest increases since 2019, while the highest quintile is flat to slightly down. The overall pattern suggests a rising essentials burden concentrated in lower- and lower-middle-income households. The figures below show both the 2019 vs 2024 comparison and the pre- vs post-pandemic averages.
 
-In addition are bar charts and graphics showing the increase.
-
-## Core Essentials Visuals
+## Essentials Visuals
 
 ```{r core_bar, fig.height=7.5}
 core_share <- essentials_share %>%
@@ -233,6 +198,50 @@ ggplot(
   )
 ```
 
+The next chart repeats the comparison for the broader essentials basket (adding healthcare and transportation).
+
+```{r essentials_bar, fig.height=7.5}
+essentials_share_full <- essentials_share %>%
+  filter(essentials_type == "Essentials") %>%
+  inner_join(group_definitions, by = c("demographics_text", "characteristics_text"))
+
+essentials_bar <- essentials_share_full %>%
+  filter(year %in% c(2016:2019, 2023:2024)) %>%
+  mutate(period = if_else(year <= 2019, "2016-2019 avg", "2023-2024 avg")) %>%
+  mutate(period = factor(period, levels = c("2016-2019 avg", "2023-2024 avg"))) %>%
+  group_by(group, period) %>%
+  summarise(avg_share = mean(essentials_share, na.rm = TRUE), .groups = "drop")
+
+ggplot(
+  essentials_bar,
+  aes(x = factor(group, levels = group_definitions$group), y = avg_share, fill = period)
+) +
+  geom_col(position = position_dodge2(width = 0.7, reverse = TRUE), width = 0.65) +
+  geom_text(
+    aes(label = scales::percent(avg_share, accuracy = 0.1)),
+    position = position_dodge2(width = 0.7, reverse = TRUE),
+    hjust = 1.05,
+    color = "white",
+    size = 3.2
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("2016-2019 avg" = "#D16B6B", "2023-2024 avg" = "#8B1A1A")) +
+  labs(
+    title = "Essentials share: pre-pandemic vs 2023-2024",
+    x = NULL,
+    y = "Essentials share",
+    fill = NULL
+  ) +
+  coord_flip() +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    axis.text.x = element_text(angle = 25, hjust = 1)
+  )
+```
+
+The line charts show that core essentials shares rose during the inflation surge and have been coming down in recent years, though many groups remain above pre-pandemic levels.
+
 ```{r core_line, fig.height=7.5}
 core_line <- core_share %>%
   filter(year >= 2010) %>%
@@ -257,3 +266,5 @@ ggplot(core_line, aes(x = year, y = essentials_share, group = group)) +
 ## Conclusion
 
 The 2020-2024 period marks a clear upward shift in core essentials, especially for lower-income households, consistent with a "vibescession" narrative where everyday bills rise faster than perceptions of income gains. Policy responses that reduce housing costs, stabilize food prices, and expand access to affordable healthcare and transportation would directly address the areas where cost burdens are rising most, while also speaking to the lived experience of people who find themselves struggling in this economy.
+
+## References

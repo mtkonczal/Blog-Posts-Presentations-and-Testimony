@@ -1,0 +1,15 @@
+{
+  "hash": "8b6bc748355618b30e452854f3a87fca",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"AFT Macro Slides\"\nauthor: \"Mike Konczal\"\nformat: pptx\n---\n\n\n\n## Quarto\n\nQuarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.\n\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n\n\n\n---\n\n## This is a next slide\n\nHow is it going?\n\n- Well?",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": null,
+    "postProcess": false
+  }
+}

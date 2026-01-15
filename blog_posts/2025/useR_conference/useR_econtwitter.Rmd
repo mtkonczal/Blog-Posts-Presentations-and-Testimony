@@ -1,0 +1,481 @@
+---
+title: "From #EconTwitter to the White House"
+subtitle: "Real-Time Economic Data with R"
+author: "Mike Konczal, Economic Security Project"
+institute: "Presented at the useR! 2025 Conference, Duke University"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  beamer_presentation:
+    theme: "metropolis"
+    latex_engine: xelatex
+header-includes:
+  - \metroset{numbering=fraction}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+library(tidyverse)
+library(govMacroTools)
+library(lubridate)
+library(scales)
+library(glue)
+library(blsR)
+library(janitor)
+library(showtext)
+library(grid)
+library(tidycensus)
+font_add_google("Fira Sans", "fira")
+showtext_auto()
+
+knitr::opts_chunk$set(
+  fig.width = 7,   # narrower default width
+  fig.height = 2.8, # shorter default height
+  fig.align = "center",
+  out.width = "95%" # scale image within slide
+)
+
+knitr::knit_hooks$set(
+  size = function(before, options, envir) {
+    if (before) {
+      # before the chunk starts
+      paste0("\\", options$size)   # e.g. \tiny  \scriptsize
+    } else {
+      "\\normalsize"               # reset after the chunk
+    }
+  }
+)
+
+all_dates <- seq(from = as.Date("2000-01-01"), to = as.Date("2025-04-01"), by = "month")
+
+create_chart_dates <- function(df, x){
+  return_dates <- sort(unique(df), decreasing = TRUE)
+  return_dates <- return_dates[seq(1, length(return_dates), x)]
+  return(return_dates)
+}
+
+
+theme_chartbook <- function() {
+  theme_void(base_family = "fira", base_size = 12) +
+    theme(
+      plot.title = element_text(size = 12, hjust = 0),
+      plot.title.position = "plot",
+      plot.background = element_rect(fill = NA, color = NA),
+      panel.background = element_rect(fill = NA, color = NA),
+      axis.text = element_text(size = 12),
+      axis.title = element_blank(),
+      panel.grid = element_blank(),
+      legend.title = element_blank()
+    )
+}
+
+scale_chartbook_colors <- function() {
+  scale_color_manual(values = presentation_two_colors)
+}
+
+scale_chartbook_fill <- function() {
+  scale_fill_manual(values = presentation_two_colors)
+}
+
+presentation_two_colors <- c("#2c3254", "#ff8361")  # Blue, red (or whatever you prefer)
+
+# Set global ggplot defaults
+update_geom_defaults("line", list(color = presentation_two_colors[1]))
+update_geom_defaults("bar",  list(fill = presentation_two_colors[1]))
+update_geom_defaults("col",  list(fill = presentation_two_colors[1]))
+
+#census_key <- "721190eb4f4e6f0c646422f469505567acec2241"
+#census_api_key(census_key, install = TRUE)
+
+ces <- readRDS("data/ces.RDS")
+se <- readRDS("data/se.rds")
+cpi <- readRDS("data/cpi.rds")
+median_cpi <- readRDS("data/median_data.rds")
+
+```
+
+## Overview
+
+### Today We'll Discuss
+
+Over the next 15 minutes I will discuss:
+
+-   How to use R to analyze economic data right as it comes out.
+-   Why you should use R to do that.
+-   Try to convince analysts to not just use Excel, and economists to not just use Stata.
+-   Five examples where R really shines.
+
+Data generally comes out promptly at 8:30 a.m., sometimes 10:00 a.m.. The 'first draft' of what has just happened is written quickly, prompt analysis is key.
+
+### My Background
+
+Why me?
+
+-   Have provided commentary and real-time analysis on data releases for over a decade.
+-   Served as Special Assistant to the President and Chief Economist, National Economic Council (NEC), handling macroeconomic data releases, in 2024.
+-   Long-time R user and proselytizer.
+
+### A Quick Note on Political Developments
+
+"This rationale for firing Dr. McEntarfer is without merit and undermines the credibility of federal economic statistics that are a cornerstone of intelligent economic decision-making by businesses, families, and policymakers. U.S. official statistics are the gold standard globally. When leaders of other nations have politicized economic data, it has destroyed public trust in all official statistics and in government science."
+
+"*Statement on Commissioner McEntarfer’s Removal.*" William Beach, former BLS Commissioner (2019-2023), Mercatus Center (2016-2019) and Heritage Foundation (1998-2013)
+
+### How to Get Data - White House
+
+White House process worked on two tracks:
+
+- Council of Economic Advisers get that early data first, as a print copy, and prepare analysis (usually in Stata).
+- A handful of senior people see the data the afternoon before (POTUS, Chief of Staff, NEC Director).
+- The rest of the teams prepare materials (talking points, statements) not knowing what is in it, then scramble right after.
+- R is available to White House staff, but was only base R for the longest time (finally got tidyverse late 2024).
+
+### How to Get Data - Everyone Else
+
+Can get from the relevant government website:
+
+-   API calls (library blsR).
+-   Flatfile downloads (own library).
+
+Can get from other sites:
+
+-   Download from a private service (HAVER, Bloomberg).
+-   Download from FRED, FRED's API or certain libraries (but starting at 8:51am).
+
+Many, from analysts to reporters, build up extensive workflows for covering data releases. So why R?
+
+### Example 1: The Grammar Deployed
+
+BLS flat file data is tidy, and we want to examine different elements of the same items (industries, locations, etc.). This makes it perfect for the grammar of graphics.
+```{r ces_start, eval = FALSE, echo = TRUE, size = 'scriptsize'}
+ces <- getMacroTools("ces", "konczal@gmail.com")
+```
+
+```{r ces_start_display, echo = TRUE, size = 'scriptsize'}
+ces %>%
+  select(series_id, date, value, data_type_text, industry_name) %>%
+  head(5)
+```
+
+### Example 1: Tidy CES Jobs
+
+Let's say you want to look at the number of jobs per industry over the past year.
+
+```{r ces_jobs_code, eval = FALSE, echo = TRUE, size = 'scriptsize'}
+ces <- getBLSFiles("ces", "konczal@gmail.com")
+
+ces %>%
+  filter(seasonal == "S",
+         display_level == 2,
+         # Watch this line:
+         data_type_text == "ALL EMPLOYEES, THOUSANDS") %>%
+  group_by(industry_name) %>%
+  reframe(
+    change = value[date == max(date)] - value[date == max(date) %m-% months(12)]
+  ) %>%
+  mutate(industry_name = fct_reorder(industry_name, change)) %>%
+  ggplot(aes(industry_name, change)) +
+  geom_col() +
+  coord_flip()
+```
+
+###   Example 1: Tidy CES Graphics
+
+```{r ces_jobs_graphic, eval = TRUE, echo = FALSE, fig.align = "center", fig.width = 6.5, fig.height = 3}
+ces %>%
+  filter(seasonal == "S",
+         display_level == 2,
+         data_type_text == "ALL EMPLOYEES, THOUSANDS") %>%
+  group_by(industry_name) %>%
+  reframe(
+    change = value[date == max(date)] - value[date == max(date) %m-% months(12)]
+  ) %>%
+  mutate(industry_name = fct_reorder(industry_name, change)) %>%
+  ggplot(aes(industry_name, change)) +
+  geom_col() +
+  coord_flip() +
+  theme_chartbook()
+```
+
+### Example 1: The Grammar of Graphics Deployed
+
+What if we want to change this to hourly earnings? We just swap one thing, keeping the rest. The process is reusable and auditable.
+
+```{r ces_wages_code, eval = FALSE, echo = TRUE, size = 'scriptsize'}
+# Watch this line:
+# data_type_text == "ALL EMPLOYEES, THOUSANDS")
+data_type_text == "AVERAGE HOURLY EARNINGS OF ALL EMPLOYEES") %>%
+```
+
+```{r ces_wages_graphic2, fig.align = "center", fig.width = 6.5, fig.height = 3}
+ces %>%
+  filter(seasonal == "S",
+         display_level == 2,
+         # Just change me!
+         data_type_text == "AVERAGE HOURLY EARNINGS OF ALL EMPLOYEES") %>%
+  group_by(industry_name) %>%
+  reframe(
+    change = value[date == max(date)] - value[date == max(date) %m-% months(12)]
+  ) %>%
+  mutate(industry_name = fct_reorder(industry_name, change)) %>%
+  ggplot(aes(industry_name, change)) +
+  geom_col() +
+  coord_flip() +
+  theme_chartbook()
+```
+
+### Example 2: The Grammar Deployed on Inflation
+
+More, this tidy nature makes it easier for faceting. BLS tracks inflation price changes for hundreds of items:
+
+```{r ces_tariffs_code, eval = TRUE, echo = TRUE, size = 'scriptsize'}
+tariff_targets <- c(
+  "Appliances",
+  "Transportation commodities less motor fuel",
+  "Apparel",
+  "Household furnishings and supplies",
+  "Laundry equipment")
+
+cpi %>% filter(item_name %in% tariff_targets) %>%
+       select(date, value, item_name) %>% head(5)
+```
+
+### Example 2: Faceting Works Well Here
+
+This kind of data is easy to facet and learn from.
+
+```{r tariff_inflation_graphic, fig.height = 4}
+cpi %>%
+  filter(item_name %in% tariff_targets) %>%
+  group_by(item_name) %>%
+  reframe(date = date,
+          Pchange1 = value/lag(value,1)-1) %>%
+  ggplot(aes(date, Pchange1)) +
+  geom_line(color = "#2c3254") +
+  facet_wrap(~item_name, scales = "free") +
+  geom_hline(yintercept = 0) +
+  theme_chartbook() +
+  scale_y_continuous(label = percent) +
+  theme(
+  strip.text = element_text(size = 8) # change size here
+  )
+
+```
+
+### Example 3: Advanced Visualization on Inflation
+
+BLS’s CPI is built from about 94,000 price quotes each month, organized into more than 200 categories across 8 groups.
+
+Can do distributions of inflation. The Cleveland Fed’s Median CPI is the median change of 45 broad CPI components. Why not go further?
+
+```{r median_inflation_start, size = 'scriptsize', echo=TRUE, eval=FALSE}
+getFRED(cpi = "CPIAUCSL", median_cpi = "MEDCPIM158SFRBCLE")
+```
+
+```{r median_inflation_graphic, size = 'scriptsize', echo=FALSE, eval=TRUE}
+getFRED(cpi = "CPIAUCSL", median_cpi = "MEDCPIM158SFRBCLE", keep_all = FALSE) %>%
+  mutate(median_cpi = median_cpi/100, cpi = cpi/lag(cpi,1), cpi = cpi^12-1) %>%
+  filter(year(date) > 2017) %>%
+  pivot_longer(cpi:median_cpi, names_to = "type", values_to = "value") %>%
+  ggplot(aes(date, value, color=type)) +
+  geom_line() +
+  theme_chartbook() +
+  scale_chartbook_colors() +
+  scale_y_continuous(label=percent)
+
+```
+
+### Example 3: Ggridges to the Rescue!
+
+We can use the distribution of inflation changes to create a ridgeline graphic.
+
+```{r median_inflation_ridgeline, fig.height = 4}
+library(ggridges)
+
+top_cut = 0.85
+bottom_cut = 0.15
+
+quarters_backwards <- (month(max(median_cpi$date)) + c(0, 3, 6, 9) - 1) %% 12 + 1
+
+median_cpi %>%
+  mutate(dateF = as.factor(date)) %>%
+  filter(cumsumN <= top_cut & cumsum >= bottom_cut) %>%
+  filter(date >= "2020-01-01") %>%
+  filter(date != "2020-06-01") %>%
+  filter(date <= "2024-01-01") %>%
+  filter(month(date) %in% quarters_backwards) %>%
+  mutate(monthC = format(date, "%B, %Y")) %>%
+  mutate(monthC = fct_reorder(monthC, date)) %>%
+  mutate(monthCR = fct_rev(monthC)) %>%
+  ggplot(aes(x = Pchange3a, y = monthCR, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  theme_ridges() +
+  scale_x_continuous(labels = percent) +
+  theme_chartbook() +
+  theme(legend.position = "none")
+
+```
+
+### Example 4: The Phillips Curve - Theory
+
+It's easy to deploy modeling and statistics within an R development workflow.
+
+Take the Phillips Curve, a model where inflation is a positive function of demand, proxied by a negative function of unemployment, as well as past and expected future inflation. One formulation is:
+
+$$
+\pi_{t} = \pi_{t-1} + \pi_{t-2} + \pi^{e}_{t} + \beta(u - u^*) + \varepsilon_t
+$$
+
+### Example 4: The Phillips Curve - Theory is hard but automation is easy!
+
+```{r pc_setup, size = 'scriptsize', echo=TRUE}
+library(broom)
+
+phillips_curve <-
+  getFRED(
+    unrate = "UNRATE", core_pce = "PCEPILFE",
+    exp_inf = "EXPINF10YR", keep_all = FALSE) %>%
+  left_join(getFRED("nrou") %>%
+    mutate(date = date %m+% months(2))) %>%
+  mutate(
+    core_pce = (core_pce / lag(core_pce, 3))^4 - 1,
+    exp_inf = exp_inf / 100,
+    unrate_gap = unrate / 100 - nrou / 100,
+    lag1 = lag(core_pce, 3), lag2 = lag(core_pce, 6)) %>%
+  filter(month(date) %in% c(3, 6, 9, 12)) %>%
+  # do Phillips Curve regression pre-COVID and predict
+  {
+    fit <- lm(core_pce ~ lag1 + lag2 + exp_inf + unrate_gap,
+      data = dplyr::filter(., date <= as.Date("2019-12-31"))
+    )
+    augment(fit, newdata = .)
+  }
+
+```
+
+### Example 4: The Phillips Curve - Easy to See
+
+We can estimate the Phillips Curve in real time with each monthly update, and see how it is evolving.
+
+```{r pc_graphic, echo=FALSE}
+phillips_curve %>%
+  select(date, actual = core_pce, predicted = .fitted) %>%
+  pivot_longer(-date, names_to = "series", values_to = "value") %>%
+  filter(year(date)>= 2000) %>%
+  ggplot(aes(date, value, colour = series)) +
+  geom_line(size = 0.9) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Core PCE Inflation: Actual vs Predicted",
+       x = NULL, subtitle = "Quarterly change annualized",
+       colour = NULL) +
+  theme_chartbook() +
+  scale_chartbook_colors()
+```
+
+### Example 5: Other data services
+
+R's libraries make a lot of government data easily accessible:
+
+-   **blsR** – BLS API (CES, CPS, CPI, JOLTS, more)\
+-   **bea.R** – BEA national, industry, and regional accounts\
+-   **fredr** – Federal Reserve Economic Data (FRED & ALFRED)\
+-   **tidycensus** – Census ACS & Decennial Census, with geometry\
+-   **ipumsr** – Load IPUMS ACS/CPS microdata extracts\
+-   **eia** – U.S. Energy Information Administration data
+
+### Example 5: Other Data Sources
+
+BLS provides employment data for nearly 400 metropolitan statistical areas (MSA). What can we link this with?
+
+```{r se_data, size = 'scriptsize', eval = TRUE, echo = TRUE}
+library(tidycensus)
+
+se %>% select(date, value, data_type_text, area_name) %>%
+  head(5)
+
+```
+
+### Example 5: Join New Government Data
+
+Tidycensus, for instance, makes it very easy to get MSA-level data. With a pinch of text wrangling, easy to join foreign-born share into BLS data.
+
+```{r immigration_msa_text, size = 'scriptsize', eval = TRUE, echo = TRUE}
+library(tidycensus)
+
+vars_b05002 <- c(total = "B05002_001", foreign_born = "B05002_013")
+
+msa_foreign_born <- get_acs(geography = "cbsa", variables = vars_b05002,
+                  year = 2023, survey = "acs1", output = "wide") %>%
+  reframe(cbsa = GEOID, name = NAME, fb_share = foreign_bornE / totalE)
+
+head(msa_foreign_born, 5)
+```
+
+### Example 5: Easy to Work Into Workflows
+
+```{r immigration_msa_graphic, size = 'scriptsize', eval = TRUE, echo = FALSE, fig.height = 4}
+state_lookup <- c(setNames(state.name, state.abb), PR = "Puerto Rico")
+
+msa_fb2 <- msa_foreign_born %>%
+  mutate(
+    area_type = str_extract(name, "Metro Area|Micro Area"),
+    state_abbr = str_extract(name, ", [A-Z]{2}") %>% str_remove(", "),
+    state = state_lookup[state_abbr],
+    msa_name = str_remove(name, ", [A-Z]{2} .*"),
+    area_name = str_c(msa_name, ", ", state_abbr)
+  )
+
+crosswalk <- read_csv("data/msa_crosswalk.csv")
+
+msa_level <- se %>% filter(supersector_name == "Total Private",
+                                data_type_text == "All Employees, In Thousands",
+                                area_name != "Statewide",
+                                seasonal == "U",
+                                period != "M13") %>%
+  inner_join(msa_fb2, by = "area_name")
+
+max_date <- max(msa_level$date)
+
+msa_imm <- msa_level %>%
+  group_by(area_name) %>%
+  reframe(change_2025 = value[date == max_date]/value[date == max_date %m-% months(6)] - 1,
+          percent_immigrant = unique(fb_share)
+  )
+
+msa_imm %>%
+  ggplot(aes(percent_immigrant, change_2025)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_chartbook() +
+  scale_y_continuous(labels = percent) +
+  scale_x_continuous(labels = percent) +
+  labs(x = "Percent foreign-born in 2023",
+       y = "Change in job growth in 2025",
+       subtitle = "2025 Job Growth versus Percent-Foreign Born 2023, 348 MSA Regions") +
+  theme(
+    axis.title.x = element_text(),
+    axis.title.y = element_text(angle = 90)
+  ) +
+  geom_hline(yintercept = 0)
+  
+
+
+
+```
+
+
+### Go Forth and R!
+
+4 Reasons to use R for real-time economic data analysis:
+
+1. Tidy Data Workflow
+
+2. Grammar of Graphics
+
+3. Integrated Modeling
+
+4. Extensive Libraries

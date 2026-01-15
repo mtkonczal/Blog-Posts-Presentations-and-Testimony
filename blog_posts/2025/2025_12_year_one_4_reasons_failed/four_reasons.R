@@ -53,7 +53,8 @@ df %>%
   theme(
     legend.position = "right",
     panel.grid.major.x = element_blank(),
-    plot.title.position = "plot"
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold", size = 16),
   ) +
   scale_x_date(
     date_labels = "%b\n%Y",
@@ -134,7 +135,7 @@ df_cleaned %>%
   theme(
     legend.position = "none",
     plot.title.position = "plot", # Aligns title to the left edge of the plot
-    plot.title = element_text(face = "bold", size = 16),
+    plot.title = element_text(face = "bold", size = 20),
     strip.text = element_text(face = "bold", size = 11), # Nicer facet titles
     panel.grid.minor = element_blank()
   )

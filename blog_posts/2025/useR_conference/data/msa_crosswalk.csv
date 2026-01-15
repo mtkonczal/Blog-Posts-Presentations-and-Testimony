@@ -1,0 +1,433 @@
+
+bls_area_name,bls_target,census_area_name,match_score,method
+"Anniston-Oxford, AL","Anniston-Oxford, AL","Anniston-Oxford, AL",100.0,exact
+"Auburn-Opelika, AL","Auburn-Opelika, AL","Auburn-Opelika, AL",100.0,exact
+"Birmingham, AL","Birmingham, AL","Birmingham, AL",100.0,exact
+"Daphne-Fairhope-Foley, AL","Daphne-Fairhope-Foley, AL","Daphne-Fairhope-Foley, AL",100.0,exact
+"Decatur, AL","Decatur, AL","Decatur, AL",100.0,exact
+"Dothan, AL","Dothan, AL","Dothan, AL",100.0,exact
+"Florence-Muscle Shoals, AL","Florence-Muscle Shoals, AL","Florence-Muscle Shoals, AL",100.0,exact
+"Gadsden, AL","Gadsden, AL","Gadsden, AL",100.0,exact
+"Huntsville, AL","Huntsville, AL","Huntsville, AL",100.0,exact
+"Mobile, AL","Mobile, AL","Mobile, AL",100.0,exact
+"Montgomery, AL","Montgomery, AL","Montgomery, AL",100.0,exact
+"Tuscaloosa, AL","Tuscaloosa, AL","Tuscaloosa, AL",100.0,exact
+"Anchorage, AK","Anchorage, AK","Anchorage, AK",100.0,exact
+"Fairbanks-College, AK","Fairbanks-College, AK","Fairbanks-College, AK",100.0,exact
+"Flagstaff, AZ","Flagstaff, AZ","Flagstaff, AZ",100.0,exact
+"Lake Havasu City-Kingman, AZ","Lake Havasu City-Kingman, AZ","Lake Havasu City-Kingman, AZ",100.0,exact
+"Phoenix-Mesa-Chandler, AZ","Phoenix-Mesa-Chandler, AZ","Phoenix-Mesa-Chandler, AZ",100.0,exact
+"Prescott Valley-Prescott, AZ","Prescott Valley-Prescott, AZ","Prescott Valley-Prescott, AZ",100.0,exact
+"Sierra Vista-Douglas, AZ","Sierra Vista-Douglas, AZ","Sierra Vista-Douglas, AZ",100.0,exact
+"Tucson, AZ","Tucson, AZ","Tucson, AZ",100.0,exact
+"Yuma, AZ","Yuma, AZ","Yuma, AZ",100.0,exact
+"Fayetteville-Springdale-Rogers, AR","Fayetteville-Springdale-Rogers, AR","Fayetteville-Springdale-Rogers, AR",100.0,exact
+"Fort Smith, AR-OK","Fort Smith, AR-OK","Fort Smith, AR-OK Metro Area, AR",100.0,add metro area
+"Hot Springs, AR","Hot Springs, AR","Hot Springs, AR",100.0,exact
+"Jonesboro, AR","Jonesboro, AR","Jonesboro, AR",100.0,exact
+"Little Rock-North Little Rock-Conway, AR","Little Rock-North Little Rock-Conway, AR","Little Rock-North Little Rock-Conway, AR",100.0,exact
+"Anaheim-Santa Ana-Irvine, CA Metropolitan Division","Los Angeles-Long Beach-Anaheim, CA","Los Angeles-Long Beach-Anaheim, CA",100.0,exact
+"Bakersfield-Delano, CA","Bakersfield-Delano, CA","Bakersfield-Delano, CA",100.0,exact
+"Chico, CA","Chico, CA","Chico, CA",100.0,exact
+"El Centro, CA","El Centro, CA","El Centro, CA",100.0,exact
+"Fresno, CA","Fresno, CA","Fresno, CA",100.0,exact
+"Hanford-Corcoran, CA","Hanford-Corcoran, CA","Hanford-Corcoran, CA",100.0,exact
+"Los Angeles-Long Beach-Anaheim, CA","Los Angeles-Long Beach-Anaheim, CA","Los Angeles-Long Beach-Anaheim, CA",100.0,exact
+"Los Angeles-Long Beach-Glendale, CA Metropolitan Division","Los Angeles-Long Beach-Anaheim, CA","Los Angeles-Long Beach-Anaheim, CA",100.0,exact
+"Merced, CA","Merced, CA","Merced, CA",100.0,exact
+"Modesto, CA","Modesto, CA","Modesto, CA",100.0,exact
+"Napa, CA","Napa, CA","Napa, CA",100.0,exact
+"Oakland-Fremont-Berkeley, CA Metropolitan Division","San Francisco-Oakland-Fremont, CA","San Francisco-Oakland-Fremont, CA",100.0,exact
+"Oxnard-Thousand Oaks-Ventura, CA","Oxnard-Thousand Oaks-Ventura, CA","Oxnard-Thousand Oaks-Ventura, CA",100.0,exact
+"Redding, CA","Redding, CA","Redding, CA",100.0,exact
+"Riverside-San Bernardino-Ontario, CA","Riverside-San Bernardino-Ontario, CA","Riverside-San Bernardino-Ontario, CA",100.0,exact
+"Sacramento-Roseville-Folsom, CA","Sacramento-Roseville-Folsom, CA","Sacramento-Roseville-Folsom, CA",100.0,exact
+"Salinas, CA","Salinas, CA","Salinas, CA",100.0,exact
+"San Diego-Chula Vista-Carlsbad, CA","San Diego-Chula Vista-Carlsbad, CA","San Diego-Chula Vista-Carlsbad, CA",100.0,exact
+"San Francisco-Oakland-Fremont, CA","San Francisco-Oakland-Fremont, CA","San Francisco-Oakland-Fremont, CA",100.0,exact
+"San Francisco-San Mateo-Redwood City, CA Metropolitan Division","San Francisco-Oakland-Fremont, CA","San Francisco-Oakland-Fremont, CA",100.0,exact
+"San Jose-Sunnyvale-Santa Clara, CA","San Jose-Sunnyvale-Santa Clara, CA","San Jose-Sunnyvale-Santa Clara, CA",100.0,exact
+"San Luis Obispo-Paso Robles, CA","San Luis Obispo-Paso Robles, CA","San Luis Obispo-Paso Robles, CA",100.0,exact
+"San Rafael, CA Metropolitan Division","San Francisco-Oakland-Fremont, CA","San Francisco-Oakland-Fremont, CA",100.0,exact
+"Santa Cruz-Watsonville, CA","Santa Cruz-Watsonville, CA","Santa Cruz-Watsonville, CA",100.0,exact
+"Santa Maria-Santa Barbara, CA","Santa Maria-Santa Barbara, CA","Santa Maria-Santa Barbara, CA",100.0,exact
+"Santa Rosa-Petaluma, CA","Santa Rosa-Petaluma, CA","Santa Rosa-Petaluma, CA",100.0,exact
+"Stockton-Lodi, CA","Stockton-Lodi, CA","Stockton-Lodi, CA",100.0,exact
+"Vallejo, CA","Vallejo, CA","Vallejo, CA",100.0,exact
+"Visalia, CA","Visalia, CA","Visalia, CA",100.0,exact
+"Yuba City, CA","Yuba City, CA","Yuba City, CA",100.0,exact
+"Boulder, CO","Boulder, CO","Boulder, CO",100.0,exact
+"Colorado Springs, CO","Colorado Springs, CO","Colorado Springs, CO",100.0,exact
+"Denver-Aurora-Centennial, CO","Denver-Aurora-Centennial, CO","Denver-Aurora-Centennial, CO",100.0,exact
+"Fort Collins-Loveland, CO","Fort Collins-Loveland, CO","Fort Collins-Loveland, CO",100.0,exact
+"Grand Junction, CO","Grand Junction, CO","Grand Junction, CO",100.0,exact
+"Greeley, CO","Greeley, CO","Greeley, CO",100.0,exact
+"Pueblo, CO","Pueblo, CO","Pueblo, CO",100.0,exact
+"Bridgeport-Stamford-Danbury, CT","Bridgeport-Stamford-Danbury, CT","Bridgeport-Stamford-Danbury, CT",100.0,exact
+"Hartford-West Hartford-East Hartford, CT","Hartford-West Hartford-East Hartford, CT","Hartford-West Hartford-East Hartford, CT",100.0,exact
+"New Haven, CT","New Haven, CT","New Haven, CT",100.0,exact
+"Norwich-New London-Willimantic, CT","Norwich-New London-Willimantic, CT","Norwich-New London-Willimantic, CT",100.0,exact
+"Waterbury-Shelton, CT","Waterbury-Shelton, CT","Waterbury-Shelton, CT",100.0,exact
+"Dover, DE","Dover, DE","Dover, DE",100.0,exact
+"Wilmington, DE-MD-NJ Metropolitan Division","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area, PA",100.0,add metro area
+"Washington, DC-MD Metropolitan Division","Washington-Arlington-Alexandria, DC-VA-MD-WV","Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area, DC",100.0,add metro area
+"Washington-Arlington-Alexandria, DC-VA-MD-WV","Washington-Arlington-Alexandria, DC-VA-MD-WV","Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area, DC",100.0,add metro area
+"Cape Coral-Fort Myers, FL","Cape Coral-Fort Myers, FL","Cape Coral-Fort Myers, FL",100.0,exact
+"Crestview-Fort Walton Beach-Destin, FL","Crestview-Fort Walton Beach-Destin, FL","Crestview-Fort Walton Beach-Destin, FL",100.0,exact
+"Deltona-Daytona Beach-Ormond Beach, FL","Deltona-Daytona Beach-Ormond Beach, FL","Deltona-Daytona Beach-Ormond Beach, FL",100.0,exact
+"Fort Lauderdale-Pompano Beach-Sunrise, FL Metropolitan Division","Miami-Fort Lauderdale-West Palm Beach, FL","Miami-Fort Lauderdale-West Palm Beach, FL",100.0,exact
+"Gainesville, FL","Gainesville, FL","Gainesville, FL",100.0,exact
+"Homosassa Springs, FL","Homosassa Springs, FL","Homosassa Springs, FL",100.0,exact
+"Jacksonville, FL","Jacksonville, FL","Jacksonville, FL",100.0,exact
+"Lakeland-Winter Haven, FL","Lakeland-Winter Haven, FL","Lakeland-Winter Haven, FL",100.0,exact
+"Miami-Fort Lauderdale-West Palm Beach, FL","Miami-Fort Lauderdale-West Palm Beach, FL","Miami-Fort Lauderdale-West Palm Beach, FL",100.0,exact
+"Miami-Miami Beach-Kendall, FL Metropolitan Division","Miami-Fort Lauderdale-West Palm Beach, FL","Miami-Fort Lauderdale-West Palm Beach, FL",100.0,exact
+"Naples-Marco Island, FL","Naples-Marco Island, FL","Naples-Marco Island, FL",100.0,exact
+"North Port-Bradenton-Sarasota, FL","North Port-Bradenton-Sarasota, FL","North Port-Bradenton-Sarasota, FL",100.0,exact
+"Ocala, FL","Ocala, FL","Ocala, FL",100.0,exact
+"Orlando-Kissimmee-Sanford, FL","Orlando-Kissimmee-Sanford, FL","Orlando-Kissimmee-Sanford, FL",100.0,exact
+"Palm Bay-Melbourne-Titusville, FL","Palm Bay-Melbourne-Titusville, FL","Palm Bay-Melbourne-Titusville, FL",100.0,exact
+"Panama City-Panama City Beach, FL","Panama City-Panama City Beach, FL","Panama City-Panama City Beach, FL",100.0,exact
+"Pensacola-Ferry Pass-Brent, FL","Pensacola-Ferry Pass-Brent, FL","Pensacola-Ferry Pass-Brent, FL",100.0,exact
+"Port St. Lucie, FL","Port St. Lucie, FL","Port St. Lucie, FL",100.0,exact
+"Punta Gorda, FL","Punta Gorda, FL","Punta Gorda, FL",100.0,exact
+"St. Petersburg-Clearwater-Largo, FL Metropolitan Division","Tampa-St. Petersburg-Clearwater, FL","Tampa-St. Petersburg-Clearwater, FL",100.0,exact
+"Sebastian-Vero Beach-West Vero Corridor, FL","Sebastian-Vero Beach-West Vero Corridor, FL","Sebastian-Vero Beach-West Vero Corridor, FL",100.0,exact
+"Sebring, FL","Sebring, FL","Sebring, FL",100.0,exact
+"Tallahassee, FL","Tallahassee, FL","Tallahassee, FL",100.0,exact
+"Tampa, FL Metropolitan Division","Tampa-St. Petersburg-Clearwater, FL","Tampa-St. Petersburg-Clearwater, FL",100.0,exact
+"Tampa-St. Petersburg-Clearwater, FL","Tampa-St. Petersburg-Clearwater, FL","Tampa-St. Petersburg-Clearwater, FL",100.0,exact
+"West Palm Beach-Boca Raton-Delray Beach, FL Metropolitan Division","Miami-Fort Lauderdale-West Palm Beach, FL","Miami-Fort Lauderdale-West Palm Beach, FL",100.0,exact
+"Wildwood-The Villages, FL","Wildwood-The Villages, FL","Wildwood-The Villages, FL",100.0,exact
+"Albany, GA","Albany, GA","Albany, GA",100.0,exact
+"Athens-Clarke County, GA","Athens-Clarke County, GA","Athens-Clarke County, GA",100.0,exact
+"Atlanta-Sandy Springs-Roswell, GA Metropolitan Division","Atlanta-Sandy Springs-Roswell, GA","Atlanta-Sandy Springs-Roswell, GA",100.0,exact
+"Atlanta-Sandy Springs-Roswell, GA","Atlanta-Sandy Springs-Roswell, GA","Atlanta-Sandy Springs-Roswell, GA",100.0,exact
+"Augusta-Richmond County, GA-SC","Augusta-Richmond County, GA-SC","Augusta-Richmond County, GA-SC Metro Area, GA",100.0,add metro area
+"Brunswick-St. Simons, GA","Brunswick-St. Simons, GA","Brunswick-St. Simons, GA",100.0,exact
+"Columbus, GA-AL","Columbus, GA-AL","Columbus, GA-AL Metro Area, GA",100.0,add metro area
+"Dalton, GA","Dalton, GA","Dalton, GA",100.0,exact
+"Gainesville, GA","Gainesville, GA","Gainesville, GA",100.0,exact
+"Hinesville, GA","Hinesville, GA","Hinesville, GA",100.0,exact
+"Macon-Bibb County, GA","Macon-Bibb County, GA","Macon-Bibb County, GA",100.0,exact
+"Marietta, GA Metropolitan Division","Atlanta-Sandy Springs-Roswell, GA","Atlanta-Sandy Springs-Roswell, GA",100.0,exact
+"Rome, GA","Rome, GA","Rome, GA",100.0,exact
+"Savannah, GA","Savannah, GA","Savannah, GA",100.0,exact
+"Valdosta, GA","Valdosta, GA","Valdosta, GA",100.0,exact
+"Warner Robins, GA","Warner Robins, GA","Warner Robins, GA",100.0,exact
+"Kahului-Wailuku, HI","Kahului-Wailuku, HI","Kahului-Wailuku, HI",100.0,exact
+"Urban Honolulu, HI","Urban Honolulu, HI","Urban Honolulu, HI",100.0,exact
+"Boise City, ID","Boise City, ID","Boise City, ID",100.0,exact
+"Coeur d'Alene, ID","Coeur d'Alene, ID","Coeur d'Alene, ID",100.0,exact
+"Idaho Falls, ID","Idaho Falls, ID","Idaho Falls, ID",100.0,exact
+"Lewiston, ID-WA","Lewiston, ID-WA","Lewiston, ID-WA Metro Area, ID",100.0,add metro area
+"Pocatello, ID","Pocatello, ID","Pocatello, ID",100.0,exact
+"Twin Falls, ID","Twin Falls, ID","Twin Falls, ID",100.0,exact
+"Bloomington, IL","Bloomington, IL","Bloomington, IL",100.0,exact
+"Champaign-Urbana, IL","Champaign-Urbana, IL","Champaign-Urbana, IL",100.0,exact
+"Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN Metro Area, IL",100.0,add metro area
+"Chicago-Naperville-Schaumburg, IL Metropolitan Division","Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN Metro Area, IL",100.0,add metro area
+"Decatur, IL","Decatur, IL","Decatur, IL",100.0,exact
+"Elgin, IL Metropolitan Division","Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN Metro Area, IL",100.0,add metro area
+"Kankakee, IL","Kankakee, IL","Kankakee, IL",100.0,exact
+"Lake County, IL Metropolitan Division","Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN Metro Area, IL",100.0,add metro area
+"Peoria, IL","Peoria, IL","Peoria, IL",100.0,exact
+"Rockford, IL","Rockford, IL","Rockford, IL",100.0,exact
+"Springfield, IL","Springfield, IL","Springfield, IL",100.0,exact
+"Bloomington, IN","Bloomington, IN","Bloomington, IN",100.0,exact
+"Columbus, IN","Columbus, IN","Columbus, IN",100.0,exact
+"Elkhart-Goshen, IN","Elkhart-Goshen, IN","Elkhart-Goshen, IN",100.0,exact
+"Evansville, IN","Evansville, IN","Evansville, IN",100.0,exact
+"Fort Wayne, IN","Fort Wayne, IN","Fort Wayne, IN",100.0,exact
+"Indianapolis-Carmel-Greenwood, IN","Indianapolis-Carmel-Greenwood, IN","Indianapolis-Carmel-Greenwood, IN",100.0,exact
+"Kokomo, IN","Kokomo, IN","Kokomo, IN",100.0,exact
+"Lafayette-West Lafayette, IN","Lafayette-West Lafayette, IN","Lafayette-West Lafayette, IN",100.0,exact
+"Lake County-Porter County-Jasper County, IN Metropolitan Division","Chicago-Naperville-Elgin, IL-IN","Chicago-Naperville-Elgin, IL-IN Metro Area, IL",100.0,add metro area
+"Michigan City-La Porte, IN","Michigan City-La Porte, IN","Michigan City-La Porte, IN",100.0,exact
+"Muncie, IN","Muncie, IN","Muncie, IN",100.0,exact
+"South Bend-Mishawaka, IN-MI","South Bend-Mishawaka, IN-MI","South Bend-Mishawaka, IN-MI Metro Area, IN",100.0,add metro area
+"Terre Haute, IN","Terre Haute, IN","Terre Haute, IN",100.0,exact
+"Ames, IA","Ames, IA","Ames, IA",100.0,exact
+"Cedar Rapids, IA","Cedar Rapids, IA","Cedar Rapids, IA",100.0,exact
+"Davenport-Moline-Rock Island, IA-IL","Davenport-Moline-Rock Island, IA-IL","Davenport-Moline-Rock Island, IA-IL Metro Area, IA",100.0,add metro area
+"Des Moines-West Des Moines, IA","Des Moines-West Des Moines, IA","Des Moines-West Des Moines, IA",100.0,exact
+"Dubuque, IA","Dubuque, IA","Dubuque, IA",100.0,exact
+"Iowa City, IA","Iowa City, IA","Iowa City, IA",100.0,exact
+"Sioux City, IA-NE-SD","Sioux City, IA-NE-SD","Sioux City, IA-NE-SD Metro Area, IA",100.0,add metro area
+"Waterloo-Cedar Falls, IA","Waterloo-Cedar Falls, IA","Waterloo-Cedar Falls, IA",100.0,exact
+"Lawrence, KS","Lawrence, KS","Lawrence, KS",100.0,exact
+"Manhattan, KS","Manhattan, KS","Manhattan, KS",100.0,exact
+"Topeka, KS","Topeka, KS","Topeka, KS",100.0,exact
+"Wichita, KS","Wichita, KS","Wichita, KS",100.0,exact
+"Bowling Green, KY","Bowling Green, KY","Bowling Green, KY",100.0,exact
+"Elizabethtown, KY","Elizabethtown, KY","Elizabethtown, KY",100.0,exact
+"Lexington-Fayette, KY","Lexington-Fayette, KY","Lexington-Fayette, KY",100.0,exact
+"Louisville/Jefferson County, KY-IN","Louisville/Jefferson County, KY-IN","Louisville/Jefferson County, KY-IN Metro Area, KY",100.0,add metro area
+"Owensboro, KY","Owensboro, KY","Owensboro, KY",100.0,exact
+"Paducah, KY-IL","Paducah, KY-IL","Paducah, KY-IL Metro Area, KY",100.0,add metro area
+"Alexandria, LA","Alexandria, LA","Alexandria, LA",100.0,exact
+"Baton Rouge, LA","Baton Rouge, LA","Baton Rouge, LA",100.0,exact
+"Hammond, LA","Hammond, LA","Hammond, LA",100.0,exact
+"Houma-Bayou Cane-Thibodaux, LA","Houma-Bayou Cane-Thibodaux, LA","Houma-Bayou Cane-Thibodaux, LA",100.0,exact
+"Lafayette, LA","Lafayette, LA","Lafayette, LA",100.0,exact
+"Lake Charles, LA","Lake Charles, LA","Lake Charles, LA",100.0,exact
+"Monroe, LA","Monroe, LA","Monroe, LA",100.0,exact
+"New Orleans-Metairie, LA","New Orleans-Metairie, LA","New Orleans-Metairie, LA",100.0,exact
+"Shreveport-Bossier City, LA","Shreveport-Bossier City, LA","Shreveport-Bossier City, LA",100.0,exact
+"Slidell-Mandeville-Covington, LA","Slidell-Mandeville-Covington, LA","Slidell-Mandeville-Covington, LA",100.0,exact
+"Bangor, ME","Bangor, ME","Bangor, ME",100.0,exact
+"Lewiston-Auburn, ME","Lewiston-Auburn, ME","Lewiston-Auburn, ME",100.0,exact
+"Portland-South Portland, ME","Portland-South Portland, ME","Portland-South Portland, ME",100.0,exact
+"Baltimore-Columbia-Towson, MD","Baltimore-Columbia-Towson, MD","Baltimore-Columbia-Towson, MD",100.0,exact
+"Frederick-Gaithersburg-Bethesda, MD Metropolitan Division","Washington-Arlington-Alexandria, DC-VA-MD-WV","Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area, DC",100.0,add metro area
+"Hagerstown-Martinsburg, MD-WV","Hagerstown-Martinsburg, MD-WV","Hagerstown-Martinsburg, MD-WV Metro Area, MD",100.0,add metro area
+"Lexington Park, MD","Lexington Park, MD","Lexington Park, MD",100.0,exact
+"Salisbury, MD","Salisbury, MD","Salisbury, MD",100.0,exact
+"Amherst Town-Northampton, MA","Amherst Town-Northampton, MA","Amherst Town-Northampton, MA",100.0,exact
+"Barnstable Town, MA","Barnstable Town, MA","Barnstable Town, MA",100.0,exact
+"Boston, MA Metropolitan Division","Boston-Cambridge-Newton, MA-NH","Boston-Cambridge-Newton, MA-NH Metro Area, MA",100.0,add metro area
+"Boston-Cambridge-Newton, MA-NH","Boston-Cambridge-Newton, MA-NH","Boston-Cambridge-Newton, MA-NH Metro Area, MA",100.0,add metro area
+"Cambridge-Newton-Framingham, MA Metropolitan Division","Boston-Cambridge-Newton, MA-NH","Boston-Cambridge-Newton, MA-NH Metro Area, MA",100.0,add metro area
+"Pittsfield, MA","Pittsfield, MA","Pittsfield, MA",100.0,exact
+"Springfield, MA","Springfield, MA","Springfield, MA",100.0,exact
+"Worcester, MA","Worcester, MA","Worcester, MA",100.0,exact
+"Ann Arbor, MI","Ann Arbor, MI","Ann Arbor, MI",100.0,exact
+"Battle Creek, MI","Battle Creek, MI","Battle Creek, MI",100.0,exact
+"Bay City, MI","Bay City, MI","Bay City, MI",100.0,exact
+"Detroit-Dearborn-Livonia, MI Metropolitan Division","Detroit-Warren-Dearborn, MI","Detroit-Warren-Dearborn, MI",100.0,exact
+"Detroit-Warren-Dearborn, MI","Detroit-Warren-Dearborn, MI","Detroit-Warren-Dearborn, MI",100.0,exact
+"Flint, MI","Flint, MI","Flint, MI",100.0,exact
+"Grand Rapids-Wyoming-Kentwood, MI","Grand Rapids-Wyoming-Kentwood, MI","Grand Rapids-Wyoming-Kentwood, MI",100.0,exact
+"Jackson, MI","Jackson, MI","Jackson, MI",100.0,exact
+"Kalamazoo-Portage, MI","Kalamazoo-Portage, MI","Kalamazoo-Portage, MI",100.0,exact
+"Lansing-East Lansing, MI","Lansing-East Lansing, MI","Lansing-East Lansing, MI",100.0,exact
+"Midland, MI","Midland, MI","Midland, MI",100.0,exact
+"Monroe, MI","Monroe, MI","Monroe, MI",100.0,exact
+"Muskegon-Norton Shores, MI","Muskegon-Norton Shores, MI","Muskegon-Norton Shores, MI",100.0,exact
+"Niles, MI","Niles, MI","Niles, MI",100.0,exact
+"Saginaw, MI","Saginaw, MI","Saginaw, MI",100.0,exact
+"Traverse City, MI","Traverse City, MI","Traverse City, MI",100.0,exact
+"Warren-Troy-Farmington Hills, MI Metropolitan Division","Detroit-Warren-Dearborn, MI","Detroit-Warren-Dearborn, MI",100.0,exact
+"Duluth, MN-WI","Duluth, MN-WI","Duluth, MN-WI Metro Area, MN",100.0,add metro area
+"Mankato, MN","Mankato, MN","Mankato, MN",100.0,exact
+"Minneapolis-St. Paul-Bloomington, MN-WI","Minneapolis-St. Paul-Bloomington, MN-WI","Minneapolis-St. Paul-Bloomington, MN-WI Metro Area, MN",100.0,add metro area
+"Rochester, MN","Rochester, MN","Rochester, MN",100.0,exact
+"St. Cloud, MN","St. Cloud, MN","St. Cloud, MN",100.0,exact
+"Gulfport-Biloxi, MS","Gulfport-Biloxi, MS","Gulfport-Biloxi, MS",100.0,exact
+"Hattiesburg, MS","Hattiesburg, MS","Hattiesburg, MS",100.0,exact
+"Jackson, MS","Jackson, MS","Jackson, MS",100.0,exact
+"Cape Girardeau, MO-IL","Cape Girardeau, MO-IL","Cape Girardeau, MO-IL Metro Area, MO",100.0,add metro area
+"Columbia, MO","Columbia, MO","Columbia, MO",100.0,exact
+"Jefferson City, MO","Jefferson City, MO","Jefferson City, MO",100.0,exact
+"Joplin, MO-KS","Joplin, MO-KS","Joplin, MO-KS Metro Area, MO",100.0,add metro area
+"Kansas City, MO-KS","Kansas City, MO-KS","Kansas City, MO-KS Metro Area, MO",100.0,add metro area
+"St. Joseph, MO-KS","St. Joseph, MO-KS","St. Joseph, MO-KS Metro Area, MO",100.0,add metro area
+"St. Louis, MO-IL","St. Louis, MO-IL","St. Louis, MO-IL Metro Area, MO",100.0,add metro area
+"Springfield, MO","Springfield, MO","Springfield, MO",100.0,exact
+"Billings, MT","Billings, MT","Billings, MT",100.0,exact
+"Bozeman, MT","Bozeman, MT","Bozeman, MT",100.0,exact
+"Great Falls, MT","Great Falls, MT","Great Falls, MT",100.0,exact
+"Helena, MT","Helena, MT","Helena, MT",100.0,exact
+"Missoula, MT","Missoula, MT","Missoula, MT",100.0,exact
+"Grand Island, NE","Grand Island, NE","Grand Island, NE",100.0,exact
+"Lincoln, NE","Lincoln, NE","Lincoln, NE",100.0,exact
+"Omaha, NE-IA","Omaha, NE-IA","Omaha, NE-IA Metro Area, NE",100.0,add metro area
+"Carson City, NV","Carson City, NV","Carson City, NV",100.0,exact
+"Las Vegas-Henderson-North Las Vegas, NV","Las Vegas-Henderson-North Las Vegas, NV","Las Vegas-Henderson-North Las Vegas, NV",100.0,exact
+"Reno, NV","Reno, NV","Reno, NV",100.0,exact
+"Manchester-Nashua, NH","Manchester-Nashua, NH","Manchester-Nashua, NH",100.0,exact
+"Rockingham County-Strafford County, NH Metropolitan Division","Boston-Cambridge-Newton, MA-NH","Boston-Cambridge-Newton, MA-NH Metro Area, MA",100.0,add metro area
+"Atlantic City-Hammonton, NJ","Atlantic City-Hammonton, NJ","Atlantic City-Hammonton, NJ",100.0,exact
+"Camden, NJ Metropolitan Division","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area, PA",100.0,add metro area
+"Lakewood-New Brunswick, NJ Metropolitan Division","New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,add metro area
+"Newark, NJ Metropolitan Division","New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,add metro area
+"Trenton-Princeton, NJ","Trenton-Princeton, NJ","Trenton-Princeton, NJ",100.0,exact
+"Vineland, NJ","Vineland, NJ","Vineland, NJ",100.0,exact
+"Albuquerque, NM","Albuquerque, NM","Albuquerque, NM",100.0,exact
+"Farmington, NM","Farmington, NM","Farmington, NM",100.0,exact
+"Las Cruces, NM","Las Cruces, NM","Las Cruces, NM",100.0,exact
+"Santa Fe, NM","Santa Fe, NM","Santa Fe, NM",100.0,exact
+"Albany-Schenectady-Troy, NY","Albany-Schenectady-Troy, NY","Albany-Schenectady-Troy, NY",100.0,exact
+"Binghamton, NY","Binghamton, NY","Binghamton, NY",100.0,exact
+"Buffalo-Cheektowaga, NY","Buffalo-Cheektowaga, NY","Buffalo-Cheektowaga, NY",100.0,exact
+"Elmira, NY","Elmira, NY","Elmira, NY",100.0,exact
+"Glens Falls, NY","Glens Falls, NY","Glens Falls, NY",100.0,exact
+"Ithaca, NY","Ithaca, NY","Ithaca, NY",100.0,exact
+"Kingston, NY","Kingston, NY","Kingston, NY",100.0,exact
+"Kiryas Joel-Poughkeepsie-Newburgh, NY","Kiryas Joel-Poughkeepsie-Newburgh, NY","Kiryas Joel-Poughkeepsie-Newburgh, NY",100.0,exact
+"Nassau County-Suffolk County, NY Metropolitan Division","New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,add metro area
+"New York-Jersey City-White Plains, NY-NJ Metropolitan Division","New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,add metro area
+"New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,add metro area
+"Rochester, NY","Rochester, NY","Rochester, NY",100.0,exact
+"Syracuse, NY","Syracuse, NY","Syracuse, NY",100.0,exact
+"Utica-Rome, NY","Utica-Rome, NY","Utica-Rome, NY",100.0,exact
+"Watertown-Fort Drum, NY","Watertown-Fort Drum, NY","Watertown-Fort Drum, NY",100.0,exact
+"New York City, NY","New York City, NY","New York-Newark-Jersey City, NY-NJ Metro Area, NY",100.0,fuzzy
+"Asheville, NC","Asheville, NC","Asheville, NC",100.0,exact
+"Burlington, NC","Burlington, NC","Burlington, NC",100.0,exact
+"Charlotte-Concord-Gastonia, NC-SC","Charlotte-Concord-Gastonia, NC-SC","Charlotte-Concord-Gastonia, NC-SC Metro Area, NC",100.0,add metro area
+"Durham-Chapel Hill, NC","Durham-Chapel Hill, NC","Durham-Chapel Hill, NC",100.0,exact
+"Fayetteville, NC","Fayetteville, NC","Fayetteville, NC",100.0,exact
+"Goldsboro, NC","Goldsboro, NC","Goldsboro, NC",100.0,exact
+"Greensboro-High Point, NC","Greensboro-High Point, NC","Greensboro-High Point, NC",100.0,exact
+"Greenville, NC","Greenville, NC","Greenville, NC",100.0,exact
+"Hickory-Lenoir-Morganton, NC","Hickory-Lenoir-Morganton, NC","Hickory-Lenoir-Morganton, NC",100.0,exact
+"Jacksonville, NC","Jacksonville, NC","Jacksonville, NC",100.0,exact
+"Pinehurst-Southern Pines, NC","Pinehurst-Southern Pines, NC","Pinehurst-Southern Pines, NC",100.0,exact
+"Raleigh-Cary, NC","Raleigh-Cary, NC","Raleigh-Cary, NC",100.0,exact
+"Rocky Mount, NC","Rocky Mount, NC","Rocky Mount, NC",100.0,exact
+"Wilmington, NC","Wilmington, NC","Wilmington, NC",100.0,exact
+"Winston-Salem, NC","Winston-Salem, NC","Winston-Salem, NC",100.0,exact
+"Bismarck, ND","Bismarck, ND","Bismarck, ND",100.0,exact
+"Fargo, ND-MN","Fargo, ND-MN","Fargo, ND-MN Metro Area, ND",100.0,add metro area
+"Grand Forks, ND-MN","Grand Forks, ND-MN","Grand Forks, ND-MN Metro Area, ND",100.0,add metro area
+"Minot, ND","Minot, ND","Minot, ND",100.0,exact
+"Akron, OH","Akron, OH","Akron, OH",100.0,exact
+"Canton-Massillon, OH","Canton-Massillon, OH","Canton-Massillon, OH",100.0,exact
+"Cincinnati, OH-KY-IN","Cincinnati, OH-KY-IN","Cincinnati, OH-KY-IN Metro Area, OH",100.0,add metro area
+"Cleveland, OH","Cleveland, OH","Cleveland, OH",100.0,exact
+"Columbus, OH","Columbus, OH","Columbus, OH",100.0,exact
+"Dayton-Kettering-Beavercreek, OH","Dayton-Kettering-Beavercreek, OH","Dayton-Kettering-Beavercreek, OH",100.0,exact
+"Lima, OH","Lima, OH","Lima, OH",100.0,exact
+"Mansfield, OH","Mansfield, OH","Mansfield, OH",100.0,exact
+"Sandusky, OH","Sandusky, OH","Sandusky, OH",100.0,exact
+"Springfield, OH","Springfield, OH","Springfield, OH",100.0,exact
+"Toledo, OH","Toledo, OH","Toledo, OH",100.0,exact
+"Weirton-Steubenville, WV-OH","Weirton-Steubenville, WV-OH","Weirton-Steubenville, WV-OH Metro Area, WV",100.0,add metro area
+"Youngstown-Warren, OH","Youngstown-Warren, OH","Youngstown-Warren, OH",100.0,exact
+"Enid, OK","Enid, OK","Enid, OK",100.0,exact
+"Lawton, OK","Lawton, OK","Lawton, OK",100.0,exact
+"Oklahoma City, OK","Oklahoma City, OK","Oklahoma City, OK",100.0,exact
+"Tulsa, OK","Tulsa, OK","Tulsa, OK",100.0,exact
+"Albany, OR","Albany, OR","Albany, OR",100.0,exact
+"Bend, OR","Bend, OR","Bend, OR",100.0,exact
+"Corvallis, OR","Corvallis, OR","Corvallis, OR",100.0,exact
+"Eugene-Springfield, OR","Eugene-Springfield, OR","Eugene-Springfield, OR",100.0,exact
+"Grants Pass, OR","Grants Pass, OR","Grants Pass, OR",100.0,exact
+"Medford, OR","Medford, OR","Medford, OR",100.0,exact
+"Portland-Vancouver-Hillsboro, OR-WA","Portland-Vancouver-Hillsboro, OR-WA","Portland-Vancouver-Hillsboro, OR-WA Metro Area, OR",100.0,add metro area
+"Salem, OR","Salem, OR","Salem, OR",100.0,exact
+"Allentown-Bethlehem-Easton, PA-NJ","Allentown-Bethlehem-Easton, PA-NJ","Allentown-Bethlehem-Easton, PA-NJ Metro Area, PA",100.0,add metro area
+"Altoona, PA","Altoona, PA","Altoona, PA",100.0,exact
+"Chambersburg, PA","Chambersburg, PA","Chambersburg, PA",100.0,exact
+"Erie, PA","Erie, PA","Erie, PA",100.0,exact
+"Gettysburg, PA","Gettysburg, PA","Gettysburg, PA",100.0,exact
+"Harrisburg-Carlisle, PA","Harrisburg-Carlisle, PA","Harrisburg-Carlisle, PA",100.0,exact
+"Johnstown, PA","Johnstown, PA","Johnstown, PA",100.0,exact
+"Lancaster, PA","Lancaster, PA","Lancaster, PA",100.0,exact
+"Lebanon, PA","Lebanon, PA","Lebanon, PA",100.0,exact
+"Montgomery County-Bucks County-Chester County, PA Metropolitan Division","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area, PA",100.0,add metro area
+"Philadelphia, PA Metropolitan Division","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area, PA",100.0,add metro area
+"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD","Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area, PA",100.0,add metro area
+"Pittsburgh, PA","Pittsburgh, PA","Pittsburgh, PA",100.0,exact
+"Reading, PA","Reading, PA","Reading, PA",100.0,exact
+"Scranton--Wilkes-Barre, PA","Scranton--Wilkes-Barre, PA","Scranton--Wilkes-Barre, PA",100.0,exact
+"State College, PA","State College, PA","State College, PA",100.0,exact
+"Williamsport, PA","Williamsport, PA","Williamsport, PA",100.0,exact
+"York-Hanover, PA","York-Hanover, PA","York-Hanover, PA",100.0,exact
+"Providence-Warwick, RI-MA","Providence-Warwick, RI-MA","Providence-Warwick, RI-MA Metro Area, RI",100.0,add metro area
+"Charleston-North Charleston, SC","Charleston-North Charleston, SC","Charleston-North Charleston, SC",100.0,exact
+"Columbia, SC","Columbia, SC","Columbia, SC",100.0,exact
+"Florence, SC","Florence, SC","Florence, SC",100.0,exact
+"Greenville-Anderson-Greer, SC","Greenville-Anderson-Greer, SC","Greenville-Anderson-Greer, SC",100.0,exact
+"Hilton Head Island-Bluffton-Port Royal, SC","Hilton Head Island-Bluffton-Port Royal, SC","Hilton Head Island-Bluffton-Port Royal, SC",100.0,exact
+"Myrtle Beach-Conway-North Myrtle Beach, SC","Myrtle Beach-Conway-North Myrtle Beach, SC","Myrtle Beach-Conway-North Myrtle Beach, SC",100.0,exact
+"Spartanburg, SC","Spartanburg, SC","Spartanburg, SC",100.0,exact
+"Sumter, SC","Sumter, SC","Sumter, SC",100.0,exact
+"Rapid City, SD","Rapid City, SD","Rapid City, SD",100.0,exact
+"Sioux Falls, SD-MN","Sioux Falls, SD-MN","Sioux Falls, SD-MN Metro Area, SD",100.0,add metro area
+"Chattanooga, TN-GA","Chattanooga, TN-GA","Chattanooga, TN-GA Metro Area, TN",100.0,add metro area
+"Clarksville, TN-KY","Clarksville, TN-KY","Clarksville, TN-KY Metro Area, TN",100.0,add metro area
+"Cleveland, TN","Cleveland, TN","Cleveland, TN",100.0,exact
+"Jackson, TN","Jackson, TN","Jackson, TN",100.0,exact
+"Johnson City, TN","Johnson City, TN","Johnson City, TN",100.0,exact
+"Kingsport-Bristol, TN-VA","Kingsport-Bristol, TN-VA","Kingsport-Bristol, TN-VA Metro Area, TN",100.0,add metro area
+"Knoxville, TN","Knoxville, TN","Knoxville, TN",100.0,exact
+"Memphis, TN-MS-AR","Memphis, TN-MS-AR","Memphis, TN-MS-AR Metro Area, TN",100.0,add metro area
+"Morristown, TN","Morristown, TN","Morristown, TN",100.0,exact
+"Nashville-Davidson--Murfreesboro--Franklin, TN","Nashville-Davidson--Murfreesboro--Franklin, TN","Nashville-Davidson--Murfreesboro--Franklin, TN",100.0,exact
+"Abilene, TX","Abilene, TX","Abilene, TX",100.0,exact
+"Amarillo, TX","Amarillo, TX","Amarillo, TX",100.0,exact
+"Austin-Round Rock-San Marcos, TX","Austin-Round Rock-San Marcos, TX","Austin-Round Rock-San Marcos, TX",100.0,exact
+"Beaumont-Port Arthur, TX","Beaumont-Port Arthur, TX","Beaumont-Port Arthur, TX",100.0,exact
+"Brownsville-Harlingen, TX","Brownsville-Harlingen, TX","Brownsville-Harlingen, TX",100.0,exact
+"College Station-Bryan, TX","College Station-Bryan, TX","College Station-Bryan, TX",100.0,exact
+"Corpus Christi, TX","Corpus Christi, TX","Corpus Christi, TX",100.0,exact
+"Dallas-Fort Worth-Arlington, TX","Dallas-Fort Worth-Arlington, TX","Dallas-Fort Worth-Arlington, TX",100.0,exact
+"Dallas-Plano-Irving, TX Metropolitan Division","Dallas-Fort Worth-Arlington, TX","Dallas-Fort Worth-Arlington, TX",100.0,exact
+"Eagle Pass, TX","Eagle Pass, TX","Eagle Pass, TX",100.0,exact
+"El Paso, TX","El Paso, TX","El Paso, TX",100.0,exact
+"Fort Worth-Arlington-Grapevine, TX Metropolitan Division","Dallas-Fort Worth-Arlington, TX","Dallas-Fort Worth-Arlington, TX",100.0,exact
+"Houston-Pasadena-The Woodlands, TX","Houston-Pasadena-The Woodlands, TX","Houston-Pasadena-The Woodlands, TX",100.0,exact
+"Killeen-Temple, TX","Killeen-Temple, TX","Killeen-Temple, TX",100.0,exact
+"Laredo, TX","Laredo, TX","Laredo, TX",100.0,exact
+"Longview, TX","Longview, TX","Longview, TX",100.0,exact
+"Lubbock, TX","Lubbock, TX","Lubbock, TX",100.0,exact
+"McAllen-Edinburg-Mission, TX","McAllen-Edinburg-Mission, TX","McAllen-Edinburg-Mission, TX",100.0,exact
+"Midland, TX","Midland, TX","Midland, TX",100.0,exact
+"Odessa, TX","Odessa, TX","Odessa, TX",100.0,exact
+"San Angelo, TX","San Angelo, TX","San Angelo, TX",100.0,exact
+"San Antonio-New Braunfels, TX","San Antonio-New Braunfels, TX","San Antonio-New Braunfels, TX",100.0,exact
+"Sherman-Denison, TX","Sherman-Denison, TX","Sherman-Denison, TX",100.0,exact
+"Texarkana, TX-AR","Texarkana, TX-AR","Texarkana, TX-AR Metro Area, TX",100.0,add metro area
+"Tyler, TX","Tyler, TX","Tyler, TX",100.0,exact
+"Victoria, TX","Victoria, TX","Victoria, TX",100.0,exact
+"Waco, TX","Waco, TX","Waco, TX",100.0,exact
+"Wichita Falls, TX","Wichita Falls, TX","Wichita Falls, TX",100.0,exact
+"Logan, UT-ID","Logan, UT-ID","Logan, UT-ID Metro Area, UT",100.0,add metro area
+"Ogden, UT","Ogden, UT","Ogden, UT",100.0,exact
+"Provo-Orem-Lehi, UT","Provo-Orem-Lehi, UT","Provo-Orem-Lehi, UT",100.0,exact
+"St. George, UT","St. George, UT","St. George, UT",100.0,exact
+"Salt Lake City-Murray, UT","Salt Lake City-Murray, UT","Salt Lake City-Murray, UT",100.0,exact
+"Burlington-South Burlington, VT","Burlington-South Burlington, VT","Burlington-South Burlington, VT",100.0,exact
+"Arlington-Alexandria-Reston, VA-WV Metropolitan Division","Washington-Arlington-Alexandria, DC-VA-MD-WV","Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area, DC",100.0,add metro area
+"Blacksburg-Christiansburg-Radford, VA","Blacksburg-Christiansburg-Radford, VA","Blacksburg-Christiansburg-Radford, VA",100.0,exact
+"Charlottesville, VA","Charlottesville, VA","Charlottesville, VA",100.0,exact
+"Harrisonburg, VA","Harrisonburg, VA","Harrisonburg, VA",100.0,exact
+"Lynchburg, VA","Lynchburg, VA","Lynchburg, VA",100.0,exact
+"Richmond, VA","Richmond, VA","Richmond, VA",100.0,exact
+"Roanoke, VA","Roanoke, VA","Roanoke, VA",100.0,exact
+"Staunton-Stuarts Draft, VA","Staunton-Stuarts Draft, VA","Staunton-Stuarts Draft, VA",100.0,exact
+"Virginia Beach-Chesapeake-Norfolk, VA-NC","Virginia Beach-Chesapeake-Norfolk, VA-NC","Virginia Beach-Chesapeake-Norfolk, VA-NC Metro Area, VA",100.0,add metro area
+"Winchester, VA-WV","Winchester, VA-WV","Winchester, VA-WV Metro Area, VA",100.0,add metro area
+"Bellingham, WA","Bellingham, WA","Bellingham, WA",100.0,exact
+"Bremerton-Silverdale-Port Orchard, WA","Bremerton-Silverdale-Port Orchard, WA","Bremerton-Silverdale-Port Orchard, WA",100.0,exact
+"Everett, WA Metropolitan Division","Seattle-Tacoma-Bellevue, WA","Seattle-Tacoma-Bellevue, WA",100.0,exact
+"Kennewick-Richland, WA","Kennewick-Richland, WA","Kennewick-Richland, WA",100.0,exact
+"Longview-Kelso, WA","Longview-Kelso, WA","Longview-Kelso, WA",100.0,exact
+"Mount Vernon-Anacortes, WA","Mount Vernon-Anacortes, WA","Mount Vernon-Anacortes, WA",100.0,exact
+"Olympia-Lacey-Tumwater, WA","Olympia-Lacey-Tumwater, WA","Olympia-Lacey-Tumwater, WA",100.0,exact
+"Seattle-Bellevue-Kent, WA Metropolitan Division","Seattle-Tacoma-Bellevue, WA","Seattle-Tacoma-Bellevue, WA",100.0,exact
+"Seattle-Tacoma-Bellevue, WA","Seattle-Tacoma-Bellevue, WA","Seattle-Tacoma-Bellevue, WA",100.0,exact
+"Spokane-Spokane Valley, WA","Spokane-Spokane Valley, WA","Spokane-Spokane Valley, WA",100.0,exact
+"Tacoma-Lakewood, WA Metropolitan Division","Seattle-Tacoma-Bellevue, WA","Seattle-Tacoma-Bellevue, WA",100.0,exact
+"Walla Walla, WA","Walla Walla, WA","Walla Walla, WA",100.0,exact
+"Wenatchee-East Wenatchee, WA","Wenatchee-East Wenatchee, WA","Wenatchee-East Wenatchee, WA",100.0,exact
+"Yakima, WA","Yakima, WA","Yakima, WA",100.0,exact
+"Beckley, WV","Beckley, WV","Beckley, WV",100.0,exact
+"Charleston, WV","Charleston, WV","Charleston, WV",100.0,exact
+"Huntington-Ashland, WV-KY-OH","Huntington-Ashland, WV-KY-OH","Huntington-Ashland, WV-KY-OH Metro Area, WV",100.0,add metro area
+"Morgantown, WV","Morgantown, WV","Morgantown, WV",100.0,exact
+"Parkersburg-Vienna, WV","Parkersburg-Vienna, WV","Parkersburg-Vienna, WV",100.0,exact
+"Wheeling, WV-OH","Wheeling, WV-OH","Wheeling, WV-OH Metro Area, WV",100.0,add metro area
+"Appleton, WI","Appleton, WI","Appleton, WI",100.0,exact
+"Eau Claire, WI","Eau Claire, WI","Eau Claire, WI",100.0,exact
+"Fond du Lac, WI","Fond du Lac, WI","Fond du Lac, WI",100.0,exact
+"Green Bay, WI","Green Bay, WI","Green Bay, WI",100.0,exact
+"Janesville-Beloit, WI","Janesville-Beloit, WI","Janesville-Beloit, WI",100.0,exact
+"Kenosha, WI","Kenosha, WI","Kenosha, WI",100.0,exact
+"La Crosse-Onalaska, WI-MN","La Crosse-Onalaska, WI-MN","La Crosse-Onalaska, WI-MN Metro Area, WI",100.0,add metro area
+"Madison, WI","Madison, WI","Madison, WI",100.0,exact
+"Milwaukee-Waukesha, WI","Milwaukee-Waukesha, WI","Milwaukee-Waukesha, WI",100.0,exact
+"Oshkosh-Neenah, WI","Oshkosh-Neenah, WI","Oshkosh-Neenah, WI",100.0,exact
+"Racine-Mount Pleasant, WI","Racine-Mount Pleasant, WI","Racine-Mount Pleasant, WI",100.0,exact
+"Sheboygan, WI","Sheboygan, WI","Sheboygan, WI",100.0,exact
+"Wausau, WI","Wausau, WI","Wausau, WI",100.0,exact
+"Casper, WY","Casper, WY","Casper, WY",100.0,exact
+"Cheyenne, WY","Cheyenne, WY","Cheyenne, WY",100.0,exact
+"Aguadilla, PR","Aguadilla, PR","Aguadilla, PR",100.0,exact
+"Arecibo, PR","Arecibo, PR","Arecibo, PR",100.0,exact
+"Guayama, PR","Guayama, PR","Guayama, PR",100.0,exact
+"Mayaguez, PR","Mayaguez, PR","Mayagüez, PR",90.91,fuzzy
+"Ponce, PR","Ponce, PR","Ponce, PR",100.0,exact
+"San Juan-Bayamon-Caguas, PR","San Juan-Bayamon-Caguas, PR","San Juan-Bayamón-Caguas, PR",96.15,fuzzy
