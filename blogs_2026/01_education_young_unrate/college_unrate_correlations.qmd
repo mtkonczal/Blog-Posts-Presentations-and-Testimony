@@ -13,19 +13,6 @@ execute:
   warning: false
 ---
 
-I want to look at the labor market with fresh eyes as we go into 2026. And the first place I want to do this is the debate over the labor market prospects for people in their 20s with college degrees. This was a highly debated topic in 2025, one that I felt often moved too quickly into the question of the impact of large-language models (AI), rather than just the specific question of what is happening.
-
-My weakly-held hot take a year ago would have been, channeling Joey Politano, who made the argument at the time, that AI could increase jobs in the short-run. My own experience has been that it makes productive workers far more productive, but the unreliability of what it concludes makes it difficult to automate positions that require certainty over how outcomes are determined. But I did worry that entry-level work would be vulnerable, both because of the way the career ladder is structured and because of bosses, wanting to cut corners, would try to haphazardly replace workers with AI there first.
-
-And we did see unemployment increase for new college graduates. But, as friend of the blog Guy Berger would note, unemployment is also up for young people across the board, consistent with a weakening labor market and low hiring. Over the past two years, unemployment has increased 1 percentage point, from 3.5% to 4.5%.
-
-Is there a way to distinguish if it's increasing more than we'd expect?
-
-## Overview
-
-Let's build up to how we're going to approach this. There are many unemployment rates, either for subgroups on race, gender, or age, and there are also types of attachment to the labor force. But they all tend to track the headline unemployment rate you hear about in the news, called U-3 unemployment, even over decades.
-
-Let's pick two example groups, men as well as workers aged 45-54, and see if their rise in unemployment tracks what we'd expect given overall increase. Let's run a regression on their individual (log) unemployment rates versus the overall (log) unemployment rate for the years 1994 to 2019. We get an equation, which we then use to project forward to 2025. Note that this data is seasonally-adjusted by BLS and monthly. We get this:
 
 ```{r setup}
 #| echo: false
@@ -176,7 +163,6 @@ ggsave(
 fig_1a
 ```
 
-Figure 1.a shows the full history back to 1994. The dotted lines are projections based on the log-log relationship between each group's unemployment rate and overall unemployment, trained on data through 2019 (marked by the vertical dashed line). Notice how closely the actual values track the projections across multiple business cycles—through the dot-com bust, the Great Recession, and the COVID shock. This is the power of the approach: these relationships are remarkably stable over decades.
 
 ```{r men_45_54_recent}
 # ---- Post-2021 zoom plot (Figure 1.b) ----
@@ -209,9 +195,7 @@ ggsave(
 fig_1b
 ```
 
-Figure 1.b zooms in on the post-pandemic period. Both men and 45-54 year-olds track almost perfectly with their expected values. The labor market slowdown since 2023 has increased unemployment across the board, but these groups are rising exactly as much as their historical relationship with U-3 would predict. Nothing unusual here.
 
-We can extend this analysis across many demographic groups at once. I take unemployment rates by gender, race, age, and education, regress each against the overall unemployment rate through 2019, and calculate the average difference between actual and predicted values over the most recent 3 months:
 
 ```{r all_unrates_barchart}
 # ---- Pull data using BLS API ----
@@ -350,9 +334,7 @@ fig_2
 
 ```
 
-Most groups cluster right around zero—their unemployment rates are exactly where you'd expect given the current level of overall unemployment. But BA+ stands out with unemployment notably higher than its historical relationship would predict. Something is different about college-educated workers.
 
-Many, including myself, have noted the statistically significant increase in black unemployment over the past year. Let's look at this more closely:
 
 ```{r black_unrate}
 
@@ -434,11 +416,7 @@ ggsave(
 fig_3b
 ```
 
-Here we can see black unemployment has returned to its longer-term trend. The tight labor market and full employment environment of 2021-2023 especially benefited Black workers—the black unemployment rate fell much further than historical patterns would predict, and the black-white unemployment gap collapsed to record lows. It's a sad fact that this progress has reversed. As the labor market has cooled, black unemployment has returned to its historical relationship with overall unemployment, and the gap has widened back to where we'd expect it to be.
 
-## Young People
-
-Now I want to look at the college-educated more closely. Let's take data from the New York Fed's [The Labor Market for Recent College Graduates](https://www.newyorkfed.org/research/college-labor-market#--:explore:unemployment) website. These are 22-27 year olds, where recent grads are those with a completed 4-year BA or higher and young workers are everyone else. Let's run the same regression from 1990 to 2019, and project:
 
 ```{r young_unemployed}
 
@@ -522,15 +500,6 @@ ggsave(
 fig_4
 ```
 
-As you can see, people in their 20s more or less tracks exactly what we'd expect given the labor market slowdown. That is real. But young college is much higher than the trendline we'd expect. It was higher throughout, which may be an element of unemployment just being quite low in the 2022-2023 period. But as it increases, young college educated unemployment is increasing faster than we'd expect from the slowdown.
-
-**Disclaimer:** I want to make sure you understand two points I'm not making here. I'm not saying it's just college-educated workers who have higher unemployment. Everyone does. I'm also not saying college-educated workers have higher unemployment than non-college educated workers. They don't. They just have higher unemployment than what you would have guessed from historical experience given the current unemployment rate. These are both obvious from the graphic, but it's worth taking a second and remembering this.
-
-I stress these results multiple ways, taking just certain years, taking all years, and so forth. I believe they are robust to specification.
-
-We'd see a similar, though less dramatic divergence, pattern if we ran this on all BAs and high-school diplomas for ages 25+, which the BLS has online. But my guess is that this is most impactful for young people, and I want to see the age range where this divergence is most dramatic.
-
-So I take the BLS microdata from IPUMS and create my own categories. I use 12-month rolling values instead of trying to seasonally adjust the data. I take 3-year age bands (so, e.g., 22-24 for age 23) for college-plus and non-college (everyone without a BA). The College+ series starts at ages 21-23, and the HS+ series starts at ages 18-20. I then run a log-log regression on the prediction line from 1994 to 2019 and take the average difference between the projected and the actual over the past 3 months. I then chart it across the age spectrum:
 
 ```{r ba_non_ba_by_age}
 # Assuming age_diff.csv exists in your directory
@@ -567,34 +536,3 @@ fig_5
 
 ```
 
-For someone who is 24 (the age-range 23-25) with a BA+, they have unemployment that is 2 percentage points more than we'd expect based on their historical relationship with overall unemployment. That excess fades steadily and largely disappears by the mid-30s. Non-college workers are also slightly above zero, but the pattern is relatively flat across all ages. The gap between the two lines at young ages—and their convergence by middle age—is what I find striking.
-
-A fair question: why are both lines above zero for most of the age range? Diagnostics suggest a small upward bias in the level of the residuals even before the pandemic. In pre‑COVID holdout tests (training through 2014 or 2017 and testing 2015‑2019), the mean residual is modestly positive across groups, and the all‑ages line is slightly above zero too. A smearing correction and a level‑level regression reduce this bias a bit but do not eliminate it, which points to back‑transform bias and slow drift in the subgroup‑overall relationship rather than a unique shock to any one group.
-
-Does this matter? It matters for the *level*, so the right comparison is to a pre‑2019 baseline, not to zero. When I compare 2015‑2019 to 2023‑2025, the College+ residual rises by about 0.2pp on average and by roughly 1pp for ages 21‑27, while HS+ is essentially flat and <HS is lower. That pattern is why I focus on the gap between young College+ and non‑college—after re‑centering, the gap remains and is concentrated among the young.
-
-**A note on data:** One popular study element is to compare where the unemployed are coming from. However I think this breaks down, because so many of the young college educated are "new entrants," who record a missing value for this category. So it's difficult to say where exactly they would have been employed in a lower unemployment counterfactual.
-
-## Is It Just More College Graduates?
-
-One natural question: could this simply be a composition effect? If the share of young people with college degrees has increased substantially, perhaps the labor market is just absorbing a larger pool of graduates, pushing marginal candidates into unemployment.
-
-The data doesn't support this explanation. Among 24-27 year olds, the share with a bachelor's degree (excluding graduate degrees) was 22% in 2000, rose to 25% by 2019, and sits at 26% in 2024. That's a modest increase—about 4 percentage points over nearly a quarter century—and the 2019-to-2024 change is just 1 percentage point. The share with graduate degrees has similarly inched up from 5% to 7% over this period.
-
-Meanwhile, the share with "some college" (including associate's degrees) has actually declined, from 30% in 2000 to 24% in 2024, as more students complete their degrees rather than stopping partway. The share with only a high school diploma has held roughly steady at around 25%.
-
-These are gradual, long-running trends—not a sudden surge that would explain a sharp divergence in unemployment patterns since 2022. The elevated unemployment for young college graduates appears to reflect something about labor demand or matching, not a flood of new degree-holders overwhelming the market.
-
-## Conclusion
-
-Let me be precise about what I am and am not saying here.
-
-**What I am not saying:** I am not claiming that only college-educated workers face elevated unemployment—everyone does, as the labor market has cooled from its 2022-2023 peak. I am also not claiming that college-educated workers have higher unemployment rates than non-college workers. They don't. A BA still confers significant labor market advantages, and that remains true today.
-
-**What I am saying:** Young college-educated workers have unemployment rates that are higher than what their historical relationship with overall unemployment would predict. This is not true for most other demographic groups. Men, women, workers aged 45-54, and young non-college workers all track their historical patterns almost exactly. Black workers, who saw extraordinary gains during the full employment period, have sadly returned to their historical trend—but they are not above it. College-educated workers, particularly those in their early-to-mid 20s, are the outlier.
-
-The magnitude is meaningful: roughly 2 percentage points of "excess" unemployment for workers around age 24, declining steadily until it disappears by the mid-30s. This pattern—concentrated among the young and fading with age—suggests something specific to labor market entry rather than a broad collapse in demand for educated workers.
-
-What's driving this? I don't know yet. It could be AI-related disruption to entry-level knowledge work. It could be a hangover from over-hiring during 2021-2022. It could be structural changes in how firms recruit and train new graduates. It could be some combination of all three, or something else entirely. Future posts will dig into these possibilities.
-
-But the pattern itself is clear and robust across multiple data sources and specifications. Something is different for young college graduates in this labor market, and it's worth taking seriously.
