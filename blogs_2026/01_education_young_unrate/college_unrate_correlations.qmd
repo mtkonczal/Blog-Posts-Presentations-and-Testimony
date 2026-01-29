@@ -516,7 +516,7 @@ fig_5 <- ggplot(age_diff, aes(x = center_age, y = diff_avg, color = edu_group)) 
   labs(
     title = "Figure 5: Actual Minus Projected Unemployment by Age",
     subtitle = paste0(
-      "Average residual (Actual - Predicted) over 3 months prior to Sept 2025; log-log model trained 1994-2019"
+      "Average residual (Actual - Predicted) over 3 months prior to Sept 2025; log-log model trained 1989-2019"
     ),
     x = "Center age (band is center ±1 year)",
     y = "Avg Residual (Actual - Proj)",
