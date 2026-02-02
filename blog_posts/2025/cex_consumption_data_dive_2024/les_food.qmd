@@ -1,0 +1,82 @@
+---
+title: "Linear Expenditure System: Food vs Total Spending"
+author: "Mike Konczal"
+date: today
+date-format: "MMMM D, YYYY"
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r load_data}
+library(tidyverse)
+
+led <- read_csv("data/food_led_data.csv")
+```
+
+## Setup
+
+```{r les_setup}
+food_detail <- led %>%
+  filter(item_text %in% c("Food at home", "Food away from home")) %>%
+  filter(!is.na(total_expend), !is.na(value)) %>%
+  mutate(
+    item_text = factor(item_text, levels = c("Food at home", "Food away from home")),
+    budget_share = value / total_expend
+  )
+
+les_fit_at_home <- lm(value ~ total_expend, data = food_detail %>% filter(item_text == "Food at home"))
+les_fit_away <- lm(value ~ total_expend, data = food_detail %>% filter(item_text == "Food away from home"))
+
+les_summary_at_home <- summary(les_fit_at_home)
+les_summary_away <- summary(les_fit_away)
+```
+
+## Linear expenditure system estimate
+
+```{r les_coefficients}
+list(
+  food_at_home = les_summary_at_home,
+  food_away_from_home = les_summary_away
+)
+```
+
+## Food vs total spending
+
+```{r les_scatter, fig.width=7.5, fig.height=5.5}
+ggplot(food_detail, aes(x = total_expend, y = value, color = item_text)) +
+  geom_point(alpha = 0.35, size = 1.2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.9) +
+  scale_color_manual(values = c("Food at home" = "#1F5A7A", "Food away from home" = "#D16B6B")) +
+  labs(
+    title = "Food expenditures vs total expenditures",
+    x = "Total expenditures",
+    y = "Food expenditures",
+    color = NULL,
+    caption = "BLS CEX, Mike Konczal"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+## Budget share vs total spending
+
+```{r les_share_scatter, fig.width=7.5, fig.height=5.5}
+ggplot(food_detail, aes(x = total_expend, y = budget_share, color = item_text)) +
+  geom_point(alpha = 0.35, size = 1.2) +
+  geom_smooth(method = "loess", se = FALSE, linewidth = 0.9) +
+  scale_color_manual(values = c("Food at home" = "#1F5A7A", "Food away from home" = "#D16B6B")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  labs(
+    title = "Food budget shares vs total expenditures",
+    x = "Total expenditures",
+    y = "Budget share",
+    color = NULL,
+    caption = "BLS CEX, Mike Konczal"
+  ) +
+  theme_minimal(base_size = 12)
+```

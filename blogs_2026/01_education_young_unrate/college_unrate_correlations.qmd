@@ -467,11 +467,10 @@ plot_df <- compare %>%
     )
   )
 
-# ---- Zoom Plot ----
-fig_4 <- plot_df %>%
-  filter(year(date) >= 2021) %>%
+# ---- Full history plot (Figure 4.a) ----
+fig_4a <- plot_df %>%
   ggplot(aes(x = date, y = value, color = group, linetype = type)) +
-  geom_line(aes(alpha = type), linewidth = 1.2) +
+  geom_line(aes(alpha = type), linewidth = 1) +
   scale_color_manual(values = c(
     "All other non-college graduates (ages 22-27)" = col_young,
     "Recent college graduates (ages 22-27)" = col_grads
@@ -480,7 +479,7 @@ fig_4 <- plot_df %>%
   scale_alpha_manual(values = c("Actual" = 1, "Projection" = 0.8), guide = "none") +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title = "Figure 4: Recent College Graduates Have Higher Unemployment\nThan Predicted From Slowing Labor Market",
+    title = "Figure 4.a: Young College-Educated Unemployment No Longer Tracks Overall",
     subtitle = "Unemployment rates (ages 22-27): Actual vs. trend predicted by overall unemployment rate (1990-2019)",
     x = NULL,
     y = NULL,
@@ -491,13 +490,45 @@ fig_4 <- plot_df %>%
   my_style
 
 ggsave(
-  filename = file.path(plot_dir, "figure-4.png"),
-  plot = fig_4,
+  filename = file.path(plot_dir, "figure-4a.png"),
+  plot = fig_4a,
   width = plot_width,
   height = plot_height,
   dpi = plot_dpi
 )
-fig_4
+fig_4a
+
+# ---- Post-2017 zoom plot (Figure 4.b) ----
+fig_4b <- plot_df %>%
+  filter(year(date) >= 2017) %>%
+  ggplot(aes(x = date, y = value, color = group, linetype = type)) +
+  geom_line(aes(alpha = type), linewidth = 1.2) +
+  scale_color_manual(values = c(
+    "All other non-college graduates (ages 22-27)" = col_young,
+    "Recent college graduates (ages 22-27)" = col_grads
+  )) +
+  scale_linetype_manual(values = c("Actual" = "solid", "Projection" = "dotted")) +
+  scale_alpha_manual(values = c("Actual" = 1, "Projection" = 0.8), guide = "none") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Figure 4.b: Recent College Graduates Have Higher Unemployment\nThan Predicted From Slowing Labor Market",
+    subtitle = "Unemployment rates (ages 22-27): Actual vs. trend predicted by overall unemployment rate (1990-2019)",
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    linetype = NULL,
+    caption = "Source: NY Fed, Author's Calculations, Mike Konczal"
+  ) +
+  my_style
+
+ggsave(
+  filename = file.path(plot_dir, "figure-4b.png"),
+  plot = fig_4b,
+  width = plot_width,
+  height = plot_height,
+  dpi = plot_dpi
+)
+fig_4b
 ```
 
 
