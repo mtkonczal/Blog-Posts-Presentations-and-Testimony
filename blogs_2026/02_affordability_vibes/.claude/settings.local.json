@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Rscript:*)",
+      "Bash(quarto render:*)",
+      "WebFetch(domain:www.congress.gov)",
+      "WebSearch",
+      "WebFetch(domain:www.senate.gov)",
+      "WebFetch(domain:clerk.house.gov)",
+      "WebFetch(domain:voteview.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "WebFetch(domain:www.govtrack.us)",
+      "Bash(ls:*)"
+    ]
+  }
+}

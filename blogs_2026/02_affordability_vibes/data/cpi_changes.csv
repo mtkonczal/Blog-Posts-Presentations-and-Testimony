@@ -1,0 +1,199 @@
+item_name,item_display_level,val_2019,val_2025,pct_change,beats_all_items,category
+Energy,1,221.18,285.016,28.861560719775746,TRUE,Discretionary
+All items less food,1,258.322,323.14,25.09193951734656,FALSE,Discretionary
+All items less food and shelter,1,230.514,279.752,21.36009092723219,FALSE,Essential
+"All items less food, shelter, and energy",1,234.827,282.484,20.29451468527894,FALSE,Essential
+"All items less food, shelter, energy, and used cars and trucks",1,240.691,288.063,19.681666535101016,FALSE,Essential
+All items less food and energy,1,266.02,331.86,24.750018795579297,FALSE,Discretionary
+All items less shelter,1,236.755,292.462,23.529386918966864,FALSE,Essential
+All items less medical care,1,246.537,313.383,27.113982891006216,TRUE,Discretionary
+All items less energy,1,264.47,332.836,25.850190947933594,FALSE,Discretionary
+Apparel less footwear,1,115.021,124.337,8.099390546074204,FALSE,Discretionary
+Men's and boys' apparel,1,116.38,129.337,11.133356246777781,FALSE,Discretionary
+Women's and girls' apparel,1,105.324,109.32,3.7940070639170598,FALSE,Discretionary
+Commodities,1,186.909,227.201,21.557014375979765,FALSE,Discretionary
+Energy commodities,1,249.366,290.055,16.316979860927304,FALSE,Discretionary
+Commodities less food,1,154.296,178.812,15.888940737284196,FALSE,Discretionary
+Commodities less food and beverages,1,150.907,174.847,15.864075225138663,FALSE,Discretionary
+Commodities less food and energy commodities,1,144.38,167.34,15.90247956780717,FALSE,Discretionary
+"Commodities less food, energy, and used cars and trucks",1,145.477,165.503,13.765749912357261,FALSE,Discretionary
+Durables,1,104.362,123.871,18.693585787930477,FALSE,Discretionary
+Education,1,268.092,313.991,17.120615311161846,FALSE,Essential
+Communication,1,73.566,71.806,-2.392409537014384,FALSE,Discretionary
+Information and information processing,2,69.532,67.378,-3.0978542253926156,FALSE,Discretionary
+Education and communication commodities,1,69.39,51.128,-26.31791324398328,FALSE,Essential
+Education and communication services,1,112.069,124.567,11.152058107059037,FALSE,Essential
+Food,1,260.483,344.693,32.3284053085998,TRUE,Discretionary
+Food at home,2,242.887,317.077,30.545068282781696,TRUE,Essential
+Cereals and bakery products,3,276.485,363.924,31.625223791525748,TRUE,Discretionary
+"Meats, poultry, fish, and eggs",3,254.035,347.21,36.67801680870746,TRUE,Discretionary
+Fruits and vegetables,3,298.408,356.586,19.49612610921958,FALSE,Discretionary
+Nonalcoholic beverages and beverage materials,3,171.272,234.281,36.78885048344156,TRUE,Essential
+Other food at home,3,211.524,281.522,33.09222594126435,TRUE,Essential
+Alcoholic beverages,2,252.854,298.085,17.888188440760256,FALSE,Discretionary
+Personal care,1,236.248,296.044,25.31069046087162,FALSE,Discretionary
+Other goods,1,115.404,146.317,26.786766489896372,TRUE,Discretionary
+Shelter,1,322.247,420.983,30.639850797680033,TRUE,Essential
+Fuels and utilities,1,243.23,339.946,39.76318710685361,TRUE,Essential
+Household energy,2,199.869,285.674,42.93061955580904,TRUE,Essential
+Household furnishings and operations,1,124.082,154.473,24.49267419931982,FALSE,Discretionary
+Household furnishings and supplies,1,90.64,109.282,20.56707855251545,FALSE,Discretionary
+Medical care commodities,1,387.533,418.532,7.99906072515113,FALSE,Essential
+Medical care services,1,550.659,642.549,16.687278333778256,FALSE,Essential
+Nondurables,1,229.191,284.642,24.194231012561573,FALSE,Discretionary
+Domestically produced farm food,1,249.635,325.422,30.359124321509423,TRUE,Discretionary
+Nondurables less food,1,202.561,234.379,15.707860841919219,FALSE,Discretionary
+Nondurables less food and beverages,1,199.418,230.393,15.532700157458201,FALSE,Discretionary
+"Nondurables less food, beverages, and apparel",1,251.298,296.103,17.829429601508973,FALSE,Discretionary
+Nondurables less food and apparel,1,250.342,294.875,17.78886483290858,FALSE,Discretionary
+Recreation commodities,1,79.616,84.148,5.6923231511254,FALSE,Discretionary
+Recreation services,1,126.441,158.182,25.10340791357233,FALSE,Discretionary
+Services,1,329.354,423.55,28.600229540251544,TRUE,Discretionary
+Utilities and public transportation,1,219.636,271.119,23.440146424083498,FALSE,Discretionary
+Rent of shelter,1,335.994,439.604,30.83686018202705,TRUE,Essential
+Other services,1,363.327,430.513,18.491881968584778,FALSE,Discretionary
+Transportation services,1,326.555,450.871,38.06893172666166,TRUE,Essential
+Services less rent of shelter,1,347.103,437.319,25.991132315191745,FALSE,Essential
+Services less medical care services,1,312.517,406.85,30.18491794046405,TRUE,Essential
+Services less energy services,1,342.021,437.116,27.803848301712453,TRUE,Essential
+Private transportation,1,209.193,273.595,30.785924959248167,TRUE,Discretionary
+Transportation commodities less motor fuel,1,105.151,131.959,25.494764671757775,FALSE,Essential
+Men's apparel,2,117.998,132.415,12.218003694977874,FALSE,Discretionary
+"Men's suits, sport coats, and outerwear",3,102.539,94.332,-8.003783926115926,FALSE,Discretionary
+"Men's underwear, nightwear, swimwear and accessories",3,155.588,190.813,22.639920816515403,FALSE,Discretionary
+Men's shirts and sweaters,3,74.256,81.309,9.498222365869413,FALSE,Discretionary
+Men's pants and shorts,3,117.723,140.331,19.204403557503614,FALSE,Discretionary
+Boys' apparel,2,107.585,115.885,7.714830134312423,FALSE,Discretionary
+Women's apparel,2,107.268,110.399,2.918857441175371,FALSE,Discretionary
+Women's outerwear,3,100.043,105.649,5.60359045610388,FALSE,Discretionary
+Women's dresses,3,111.649,104.957,-5.9937840912144384,FALSE,Discretionary
+Women's suits and separates,3,74.353,74.208,-0.19501566850025354,FALSE,Discretionary
+"Women's underwear, nightwear, swimwear and accessories",3,104.06,114.803,10.32385162406304,FALSE,Discretionary
+Girls' apparel,2,95.623,105.818,10.661660897482816,FALSE,Discretionary
+Footwear,1,137.267,147.831,7.695950228387005,FALSE,Discretionary
+Men's footwear,2,138.699,152.718,10.107498972595309,FALSE,Discretionary
+Boys' and girls' footwear,2,155.829,161.846,3.861283843187091,FALSE,Discretionary
+Women's footwear,2,124.743,135.394,8.538354857587205,FALSE,Discretionary
+Infants' and toddlers' apparel,1,117.406,129.57,10.360628928674842,FALSE,Discretionary
+Jewelry and watches,1,171.623,211.641,23.317387529643476,FALSE,Discretionary
+Watches,2,137.653,167.809,21.90725955845496,FALSE,Discretionary
+Jewelry,2,170.026,210.13,23.586980814698922,FALSE,Discretionary
+Educational books and supplies,2,681.151,756.839,11.111779913704911,FALSE,Essential
+"Tuition, other school fees, and childcare",2,769.698,903.402,17.370968873506243,FALSE,Essential
+College tuition and fees,3,870.663,963.312,10.641201015777636,FALSE,Essential
+Elementary and high school tuition and fees,3,879.436,1093.376,24.32695500297917,FALSE,Essential
+Day care and preschool,3,307.51,394.711,28.35712659750904,TRUE,Discretionary
+Technical and business school tuition and fees,3,254.64,282.434,10.915017279296269,FALSE,Essential
+Postage and delivery services,2,197.528,265.952,34.64015228220809,TRUE,Discretionary
+Postage,3,310.053,413.067,33.22464223858501,TRUE,Discretionary
+Delivery services,3,325.522,493.922,51.73229459145621,TRUE,Discretionary
+"Information technology, hardware and services",2,7.347,6.71,-8.670205526065066,FALSE,Discretionary
+"Computers, peripherals, and smart home assistants",3,38.001,33.73,-11.239177916370624,FALSE,Discretionary
+Internet services and electronic information providers,3,78.133,86.29,10.439890955166199,FALSE,Discretionary
+"Telephone hardware, calculators, and other consumer information items",3,15.031,7.094,-52.80420464373628,FALSE,Discretionary
+Information technology commodities,1,49.45,34.639,-29.951466127401417,FALSE,Discretionary
+Dairy and related products,3,222.033,268.951,21.13109312579664,FALSE,Discretionary
+Food away from home,2,288.078,389.889,35.34147001853667,TRUE,Essential
+Full service meals and snacks,3,178.981,241.356,34.850067884300564,TRUE,Discretionary
+Food at employee sites and schools,3,183.089,214.059,16.91527071533516,FALSE,Discretionary
+Other food away from home,3,198.31,261.942,32.087136301749794,TRUE,Essential
+Alcoholic beverages at home,3,205.115,231.983,13.098993247690327,FALSE,Discretionary
+Alcoholic beverages away from home,3,357.664,449.588,25.701216784468105,FALSE,Discretionary
+Tobacco and smoking products,1,1141.6,1693.007,48.30124386825509,TRUE,Discretionary
+Cigarettes,2,468.309,720.251,53.79824005090654,TRUE,Discretionary
+Miscellaneous personal services,2,452.586,586.292,29.5426725528408,TRUE,Discretionary
+Funeral expenses,3,341.837,409.547,19.807686119407798,FALSE,Discretionary
+Laundry and dry cleaning services,3,178.513,244.084,36.73177863797035,TRUE,Essential
+Financial services,3,367.351,455.084,23.88260818672061,FALSE,Discretionary
+Miscellaneous personal goods,2,76.269,88.541,16.090416814170894,FALSE,Discretionary
+Rent of primary residence,2,336.418,440.034,30.799778846553984,TRUE,Essential
+Lodging away from home,2,161.083,188.868,17.248871699682766,FALSE,Discretionary
+"Housing at school, excluding board",3,568.383,675.292,18.80932399456001,FALSE,Discretionary
+Other lodging away from home including hotels and motels,3,327.896,384.195,17.169773342767215,FALSE,Discretionary
+Owners' equivalent rent of residences,2,330.255,433.771,31.34426428063164,TRUE,Essential
+Owners' equivalent rent of primary residence,3,330.297,433.763,31.325140706697297,TRUE,Essential
+Fuel oil and other fuels,3,286.453,362.708,26.62042289660085,TRUE,Discretionary
+Energy services,3,203.046,291.811,43.71669473912314,TRUE,Essential
+Water and sewer and trash collection services,2,248.024,322.728,30.1196658387898,TRUE,Essential
+Water and sewerage maintenance,3,576.636,739.615,28.263757379005128,TRUE,Essential
+Garbage and trash collection,3,486.708,658.242,35.243719026603216,TRUE,Essential
+Window and floor coverings and other linens,2,56.37,62.099,10.163207379811956,FALSE,Discretionary
+Window coverings,3,64.161,88.298,37.619426131138844,TRUE,Discretionary
+Other linens,3,42.464,41.125,-3.153259231348904,FALSE,Discretionary
+Furniture and bedding,2,113.223,134.488,18.781519655900315,FALSE,Discretionary
+Other furniture,3,67.684,78.18,15.507357721174886,FALSE,Discretionary
+Appliances,2,77.816,81.23,4.3872725403516055,FALSE,Discretionary
+Major appliances,3,80.553,88.618,10.012041761324841,FALSE,Discretionary
+Other appliances,3,69.331,70.566,1.7813099479309313,FALSE,Discretionary
+Other household equipment and furnishings,2,50.358,57.302,13.789268835140401,FALSE,Discretionary
+Indoor plants and flowers,3,131.308,172.405,31.298169189996038,TRUE,Discretionary
+Nonelectric cookware and tableware,3,80.086,87.345,9.064006193342156,FALSE,Discretionary
+"Tools, hardware, outdoor equipment and supplies",2,90.42,115.792,28.060163680601647,TRUE,Discretionary
+"Tools, hardware and supplies",3,98.306,127.381,29.576017740524495,TRUE,Discretionary
+Outdoor equipment and supplies,3,87.217,111.345,27.66433149500671,TRUE,Discretionary
+Housekeeping supplies,2,190.155,240.463,26.45631195603586,TRUE,Discretionary
+Household cleaning products,3,121.04,153.908,27.154659616655643,TRUE,Discretionary
+Miscellaneous household products,3,117.796,143.325,21.672212978369366,FALSE,Discretionary
+"Moving, storage, freight expense",3,170.734,171.644,0.5329928426675457,FALSE,Discretionary
+Professional services,2,385.514,444.878,15.398662564783638,FALSE,Discretionary
+Physicians' services,3,385.092,431.766,12.12022062260447,FALSE,Essential
+Dental services,3,502.425,628.863,25.165547096581587,FALSE,Discretionary
+Eyeglasses and eye care,3,192.205,219.842,14.378918342394842,FALSE,Discretionary
+Hospital and related services,2,900.011,1173.853,30.426517009236576,TRUE,Essential
+Hospital services,3,344.933,446.056,29.31670788240035,TRUE,Essential
+Nursing homes and adult day services,3,238.391,306.078,28.393269880154868,TRUE,Discretionary
+Medicinal drugs,2,126.875,136.874,7.880985221674863,FALSE,Discretionary
+Prescription drugs,3,537.946,569.656,5.894643700297042,FALSE,Essential
+Nonprescription drugs,3,97.358,110.938,13.948519895642875,FALSE,Essential
+Video and audio,1,106.11,122.287,15.245499952879094,FALSE,Discretionary
+Televisions,2,1.437,0.972,-32.359081419624225,FALSE,Discretionary
+"Cable, satellite, and live streaming television service",2,491.994,605.825,23.13666426826344,FALSE,Discretionary
+Other video equipment,2,9.724,8.225,-15.415466886055128,FALSE,Discretionary
+Audio equipment,2,26.294,27.382,4.137826120027377,FALSE,Discretionary
+Video and audio products,1,37.346,32.316,-13.468644567021892,FALSE,Discretionary
+Video and audio services,1,130.537,161.835,23.976343871852436,FALSE,Discretionary
+"Pets, pet products and services",1,180.308,232.824,29.12571821549794,TRUE,Discretionary
+Pets and pet products,2,205.683,241.785,17.552252738437303,FALSE,Discretionary
+Pet services including veterinary,2,258.099,375.1,45.331830034211684,TRUE,Discretionary
+Sporting goods,1,113.537,122.683,8.055523749966964,FALSE,Discretionary
+Sports vehicles including bicycles,2,157.706,170.585,8.166461643818245,FALSE,Discretionary
+Sports equipment,2,76.942,83.069,7.963141067297452,FALSE,Discretionary
+Photography,1,73.105,87.71,19.978113672115438,FALSE,Discretionary
+Photographic equipment and supplies,2,53.843,74.784,38.892706572813566,TRUE,Discretionary
+Other recreational goods,1,34.219,32.967,-3.6587860545311157,FALSE,Discretionary
+Toys,2,30.029,27.653,-7.912351393652806,FALSE,Discretionary
+"Sewing machines, fabric and supplies",2,98.893,104.146,5.311801644201308,FALSE,Discretionary
+Music instruments and accessories,2,102.629,129.437,26.12127176529051,TRUE,Discretionary
+Other recreation services,1,173.887,210.801,21.228729002168055,FALSE,Discretionary
+"Club membership for shopping clubs, fraternal, or other organizations, or participant sports fees",2,145.706,167.646,15.0577189683335,FALSE,Discretionary
+Admissions,2,392.439,494.464,25.997670975616582,FALSE,Discretionary
+Fees for lessons or instructions,2,320.252,413.924,29.24946604548917,TRUE,Discretionary
+Recreational reading materials,1,259.783,295.108,13.597887467617209,FALSE,Discretionary
+New and used motor vehicles,2,99.63,125.675,26.141724380206767,TRUE,Discretionary
+New vehicles,3,147.316,179.105,21.578783024247183,FALSE,Discretionary
+Used cars and trucks,3,140.088,184.412,31.64011192964424,TRUE,Discretionary
+Leased cars and trucks,3,85.24,112.413,31.878226184889733,TRUE,Discretionary
+Car and truck rental,3,136.337,150.237,10.19532482011487,FALSE,Discretionary
+Motor fuel,2,245.346,284.087,15.790353215458985,FALSE,Essential
+Gasoline (all types),3,244.197,282.984,15.8834875121316,FALSE,Essential
+Other motor fuels,3,223.376,269.261,20.541598023064257,FALSE,Essential
+Motor vehicle parts and equipment,2,147.757,187.835,27.12426484024446,TRUE,Discretionary
+Tires,3,125.542,159.49,27.041149575440905,TRUE,Discretionary
+Motor vehicle maintenance and repair,2,299.614,439.752,46.7728477307469,TRUE,Essential
+Motor vehicle repair,3,180.348,294.286,63.17674717767869,TRUE,Essential
+Motor vehicle insurance,2,573.282,895.817,56.2611419859685,TRUE,Essential
+Parking and other fees,3,214.472,230.669,7.5520347644447705,FALSE,Discretionary
+Public transportation,1,260.116,268.955,3.3980993095388268,FALSE,Discretionary
+Airline fares,2,267.214,265.613,-0.5991452543654185,FALSE,Discretionary
+Other intercity transportation,2,156.501,158.69,1.3987131072644932,FALSE,Discretionary
+"Stationery, stationery supplies, gift wrap",3,157.697,204.886,29.923841290576235,TRUE,Discretionary
+Ship fare,3,62.402,61.925,-0.7643985769686945,FALSE,Discretionary
+"Toys, games, hobbies and playground equipment",3,37.557,37.265,-0.7774848896344277,FALSE,Discretionary
+Photographic equipment,3,22.301,30.084,34.89978027891127,TRUE,Discretionary
+Pet food and treats,3,156.207,191.075,22.321662921636044,FALSE,Discretionary
+"Purchase of pets, pet supplies, accessories",3,118.921,132.84,11.704408809209465,FALSE,Discretionary
+"Admission to movies, theaters, and concerts",3,187.226,242.808,29.687116105669077,TRUE,Discretionary
+Admission to sporting events,3,235.763,247.758,5.087736413262478,FALSE,Discretionary
+Pet services,3,198.701,275.729,38.76578376555728,TRUE,Discretionary
+Veterinarian services,3,272.146,404.856,48.764266239444986,TRUE,Essential
+Food at elementary and secondary schools,3,152.15,204.786,34.594807755504434,TRUE,Discretionary
