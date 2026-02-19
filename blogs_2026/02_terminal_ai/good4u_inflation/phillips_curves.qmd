@@ -1,0 +1,314 @@
+---
+title: "Phillips Curves With Alternative Augmentations"
+format:
+  html:
+    toc: true
+    code-fold: show
+date: "`r Sys.Date()`"
+---
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(janitor)
+library(zoo)
+library(modelsummary)
+library(broom)
+library(gt)
+library(texreg)
+library(huxtable)
+library(kableExtra)
+
+options(dplyr.summarise.inform = FALSE)
+```
+
+**Data sources and download approach**
+- Core PCE inflation, CPI inflation, unemployment rate, NAIRU, unemployed level, and job openings come from FRED via the public `fredgraph.csv` endpoint.
+- Expected inflation (10-year CPI) comes from the Survey of Professional Forecasters (SPF) mean responses Excel file.
+- GSCPI comes from the NY Fed monthly data file (cached locally as CSV when available).
+- YouTube views are pulled from the Kworb monthly views table for the official “good 4 u” video.
+All downloads and the dataset assembly are handled by `/Users/mtkonczal/Documents/good4u_inflation/scripts/build_phillips_data.py`, which writes a single quarterly CSV at `data/phillips_data.csv` used below.
+
+**What this Quarto does**
+- Downloads monthly CPI, unemployment, unemployed, and job openings from FRED; SPF 10-year expected CPI inflation from the Philadelphia Fed; and GSCPI from the NY Fed.
+- Aggregates all series to quarterly frequency. Core PCE inflation is computed as quarterly log differences annualized: \(\pi^{core}_t = 400(\ln P^{core}_t - \ln P^{core}_{t-1})\).
+- Builds Phillips Curve regressions with expected inflation and two lags of realized inflation, then augments the curve with one variable at a time and with all variables together.
+- Uses the unemployment gap \(u_t - u^*_t\) (unemployment minus NAIRU).
+
+**Equations**
+
+Baseline Phillips Curve (quarterly):
+
+\[
+\pi^{core}_t = \beta_0 + \beta_1 \mathbb{E}_t[\pi^{10y}] + \beta_2 \pi^{core}_{t-1} + \beta_3 \pi^{core}_{t-2} + \beta_4 (u_t - u^*_t) + \varepsilon_t
+\]
+
+Augmented versions (one at a time):
+
+\[
+\pi^{core}_t = \beta_0 + \beta_1 \mathbb{E}_t[\pi^{10y}] + \beta_2 \pi^{core}_{t-1} + \beta_3 \pi^{core}_{t-2} + \beta_4 (u_t - u^*_t) + \gamma Z_t + \varepsilon_t
+\]
+
+where \(Z_t\) is one of: GSCPI, \(v/u\), \(\log(1 + \text{Views})\) for Good 4 U, or \(1\{2021 \le t \le 2022\}\).
+
+All-augments model:
+
+\[
+\pi^{core}_t = \beta_0 + \beta_1 \mathbb{E}_t[\pi^{10y}] + \beta_2 \pi^{core}_{t-1} + \beta_3 \pi^{core}_{t-2} + \beta_4 (u_t - u^*_t) + \gamma_1 \text{GSCPI}_t + \gamma_2 (v/u)_t + \gamma_3 \log(1+\text{Views}_t) + \gamma_4 D_{2021\text{–}2022} + \varepsilon_t
+\]
+
+```{r}
+#| label: helpers
+load_phillips_data <- function(path) {
+  if (!file.exists(path)) {
+    stop("Missing data/phillips_data.csv. Run scripts/build_phillips_data.py first.")
+  }
+
+  readr::read_csv(path, show_col_types = FALSE) |>
+    mutate(qtr = as.yearqtr(as.Date(qtr_date)))
+}
+```
+
+**Load data**
+
+```{r}
+#| label: load-data
+phillips_df <- load_phillips_data("data/phillips_data.csv")
+```
+
+**Build quarterly dataset**
+
+```{r}
+#| label: build-quarterly
+phillips_df <- phillips_df |>
+  filter(!is.na(core_pce_pi), !is.na(unrate_gap), !is.na(exp_pi10)) |>
+  filter(as.integer(format(as.Date(qtr), "%Y")) >= 2000)
+
+sample_range <- range(phillips_df$qtr, na.rm = TRUE)
+```
+
+```{r}
+#| label: sample-note
+cat("Sample range:", format(sample_range[1]), "to", format(sample_range[2]), "\n")
+```
+
+**Model specifications**
+
+```{r}
+#| label: models
+
+base_formula <- core_pce_pi ~ exp_pi10 + core_pce_pi_l1 + core_pce_pi_l2 + unrate_gap
+
+fit_base <- lm(base_formula, data = phillips_df)
+fit_gscpi <- lm(update(base_formula, . ~ . + gscpi), data = phillips_df)
+fit_vu <- lm(update(base_formula, . ~ . + v_u), data = phillips_df)
+
+have_youtube <- any(!is.na(phillips_df$good4u_views_log))
+fit_youtube <- if (have_youtube) {
+  lm(update(base_formula, . ~ . + good4u_views_log), data = phillips_df)
+} else {
+  NULL
+}
+
+fit_dummy <- lm(update(base_formula, . ~ . + y2021_2022), data = phillips_df)
+
+fit_all <- if (have_youtube) {
+  lm(update(base_formula, . ~ . + gscpi + v_u + good4u_views_log + y2021_2022), data = phillips_df)
+} else {
+  NULL
+}
+
+models <- list(
+  "Baseline" = fit_base,
+  "GSCPI" = fit_gscpi,
+  "v/u" = fit_vu,
+  "Good 4 U views (log1p)" = fit_youtube,
+  "2021-2022 dummy" = fit_dummy,
+  "All four" = fit_all
+)
+
+models <- models[!vapply(models, is.null, logical(1))]
+```
+
+**Regression table**
+
+```{r}
+#| label: regression-table
+
+coef_tbl <- imap_dfr(models, function(m, name) {
+  broom::tidy(m) |>
+    mutate(model = name)
+}) |>
+  filter(term != "(Intercept)") |>
+  mutate(
+    stars = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01 ~ "**",
+      p.value < 0.05 ~ "*",
+      p.value < 0.1 ~ ".",
+      TRUE ~ ""
+    ),
+    term = recode(
+      term,
+      exp_pi10 = "Expected inflation (10y)",
+      core_pce_pi_l1 = "Core PCE inflation lag 1",
+      core_pce_pi_l2 = "Core PCE inflation lag 2",
+      unrate_gap = "Unemployment gap (u - u*)",
+      gscpi = "GSCPI",
+      v_u = "v/u",
+      good4u_views_log = "Good 4 U views (log1p)",
+      y2021_2022 = "2021-2022 dummy"
+    ),
+    estimate_fmt = sprintf("%.3f%s", estimate, stars),
+    se_fmt = sprintf("(%.3f)", std.error)
+  )
+
+term_levels <- coef_tbl |>
+  distinct(term) |>
+  pull(term)
+
+est_wide <- coef_tbl |>
+  select(term, model, estimate_fmt) |>
+  pivot_wider(names_from = model, values_from = estimate_fmt) |>
+  mutate(term_order = match(term, term_levels), row_type = 1)
+
+se_wide <- coef_tbl |>
+  select(term, model, se_fmt) |>
+  pivot_wider(names_from = model, values_from = se_fmt) |>
+  mutate(term_order = match(term, term_levels), row_type = 2, term = "")
+
+reg_table <- bind_rows(est_wide, se_wide) |>
+  arrange(term_order, row_type) |>
+  select(-term_order, -row_type) |>
+  mutate(across(everything(), ~ ifelse(is.na(.), "", .)))
+
+knitr::kable(reg_table, caption = "Phillips Curve regressions (standard errors in parentheses)")
+```
+
+**Regression table (stargazer)**
+
+```{r}
+#| label: regression-table-stargazer
+#| results: 'asis'
+
+cov_labels <- c(
+  "Expected inflation (10y)",
+  "Core PCE inflation lag 1",
+  "Core PCE inflation lag 2",
+  "Unemployment gap (u - u*)",
+  "GSCPI",
+  "v/u",
+  "Good 4 U views (log1p)",
+  "2021-2022 dummy"
+)
+
+model_list <- unname(models)
+
+cat('<div class="stargazer-wide">')
+cat('<style>.stargazer-wide table{width:100%;}</style>')
+stargazer::stargazer(
+  model_list,
+  type = "html",
+  title = "Phillips Curve regressions (stargazer format)",
+  dep.var.labels = "Core PCE inflation (annualized)",
+  covariate.labels = cov_labels,
+  omit.stat = c("f", "ser"),
+  digits = 3,
+  column.sep.width = "12pt",
+  font.size = "small"
+)
+cat('</div>')
+```
+
+**Regression table (gt via modelsummary)**
+
+```{r}
+#| label: regression-table-gt
+
+modelsummary::modelsummary(
+  models,
+  coef_omit = "Intercept",
+  output = "gt"
+)
+```
+
+**Regression table (texreg)**
+
+```{r}
+#| label: regression-table-texreg
+#| results: 'asis'
+
+coef_map <- list(
+  exp_pi10 = "Expected inflation (10y)",
+  core_pce_pi_l1 = "Core PCE inflation lag 1",
+  core_pce_pi_l2 = "Core PCE inflation lag 2",
+  unrate_gap = "Unemployment gap (u - u*)",
+  gscpi = "GSCPI",
+  v_u = "v/u",
+  good4u_views_log = "Good 4 U views (log1p)",
+  y2021_2022 = "2021-2022 dummy"
+)
+
+short_model_names <- dplyr::recode(
+  names(models),
+  "Baseline" = "Base",
+  "GSCPI" = "GSCPI",
+  "v/u" = "VU",
+  "Good 4 U views (log1p)" = "G4U",
+  "2021-2022 dummy" = "D2122",
+  "All four" = "All4",
+  .default = names(models)
+)
+
+texreg::htmlreg(
+  model_list,
+  custom.coef.map = coef_map,
+  custom.model.names = short_model_names,
+  caption = "Phillips Curve regressions (texreg format)",
+  omit.stat = c("f", "ser"),
+  digits = 3
+)
+```
+
+**Regression table (huxtable)**
+
+```{r}
+#| label: regression-table-huxtable
+
+huxtable::huxreg(
+  model_list,
+  coefs = c(
+    "Expected inflation (10y)" = "exp_pi10",
+    "Core PCE inflation lag 1" = "core_pce_pi_l1",
+    "Core PCE inflation lag 2" = "core_pce_pi_l2",
+    "Unemployment gap (u - u*)" = "unrate_gap",
+    "GSCPI" = "gscpi",
+    "v/u" = "v_u",
+    "Good 4 U views (log1p)" = "good4u_views_log",
+    "2021-2022 dummy" = "y2021_2022"
+  )
+)
+```
+
+**Regression table (kableExtra)**
+
+```{r}
+#| label: regression-table-kableextra
+#| results: 'asis'
+
+kable_df <- modelsummary::modelsummary(
+  models,
+  coef_omit = "Intercept",
+  output = "data.frame"
+) |>
+  mutate(across(everything(), ~ ifelse(is.na(.), "", .)))
+
+knitr::kable(kable_df, format = "html", caption = "Phillips Curve regressions (kableExtra)") |>
+  kableExtra::kable_styling(full_width = TRUE, fixed_thead = TRUE) |>
+  kableExtra::scroll_box(width = "100%", height = "420px")
+```

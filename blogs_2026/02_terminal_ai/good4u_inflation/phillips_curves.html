@@ -1,0 +1,3144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-02-14">
+
+<title>Phillips Curves With Alternative Augmentations</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="phillips_curves_files/libs/clipboard/clipboard.min.js"></script>
+<script src="phillips_curves_files/libs/quarto-html/quarto.js"></script>
+<script src="phillips_curves_files/libs/quarto-html/popper.min.js"></script>
+<script src="phillips_curves_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="phillips_curves_files/libs/quarto-html/anchor.min.js"></script>
+<link href="phillips_curves_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="phillips_curves_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="phillips_curves_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="phillips_curves_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="phillips_curves_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="phillips_curves_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="phillips_curves_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+  
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Phillips Curves With Alternative Augmentations</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 14, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(texreg)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(huxtable)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">dplyr.summarise.inform =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Data sources and download approach</strong> - Core PCE inflation, CPI inflation, unemployment rate, NAIRU, unemployed level, and job openings come from FRED via the public <code>fredgraph.csv</code> endpoint. - Expected inflation (10-year CPI) comes from the Survey of Professional Forecasters (SPF) mean responses Excel file. - GSCPI comes from the NY Fed monthly data file (cached locally as CSV when available). - YouTube views are pulled from the Kworb monthly views table for the official “good 4 u” video. All downloads and the dataset assembly are handled by <code>/Users/mtkonczal/Documents/good4u_inflation/scripts/build_phillips_data.py</code>, which writes a single quarterly CSV at <code>data/phillips_data.csv</code> used below.</p>
+<p><strong>What this Quarto does</strong> - Downloads monthly CPI, unemployment, unemployed, and job openings from FRED; SPF 10-year expected CPI inflation from the Philadelphia Fed; and GSCPI from the NY Fed. - Aggregates all series to quarterly frequency. Core PCE inflation is computed as quarterly log differences annualized: (^{core}_t = 400(P^{core}<em>t - P^{core}</em>{t-1})). - Builds Phillips Curve regressions with expected inflation and two lags of realized inflation, then augments the curve with one variable at a time and with all variables together. - Uses the unemployment gap (u_t - u^*_t) (unemployment minus NAIRU).</p>
+<p><strong>Equations</strong></p>
+<p>Baseline Phillips Curve (quarterly):</p>
+<p>[ ^{core}_t = _0 + _1 _t[^{10y}] + <em>2 ^{core}</em>{t-1} + <em>3 ^{core}</em>{t-2} + _4 (u_t - u^*_t) + _t ]</p>
+<p>Augmented versions (one at a time):</p>
+<p>[ ^{core}_t = _0 + _1 _t[^{10y}] + <em>2 ^{core}</em>{t-1} + <em>3 ^{core}</em>{t-2} + _4 (u_t - u^*_t) + Z_t + _t ]</p>
+<p>where (Z_t) is one of: GSCPI, (v/u), ((1 + )) for Good 4 U, or (1{2021 t }).</p>
+<p>All-augments model:</p>
+<p>[ ^{core}_t = _0 + _1 _t[^{10y}] + <em>2 ^{core}</em>{t-1} + <em>3 ^{core}</em>{t-2} + _4 (u_t - u^*_t) + _1 _t + _2 (v/u)_t + _3 (1+_t) + <em>4 D</em>{20212022} + _t ]</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>load_phillips_data <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(path)) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Missing data/phillips_data.csv. Run scripts/build_phillips_data.py first."</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  readr<span class="sc">::</span><span class="fu">read_csv</span>(path, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">qtr =</span> <span class="fu">as.yearqtr</span>(<span class="fu">as.Date</span>(qtr_date)))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Load data</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>phillips_df <span class="ot">&lt;-</span> <span class="fu">load_phillips_data</span>(<span class="st">"data/phillips_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Build quarterly dataset</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>phillips_df <span class="ot">&lt;-</span> phillips_df <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(core_pce_pi), <span class="sc">!</span><span class="fu">is.na</span>(unrate_gap), <span class="sc">!</span><span class="fu">is.na</span>(exp_pi10)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(qtr), <span class="st">"%Y"</span>)) <span class="sc">&gt;=</span> <span class="dv">2000</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sample_range <span class="ot">&lt;-</span> <span class="fu">range</span>(phillips_df<span class="sc">$</span>qtr, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample range:"</span>, <span class="fu">format</span>(sample_range[<span class="dv">1</span>]), <span class="st">"to"</span>, <span class="fu">format</span>(sample_range[<span class="dv">2</span>]), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample range: 2000 Q1 to 2025 Q4 </code></pre>
+</div>
+</div>
+<p><strong>Model specifications</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>base_formula <span class="ot">&lt;-</span> core_pce_pi <span class="sc">~</span> exp_pi10 <span class="sc">+</span> core_pce_pi_l1 <span class="sc">+</span> core_pce_pi_l2 <span class="sc">+</span> unrate_gap</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fit_base <span class="ot">&lt;-</span> <span class="fu">lm</span>(base_formula, <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fit_gscpi <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(base_formula, . <span class="sc">~</span> . <span class="sc">+</span> gscpi), <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fit_vu <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(base_formula, . <span class="sc">~</span> . <span class="sc">+</span> v_u), <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>have_youtube <span class="ot">&lt;-</span> <span class="fu">any</span>(<span class="sc">!</span><span class="fu">is.na</span>(phillips_df<span class="sc">$</span>good4u_views_log))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>fit_youtube <span class="ot">&lt;-</span> <span class="cf">if</span> (have_youtube) {</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">update</span>(base_formula, . <span class="sc">~</span> . <span class="sc">+</span> good4u_views_log), <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>fit_dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(base_formula, . <span class="sc">~</span> . <span class="sc">+</span> y2021_2022), <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>fit_all <span class="ot">&lt;-</span> <span class="cf">if</span> (have_youtube) {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">update</span>(base_formula, . <span class="sc">~</span> . <span class="sc">+</span> gscpi <span class="sc">+</span> v_u <span class="sc">+</span> good4u_views_log <span class="sc">+</span> y2021_2022), <span class="at">data =</span> phillips_df)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Baseline"</span> <span class="ot">=</span> fit_base,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"GSCPI"</span> <span class="ot">=</span> fit_gscpi,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"v/u"</span> <span class="ot">=</span> fit_vu,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Good 4 U views (log1p)"</span> <span class="ot">=</span> fit_youtube,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2021-2022 dummy"</span> <span class="ot">=</span> fit_dummy,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"All four"</span> <span class="ot">=</span> fit_all</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> models[<span class="sc">!</span><span class="fu">vapply</span>(models, is.null, <span class="fu">logical</span>(<span class="dv">1</span>))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Regression table</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>coef_tbl <span class="ot">&lt;-</span> <span class="fu">imap_dfr</span>(models, <span class="cf">function</span>(m, name) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(m) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> name)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">stars =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      p.value <span class="sc">&lt;</span> <span class="fl">0.001</span> <span class="sc">~</span> <span class="st">"***"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      p.value <span class="sc">&lt;</span> <span class="fl">0.01</span> <span class="sc">~</span> <span class="st">"**"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      p.value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">~</span> <span class="st">"*"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      p.value <span class="sc">&lt;</span> <span class="fl">0.1</span> <span class="sc">~</span> <span class="st">"."</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">""</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">term =</span> <span class="fu">recode</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      term,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">exp_pi10 =</span> <span class="st">"Expected inflation (10y)"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">core_pce_pi_l1 =</span> <span class="st">"Core PCE inflation lag 1"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">core_pce_pi_l2 =</span> <span class="st">"Core PCE inflation lag 2"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">unrate_gap =</span> <span class="st">"Unemployment gap (u - u*)"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">gscpi =</span> <span class="st">"GSCPI"</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">v_u =</span> <span class="st">"v/u"</span>,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">good4u_views_log =</span> <span class="st">"Good 4 U views (log1p)"</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">y2021_2022 =</span> <span class="st">"2021-2022 dummy"</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate_fmt =</span> <span class="fu">sprintf</span>(<span class="st">"%.3f%s"</span>, estimate, stars),</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_fmt =</span> <span class="fu">sprintf</span>(<span class="st">"(%.3f)"</span>, std.error)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>term_levels <span class="ot">&lt;-</span> coef_tbl <span class="sc">|&gt;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(term) <span class="sc">|&gt;</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(term)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>est_wide <span class="ot">&lt;-</span> coef_tbl <span class="sc">|&gt;</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, model, estimate_fmt) <span class="sc">|&gt;</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> model, <span class="at">values_from =</span> estimate_fmt) <span class="sc">|&gt;</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">term_order =</span> <span class="fu">match</span>(term, term_levels), <span class="at">row_type =</span> <span class="dv">1</span>)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>se_wide <span class="ot">&lt;-</span> coef_tbl <span class="sc">|&gt;</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, model, se_fmt) <span class="sc">|&gt;</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> model, <span class="at">values_from =</span> se_fmt) <span class="sc">|&gt;</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">term_order =</span> <span class="fu">match</span>(term, term_levels), <span class="at">row_type =</span> <span class="dv">2</span>, <span class="at">term =</span> <span class="st">""</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>reg_table <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(est_wide, se_wide) <span class="sc">|&gt;</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(term_order, row_type) <span class="sc">|&gt;</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>term_order, <span class="sc">-</span>row_type) <span class="sc">|&gt;</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(.), <span class="st">""</span>, .)))</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(reg_table, <span class="at">caption =</span> <span class="st">"Phillips Curve regressions (standard errors in parentheses)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Phillips Curve regressions (standard errors in parentheses)</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 23%">
+<col style="width: 16%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: left;">Baseline</th>
+<th style="text-align: left;">GSCPI</th>
+<th style="text-align: left;">v/u</th>
+<th style="text-align: left;">Good 4 U views (log1p)</th>
+<th style="text-align: left;">2021-2022 dummy</th>
+<th style="text-align: left;">All four</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Expected inflation (10y)</td>
+<td style="text-align: left;">-0.155</td>
+<td style="text-align: left;">0.329</td>
+<td style="text-align: left;">1.119.</td>
+<td style="text-align: left;">0.529</td>
+<td style="text-align: left;">-0.281</td>
+<td style="text-align: left;">0.563</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.536)</td>
+<td style="text-align: left;">(0.500)</td>
+<td style="text-align: left;">(0.636)</td>
+<td style="text-align: left;">(0.527)</td>
+<td style="text-align: left;">(0.461)</td>
+<td style="text-align: left;">(0.563)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Core PCE inflation lag 1</td>
+<td style="text-align: left;">0.511***</td>
+<td style="text-align: left;">0.357***</td>
+<td style="text-align: left;">0.283*</td>
+<td style="text-align: left;">0.261*</td>
+<td style="text-align: left;">0.274**</td>
+<td style="text-align: left;">0.054</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.101)</td>
+<td style="text-align: left;">(0.098)</td>
+<td style="text-align: left;">(0.118)</td>
+<td style="text-align: left;">(0.113)</td>
+<td style="text-align: left;">(0.095)</td>
+<td style="text-align: left;">(0.107)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Core PCE inflation lag 2</td>
+<td style="text-align: left;">0.240*</td>
+<td style="text-align: left;">0.141</td>
+<td style="text-align: left;">0.033</td>
+<td style="text-align: left;">0.040</td>
+<td style="text-align: left;">0.097</td>
+<td style="text-align: left;">-0.083</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.100)</td>
+<td style="text-align: left;">(0.094)</td>
+<td style="text-align: left;">(0.114)</td>
+<td style="text-align: left;">(0.106)</td>
+<td style="text-align: left;">(0.089)</td>
+<td style="text-align: left;">(0.099)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unemployment gap (u - u*)</td>
+<td style="text-align: left;">-0.048</td>
+<td style="text-align: left;">-0.122**</td>
+<td style="text-align: left;">0.084</td>
+<td style="text-align: left;">-0.061</td>
+<td style="text-align: left;">-0.105*</td>
+<td style="text-align: left;">-0.144*</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.047)</td>
+<td style="text-align: left;">(0.046)</td>
+<td style="text-align: left;">(0.061)</td>
+<td style="text-align: left;">(0.044)</td>
+<td style="text-align: left;">(0.041)</td>
+<td style="text-align: left;">(0.065)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GSCPI</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.397***</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.123</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.087)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.117)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">v/u</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.381**</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.407)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.416)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Good 4 U views (log1p)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.079***</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.073***</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.020)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.018)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2021-2022 dummy</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2.062***</td>
+<td style="text-align: left;">1.617***</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.342)</td>
+<td style="text-align: left;">(0.468)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>Regression table (stargazer)</strong></p>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cov_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Expected inflation (10y)"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Core PCE inflation lag 1"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Core PCE inflation lag 2"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Unemployment gap (u - u*)"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"GSCPI"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"v/u"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Good 4 U views (log1p)"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2021-2022 dummy"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">unname</span>(models)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'&lt;div class="stargazer-wide"&gt;'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="stargazer-wide">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'&lt;style&gt;.stargazer-wide table{width:100%;}&lt;/style&gt;'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<style>.stargazer-wide table{width:100%;}</style>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>stargazer<span class="sc">::</span><span class="fu">stargazer</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  model_list,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"html"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Phillips Curve regressions (stargazer format)"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dep.var.labels =</span> <span class="st">"Core PCE inflation (annualized)"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">covariate.labels =</span> cov_labels,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">omit.stat =</span> <span class="fu">c</span>(<span class="st">"f"</span>, <span class="st">"ser"</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">column.sep.width =</span> <span class="st">"12pt"</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">font.size =</span> <span class="st">"small"</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<table style="text-align:center">
+<caption>
+<strong>Phillips Curve regressions (stargazer format)</strong>
+</caption>
+<tbody><tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="6">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+Core PCE inflation (annualized)
+</td>
+<td colspan="5">
+base_formula
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+<td>
+(6)
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Expected inflation (10y)
+</td>
+<td>
+-0.155
+</td>
+<td>
+0.329
+</td>
+<td>
+1.119<sup>*</sup>
+</td>
+<td>
+0.529
+</td>
+<td>
+-0.281
+</td>
+<td>
+0.563
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.536)
+</td>
+<td>
+(0.500)
+</td>
+<td>
+(0.636)
+</td>
+<td>
+(0.527)
+</td>
+<td>
+(0.461)
+</td>
+<td>
+(0.563)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Core PCE inflation lag 1
+</td>
+<td>
+0.511<sup>***</sup>
+</td>
+<td>
+0.357<sup>***</sup>
+</td>
+<td>
+0.283<sup>**</sup>
+</td>
+<td>
+0.261<sup>**</sup>
+</td>
+<td>
+0.274<sup>***</sup>
+</td>
+<td>
+0.054
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.101)
+</td>
+<td>
+(0.098)
+</td>
+<td>
+(0.118)
+</td>
+<td>
+(0.113)
+</td>
+<td>
+(0.095)
+</td>
+<td>
+(0.107)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Core PCE inflation lag 2
+</td>
+<td>
+0.240<sup>**</sup>
+</td>
+<td>
+0.141
+</td>
+<td>
+0.033
+</td>
+<td>
+0.040
+</td>
+<td>
+0.097
+</td>
+<td>
+-0.083
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.100)
+</td>
+<td>
+(0.094)
+</td>
+<td>
+(0.114)
+</td>
+<td>
+(0.106)
+</td>
+<td>
+(0.089)
+</td>
+<td>
+(0.099)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Unemployment gap (u - u*)
+</td>
+<td>
+-0.048
+</td>
+<td>
+-0.122<sup>***</sup>
+</td>
+<td>
+0.084
+</td>
+<td>
+-0.061
+</td>
+<td>
+-0.105<sup>**</sup>
+</td>
+<td>
+-0.144<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.047)
+</td>
+<td>
+(0.046)
+</td>
+<td>
+(0.061)
+</td>
+<td>
+(0.044)
+</td>
+<td>
+(0.041)
+</td>
+<td>
+(0.065)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+GSCPI
+</td>
+<td>
+</td>
+<td>
+0.397<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.123
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+(0.087)
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.117)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+v/u
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+1.381<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+-0.086
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.407)
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.416)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Good 4 U views (log1p)
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.079<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+0.073<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.020)
+</td>
+<td>
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+2021-2022 dummy
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+2.062<sup>***</sup>
+</td>
+<td>
+1.617<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.342)
+</td>
+<td>
+(0.468)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+0.938
+</td>
+<td>
+0.349
+</td>
+<td>
+-2.332
+</td>
+<td>
+-0.001
+</td>
+<td>
+1.925<sup>*</sup>
+</td>
+<td>
+0.635
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1.225)
+</td>
+<td>
+(1.126)
+</td>
+<td>
+(1.510)
+</td>
+<td>
+(1.165)
+</td>
+<td>
+(1.065)
+</td>
+<td>
+(1.371)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+104
+</td>
+<td>
+104
+</td>
+<td>
+101
+</td>
+<td>
+104
+</td>
+<td>
+104
+</td>
+<td>
+101
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.528
+</td>
+<td>
+0.611
+</td>
+<td>
+0.581
+</td>
+<td>
+0.595
+</td>
+<td>
+0.655
+</td>
+<td>
+0.715
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.508
+</td>
+<td>
+0.591
+</td>
+<td>
+0.559
+</td>
+<td>
+0.574
+</td>
+<td>
+0.638
+</td>
+<td>
+0.691
+</td>
+</tr>
+<tr>
+<td colspan="7" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="6" style="text-align:right">
+<sup><em></em></sup><em>p&lt;0.1; <sup><strong></strong></sup><strong>p&lt;0.05; <sup></sup></strong></em>p&lt;0.01
+</td>
+</tr>
+</tbody></table>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'&lt;/div&gt;'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Regression table (gt via modelsummary)</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  models,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"Intercept"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"gt"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="qweyjdpsgc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qweyjdpsgc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qweyjdpsgc thead, #qweyjdpsgc tbody, #qweyjdpsgc tfoot, #qweyjdpsgc tr, #qweyjdpsgc td, #qweyjdpsgc th {
+  border-style: none;
+}
+
+#qweyjdpsgc p {
+  margin: 0;
+  padding: 0;
+}
+
+#qweyjdpsgc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qweyjdpsgc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qweyjdpsgc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qweyjdpsgc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qweyjdpsgc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qweyjdpsgc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qweyjdpsgc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qweyjdpsgc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qweyjdpsgc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qweyjdpsgc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qweyjdpsgc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qweyjdpsgc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qweyjdpsgc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qweyjdpsgc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qweyjdpsgc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qweyjdpsgc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qweyjdpsgc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qweyjdpsgc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qweyjdpsgc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qweyjdpsgc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qweyjdpsgc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qweyjdpsgc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qweyjdpsgc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qweyjdpsgc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qweyjdpsgc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qweyjdpsgc .gt_left {
+  text-align: left;
+}
+
+#qweyjdpsgc .gt_center {
+  text-align: center;
+}
+
+#qweyjdpsgc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qweyjdpsgc .gt_font_normal {
+  font-weight: normal;
+}
+
+#qweyjdpsgc .gt_font_bold {
+  font-weight: bold;
+}
+
+#qweyjdpsgc .gt_font_italic {
+  font-style: italic;
+}
+
+#qweyjdpsgc .gt_super {
+  font-size: 65%;
+}
+
+#qweyjdpsgc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qweyjdpsgc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qweyjdpsgc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qweyjdpsgc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qweyjdpsgc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qweyjdpsgc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qweyjdpsgc .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qweyjdpsgc .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qweyjdpsgc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="Baseline" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Baseline</th>
+<th id="GSCPI" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">GSCPI</th>
+<th id="v/u" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">v/u</th>
+<th id="Good-4-U-views-(log1p)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Good 4 U views (log1p)</th>
+<th id="a2021-2022-dummy" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">2021-2022 dummy</th>
+<th id="All-four" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">All four</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">exp_pi10</td>
+<td class="gt_row gt_center" headers="Baseline">-0.155</td>
+<td class="gt_row gt_center" headers="GSCPI">0.329</td>
+<td class="gt_row gt_center" headers="v/u">1.119</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.529</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">-0.281</td>
+<td class="gt_row gt_center" headers="All four">0.563</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline">(0.536)</td>
+<td class="gt_row gt_center" headers="GSCPI">(0.500)</td>
+<td class="gt_row gt_center" headers="v/u">(0.636)</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">(0.527)</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">(0.461)</td>
+<td class="gt_row gt_center" headers="All four">(0.563)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">core_pce_pi_l1</td>
+<td class="gt_row gt_center" headers="Baseline">0.511</td>
+<td class="gt_row gt_center" headers="GSCPI">0.357</td>
+<td class="gt_row gt_center" headers="v/u">0.283</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.261</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">0.274</td>
+<td class="gt_row gt_center" headers="All four">0.054</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline">(0.101)</td>
+<td class="gt_row gt_center" headers="GSCPI">(0.098)</td>
+<td class="gt_row gt_center" headers="v/u">(0.118)</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">(0.113)</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">(0.095)</td>
+<td class="gt_row gt_center" headers="All four">(0.107)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">core_pce_pi_l2</td>
+<td class="gt_row gt_center" headers="Baseline">0.240</td>
+<td class="gt_row gt_center" headers="GSCPI">0.141</td>
+<td class="gt_row gt_center" headers="v/u">0.033</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.040</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">0.097</td>
+<td class="gt_row gt_center" headers="All four">-0.083</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline">(0.100)</td>
+<td class="gt_row gt_center" headers="GSCPI">(0.094)</td>
+<td class="gt_row gt_center" headers="v/u">(0.114)</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">(0.106)</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">(0.089)</td>
+<td class="gt_row gt_center" headers="All four">(0.099)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">unrate_gap</td>
+<td class="gt_row gt_center" headers="Baseline">-0.048</td>
+<td class="gt_row gt_center" headers="GSCPI">-0.122</td>
+<td class="gt_row gt_center" headers="v/u">0.084</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">-0.061</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">-0.105</td>
+<td class="gt_row gt_center" headers="All four">-0.144</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline">(0.047)</td>
+<td class="gt_row gt_center" headers="GSCPI">(0.046)</td>
+<td class="gt_row gt_center" headers="v/u">(0.061)</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">(0.044)</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">(0.041)</td>
+<td class="gt_row gt_center" headers="All four">(0.065)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">gscpi</td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI">0.397</td>
+<td class="gt_row gt_center" headers="v/u"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">0.123</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI">(0.087)</td>
+<td class="gt_row gt_center" headers="v/u"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">(0.117)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">v_u</td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI"></td>
+<td class="gt_row gt_center" headers="v/u">1.381</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">-0.086</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI"></td>
+<td class="gt_row gt_center" headers="v/u">(0.407)</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">(0.416)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">good4u_views_log</td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI"></td>
+<td class="gt_row gt_center" headers="v/u"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.079</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">0.073</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI"></td>
+<td class="gt_row gt_center" headers="v/u"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">(0.020)</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy"></td>
+<td class="gt_row gt_center" headers="All four">(0.018)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">y2021_2022</td>
+<td class="gt_row gt_center" headers="Baseline"></td>
+<td class="gt_row gt_center" headers="GSCPI"></td>
+<td class="gt_row gt_center" headers="v/u"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">2.062</td>
+<td class="gt_row gt_center" headers="All four">1.617</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Baseline" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="GSCPI" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="v/u" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="2021-2022 dummy" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.342)</td>
+<td class="gt_row gt_center" headers="All four" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.468)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="Baseline">104</td>
+<td class="gt_row gt_center" headers="GSCPI">104</td>
+<td class="gt_row gt_center" headers="v/u">101</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">104</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">104</td>
+<td class="gt_row gt_center" headers="All four">101</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">R2</td>
+<td class="gt_row gt_center" headers="Baseline">0.528</td>
+<td class="gt_row gt_center" headers="GSCPI">0.611</td>
+<td class="gt_row gt_center" headers="v/u">0.581</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.595</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">0.655</td>
+<td class="gt_row gt_center" headers="All four">0.715</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
+<td class="gt_row gt_center" headers="Baseline">0.508</td>
+<td class="gt_row gt_center" headers="GSCPI">0.591</td>
+<td class="gt_row gt_center" headers="v/u">0.559</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.574</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">0.638</td>
+<td class="gt_row gt_center" headers="All four">0.691</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">AIC</td>
+<td class="gt_row gt_center" headers="Baseline">253.5</td>
+<td class="gt_row gt_center" headers="GSCPI">235.4</td>
+<td class="gt_row gt_center" headers="v/u">239.0</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">239.6</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">222.8</td>
+<td class="gt_row gt_center" headers="All four">205.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">BIC</td>
+<td class="gt_row gt_center" headers="Baseline">269.4</td>
+<td class="gt_row gt_center" headers="GSCPI">253.9</td>
+<td class="gt_row gt_center" headers="v/u">257.4</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">258.1</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">241.3</td>
+<td class="gt_row gt_center" headers="All four">232.1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">Log.Lik.</td>
+<td class="gt_row gt_center" headers="Baseline">-120.753</td>
+<td class="gt_row gt_center" headers="GSCPI">-110.702</td>
+<td class="gt_row gt_center" headers="v/u">-112.525</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">-112.801</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">-104.375</td>
+<td class="gt_row gt_center" headers="All four">-92.965</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">F</td>
+<td class="gt_row gt_center" headers="Baseline">27.635</td>
+<td class="gt_row gt_center" headers="GSCPI">30.731</td>
+<td class="gt_row gt_center" headers="v/u">26.312</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">28.740</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">37.243</td>
+<td class="gt_row gt_center" headers="All four">28.899</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="Baseline">0.77</td>
+<td class="gt_row gt_center" headers="GSCPI">0.70</td>
+<td class="gt_row gt_center" headers="v/u">0.74</td>
+<td class="gt_row gt_center" headers="Good 4 U views (log1p)">0.72</td>
+<td class="gt_row gt_center" headers="2021-2022 dummy">0.66</td>
+<td class="gt_row gt_center" headers="All four">0.61</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong>Regression table (texreg)</strong></p>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>coef_map <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">exp_pi10 =</span> <span class="st">"Expected inflation (10y)"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">core_pce_pi_l1 =</span> <span class="st">"Core PCE inflation lag 1"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">core_pce_pi_l2 =</span> <span class="st">"Core PCE inflation lag 2"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">unrate_gap =</span> <span class="st">"Unemployment gap (u - u*)"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gscpi =</span> <span class="st">"GSCPI"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">v_u =</span> <span class="st">"v/u"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">good4u_views_log =</span> <span class="st">"Good 4 U views (log1p)"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">y2021_2022 =</span> <span class="st">"2021-2022 dummy"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>short_model_names <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">recode</span>(</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(models),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Baseline"</span> <span class="ot">=</span> <span class="st">"Base"</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"GSCPI"</span> <span class="ot">=</span> <span class="st">"GSCPI"</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"v/u"</span> <span class="ot">=</span> <span class="st">"VU"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Good 4 U views (log1p)"</span> <span class="ot">=</span> <span class="st">"G4U"</span>,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2021-2022 dummy"</span> <span class="ot">=</span> <span class="st">"D2122"</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"All four"</span> <span class="ot">=</span> <span class="st">"All4"</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">.default =</span> <span class="fu">names</span>(models)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>texreg<span class="sc">::</span><span class="fu">htmlreg</span>(</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  model_list,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">custom.coef.map =</span> coef_map,</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">custom.model.names =</span> short_model_names,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Phillips Curve regressions (texreg format)"</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">omit.stat =</span> <span class="fu">c</span>(<span class="st">"f"</span>, <span class="st">"ser"</span>),</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">3</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;caption-side: bottom;color: #000000;border-top: 2px solid #000000;">
+<caption>
+Phillips Curve regressions (texreg format)
+</caption>
+<thead>
+<tr>
+<th style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+Base
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+GSCPI
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+VU
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+G4U
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+D2122
+</th>
+<th style="padding-left: 5px;padding-right: 5px;">
+All4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+Expected inflation (10y)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.155
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.329
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.119
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.529
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.281
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.563
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.536)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.500)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.636)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.527)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.461)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.563)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Core PCE inflation lag 1
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.511<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.357<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.283<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.261<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.274<sup>**</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.054
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.101)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.098)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.118)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.113)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.095)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.107)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Core PCE inflation lag 2
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.240<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.141
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.033
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.040
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.097
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.083
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.100)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.094)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.114)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.106)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.089)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.099)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Unemployment gap (u - u*)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.048
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.122<sup>**</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.084
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.061
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.105<sup>*</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.144<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.047)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.046)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.061)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.044)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.041)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.065)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+GSCPI
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.397<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.123
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.087)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.117)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+v/u
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.381<sup>**</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.086
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.407)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.416)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Good 4 U views (log1p)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.079<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.073<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.020)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+2021-2022 dummy
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+2.062<sup>***</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.617<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+&nbsp;
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.342)
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+(0.468)
+</td>
+</tr>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+R<sup>2</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.528
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.611
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.581
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.595
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.655
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.715
+</td>
+</tr>
+<tr>
+<td style="padding-left: 5px;padding-right: 5px;">
+Adj. R<sup>2</sup>
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.508
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.591
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.559
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.574
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.638
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.691
+</td>
+</tr>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+Num. obs.
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+104
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+104
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+101
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+104
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+104
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+101
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="font-size: 0.8em;" colspan="7">
+<sup>***</sup>p &lt; 0.001; <sup>**</sup>p &lt; 0.01; <sup>*</sup>p &lt; 0.05
+</td>
+</tr>
+</tfoot>
+</table>
+<p><strong>Regression table (huxtable)</strong></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>huxtable<span class="sc">::</span><span class="fu">huxreg</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  model_list,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coefs =</span> <span class="fu">c</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Expected inflation (10y)"</span> <span class="ot">=</span> <span class="st">"exp_pi10"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Core PCE inflation lag 1"</span> <span class="ot">=</span> <span class="st">"core_pce_pi_l1"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Core PCE inflation lag 2"</span> <span class="ot">=</span> <span class="st">"core_pce_pi_l2"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Unemployment gap (u - u*)"</span> <span class="ot">=</span> <span class="st">"unrate_gap"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"GSCPI"</span> <span class="ot">=</span> <span class="st">"gscpi"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"v/u"</span> <span class="ot">=</span> <span class="st">"v_u"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Good 4 U views (log1p)"</span> <span class="ot">=</span> <span class="st">"good4u_views_log"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2021-2022 dummy"</span> <span class="ot">=</span> <span class="st">"y2021_2022"</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;" id="tab:regression-table-huxtable">
+<colgroup><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;      font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(1)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(2)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(3)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(4)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(5)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">(6)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Expected inflation (10y)</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">-0.155&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.329&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">1.119&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.529&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">-0.281&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.563&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.536)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.500)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.636)&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.527)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.461)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.563)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Core PCE inflation lag 1</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.511 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.357 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.283 *&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.261 *&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.274 **&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.054&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.101)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.098)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.118)&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.113)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.095)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.107)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Core PCE inflation lag 2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.240 *&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.141&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.033&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.040&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.097&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.083&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.100)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.094)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.114)&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.106)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.089)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.099)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Unemployment gap (u - u*)</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.048&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.122 **&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.084&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.061&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.105 *&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.144 *&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.047)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.046)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.061)&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.044)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.041)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.065)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">GSCPI</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.397 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.123&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.087)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.117)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">v/u</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.381 **</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.086&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.407)&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.416)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Good 4 U views (log1p)</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.079 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.073 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.020)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.018)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">2021-2022 dummy</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">2.062 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">1.617 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.342)&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.468)&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.528&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.611&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.581&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.595&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.655&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.715&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">logLik</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-120.753&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-110.702&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-112.525&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-112.801&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-104.375&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-92.965&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;      font-weight: normal;">AIC</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">253.506&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">235.404&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">239.049&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">239.602&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">222.751&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">205.930&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" colspan="7" style="border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;      font-weight: normal;">*** p &lt; 0.001; ** p &lt; 0.01; * p &lt; 0.05.</th></tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><strong>Regression table (kableExtra)</strong></p>
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>kable_df <span class="ot">&lt;-</span> modelsummary<span class="sc">::</span><span class="fu">modelsummary</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  models,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"Intercept"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"data.frame"</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(.), <span class="st">""</span>, .)))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(kable_df, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Phillips Curve regressions (kableExtra)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">TRUE</span>, <span class="at">fixed_thead =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"420px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:420px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top" data-quarto-postprocess="true">
+<caption>Phillips Curve regressions (kableExtra)</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">part</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">term</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">statistic</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">Baseline</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">GSCPI</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">v/u</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">Good 4 U views (log1p)</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">2021-2022 dummy</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; position: sticky; top: 0; background-color: #FFFFFF;">All four</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">exp_pi10</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;">-0.155</td>
+<td style="text-align: left;">0.329</td>
+<td style="text-align: left;">1.119</td>
+<td style="text-align: left;">0.529</td>
+<td style="text-align: left;">-0.281</td>
+<td style="text-align: left;">0.563</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">exp_pi10</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;">(0.536)</td>
+<td style="text-align: left;">(0.500)</td>
+<td style="text-align: left;">(0.636)</td>
+<td style="text-align: left;">(0.527)</td>
+<td style="text-align: left;">(0.461)</td>
+<td style="text-align: left;">(0.563)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">core_pce_pi_l1</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;">0.511</td>
+<td style="text-align: left;">0.357</td>
+<td style="text-align: left;">0.283</td>
+<td style="text-align: left;">0.261</td>
+<td style="text-align: left;">0.274</td>
+<td style="text-align: left;">0.054</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">core_pce_pi_l1</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;">(0.101)</td>
+<td style="text-align: left;">(0.098)</td>
+<td style="text-align: left;">(0.118)</td>
+<td style="text-align: left;">(0.113)</td>
+<td style="text-align: left;">(0.095)</td>
+<td style="text-align: left;">(0.107)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">core_pce_pi_l2</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;">0.240</td>
+<td style="text-align: left;">0.141</td>
+<td style="text-align: left;">0.033</td>
+<td style="text-align: left;">0.040</td>
+<td style="text-align: left;">0.097</td>
+<td style="text-align: left;">-0.083</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">core_pce_pi_l2</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;">(0.100)</td>
+<td style="text-align: left;">(0.094)</td>
+<td style="text-align: left;">(0.114)</td>
+<td style="text-align: left;">(0.106)</td>
+<td style="text-align: left;">(0.089)</td>
+<td style="text-align: left;">(0.099)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">unrate_gap</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;">-0.048</td>
+<td style="text-align: left;">-0.122</td>
+<td style="text-align: left;">0.084</td>
+<td style="text-align: left;">-0.061</td>
+<td style="text-align: left;">-0.105</td>
+<td style="text-align: left;">-0.144</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">unrate_gap</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;">(0.047)</td>
+<td style="text-align: left;">(0.046)</td>
+<td style="text-align: left;">(0.061)</td>
+<td style="text-align: left;">(0.044)</td>
+<td style="text-align: left;">(0.041)</td>
+<td style="text-align: left;">(0.065)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">gscpi</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.397</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.123</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">gscpi</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.087)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.117)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">v_u</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.381</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.086</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">v_u</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.407)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.416)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">good4u_views_log</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.079</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.073</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">good4u_views_log</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.020)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.018)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">y2021_2022</td>
+<td style="text-align: left;">estimate</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2.062</td>
+<td style="text-align: left;">1.617</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">estimates</td>
+<td style="text-align: left;">y2021_2022</td>
+<td style="text-align: left;">std.error</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.342)</td>
+<td style="text-align: left;">(0.468)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">104</td>
+<td style="text-align: left;">104</td>
+<td style="text-align: left;">101</td>
+<td style="text-align: left;">104</td>
+<td style="text-align: left;">104</td>
+<td style="text-align: left;">101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">R2</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.528</td>
+<td style="text-align: left;">0.611</td>
+<td style="text-align: left;">0.581</td>
+<td style="text-align: left;">0.595</td>
+<td style="text-align: left;">0.655</td>
+<td style="text-align: left;">0.715</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">R2 Adj.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.508</td>
+<td style="text-align: left;">0.591</td>
+<td style="text-align: left;">0.559</td>
+<td style="text-align: left;">0.574</td>
+<td style="text-align: left;">0.638</td>
+<td style="text-align: left;">0.691</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">AIC</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">253.5</td>
+<td style="text-align: left;">235.4</td>
+<td style="text-align: left;">239.0</td>
+<td style="text-align: left;">239.6</td>
+<td style="text-align: left;">222.8</td>
+<td style="text-align: left;">205.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">BIC</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">269.4</td>
+<td style="text-align: left;">253.9</td>
+<td style="text-align: left;">257.4</td>
+<td style="text-align: left;">258.1</td>
+<td style="text-align: left;">241.3</td>
+<td style="text-align: left;">232.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">Log.Lik.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-120.753</td>
+<td style="text-align: left;">-110.702</td>
+<td style="text-align: left;">-112.525</td>
+<td style="text-align: left;">-112.801</td>
+<td style="text-align: left;">-104.375</td>
+<td style="text-align: left;">-92.965</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">F</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">27.635</td>
+<td style="text-align: left;">30.731</td>
+<td style="text-align: left;">26.312</td>
+<td style="text-align: left;">28.740</td>
+<td style="text-align: left;">37.243</td>
+<td style="text-align: left;">28.899</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gof</td>
+<td style="text-align: left;">RMSE</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.77</td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.72</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.61</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

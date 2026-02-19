@@ -1,0 +1,605 @@
+---
+title: "SCF 2022: Deeper Analysis and Implications"
+date: 2026-02-07
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import Markdown, display
+
+DATA_PATH = "SCFP2022.csv"
+
+all_cols = pd.read_csv(DATA_PATH, nrows=1).columns
+usecols = [
+    "WGT",
+    "INCOME", "NETWORTH", "ASSET", "DEBT",
+    "LIQ", "RETQLIQ", "RETEQ",
+    "HOUSES", "HOMEEQ",
+    "DEBT2INC", "CCBAL",
+    "HHOUSES", "HOUSECL",
+    "HDEBT", "HLIQ", "HRETQLIQ", "HSTOCKS", "HBOND", "HBUS", "HCCBAL", "HEDN_INST", "HVEHIC",
+    "HPRIM_MORT", "HSEC_MORT", "HMRTHEL", "HNH_MORT",
+    "VEHIC", "EDN_INST",
+    "AGE", "AGECL", "EDUC", "EDCL",
+    "RACECL", "RACECL4", "RACECL5",
+    "MARRIED", "KIDS",
+    "HCHECK", "HSAVING", "CHECKING", "SAVING", "STOCKS", "BOND", "BUS"
+]
+usecols = [c for c in usecols if c in all_cols]
+
+df = pd.read_csv(DATA_PATH, usecols=usecols)
+w = df["WGT"].astype(float).values
+
+# Weighted helpers
+
+def w_mean(x, w):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    if w.sum() == 0:
+        return np.nan
+    return (x * w).sum() / w.sum()
+
+
+def w_quantile(x, w, q):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    if len(x) == 0:
+        return np.nan
+    idx = np.argsort(x)
+    x = x[idx]
+    w = w[idx]
+    cum = np.cumsum(w)
+    if cum[-1] == 0:
+        return np.nan
+    target = q * cum[-1]
+    return np.interp(target, cum, x)
+
+
+def w_median(x, w):
+    return w_quantile(x, w, 0.5)
+
+
+def w_share(x, w, mask):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    mask = mask[m]
+    total = (x * w).sum()
+    if total == 0:
+        return np.nan
+    return (x * w * mask).sum() / total
+
+
+def fmt_money(x):
+    if pd.isna(x):
+        return ""
+    return f"${x:,.0f}"
+
+
+def fmt_pct(x):
+    if pd.isna(x):
+        return ""
+    return f"{x*100:,.1f}%"
+
+# Homeownership indicator
+home_indicator = None
+if "HHOUSES" in df.columns:
+    home_indicator = df["HHOUSES"].values
+elif "HOUSECL" in df.columns:
+    home_indicator = (df["HOUSECL"].values == 1).astype(int)
+
+# Income and net worth quintiles
+inc = df["INCOME"].values
+nw = df["NETWORTH"].values
+inc_cuts = [w_quantile(inc, w, q) for q in [0.2, 0.4, 0.6, 0.8]]
+nw_cuts = [w_quantile(nw, w, q) for q in [0.2, 0.4, 0.6, 0.8]]
+
+def assign_quintile(x, cuts):
+    out = np.full(len(x), np.nan)
+    for i, val in enumerate(x):
+        if not np.isfinite(val):
+            continue
+        if val <= cuts[0]:
+            out[i] = 1
+        elif val <= cuts[1]:
+            out[i] = 2
+        elif val <= cuts[2]:
+            out[i] = 3
+        elif val <= cuts[3]:
+            out[i] = 4
+        else:
+            out[i] = 5
+    return out
+
+inc_q = assign_quintile(inc, inc_cuts)
+nw_q = assign_quintile(nw, nw_cuts)
+```
+
+**Top Recommendations**
+
+Public policymakers
+
+1. Prioritize emergency-savings capacity: a large share of households have liquid assets below a few months of income. Policies that support payroll-linked savings, automatic enrollment, and buffer-building would reduce fragility.
+2. Expand pathways to broad-based asset building: wealth is highly concentrated and homeownership gaps are large across income/wealth groups. Targeted supply, credit access, and down-payment support can help close persistent ownership gaps.
+3. Strengthen retirement coverage for lower-income workers: retirement account access and balances are sharply lower in the bottom income quintiles. Portable, auto-enrolled retirement options and matched contributions can address coverage gaps.
+
+Business opportunities
+
+1. Low-cost liquidity products: demand is strongest for safe, fee-light emergency savings and short-term liquidity tools tied to pay cycles.
+2. Retirement access and guidance: there is a sizable underserved market for simple retirement enrollment, automated contributions, and low-minimum investment products.
+3. Debt management and refinancing: high shares of households carry revolving balances or elevated debt-to-income ratios, creating space for balance-transfer, consolidation, and coaching products that reduce interest burdens.
+
+**Notes**
+
+This report uses the SCF 2022 public data in `SCFP2022.csv` and applies the SCF household weight (`WGT`) for all estimates. Variable labels follow SCF naming; when in doubt, consult the SCF codebook for exact definitions of indicator variables and group codes (e.g., `AGECL`, `EDCL`, `RACECL4`).
+
+**Core Distribution Snapshot**
+
+```{python}
+summary_rows = []
+for var, label in [
+    ("INCOME", "Household income"),
+    ("NETWORTH", "Net worth"),
+    ("ASSET", "Total assets"),
+    ("DEBT", "Total debt")
+]:
+    if var not in df.columns:
+        continue
+    x = df[var].values
+    summary_rows.append({
+        "Measure": label,
+        "P10": fmt_money(w_quantile(x, w, 0.10)),
+        "Median": fmt_money(w_median(x, w)),
+        "P90": fmt_money(w_quantile(x, w, 0.90))
+    })
+
+pd.DataFrame(summary_rows)
+```
+
+**Wealth Concentration**
+
+```{python}
+p50 = w_quantile(nw, w, 0.50)
+p90 = w_quantile(nw, w, 0.90)
+p99 = w_quantile(nw, w, 0.99)
+
+wealth_share_df = pd.DataFrame([
+    {"Group": "Bottom 50%", "Share of net worth": fmt_pct(w_share(nw, w, nw <= p50))},
+    {"Group": "Middle 40% (50-90)", "Share of net worth": fmt_pct(w_share(nw, w, (nw > p50) & (nw < p90)))},
+    {"Group": "Top 10%", "Share of net worth": fmt_pct(w_share(nw, w, nw >= p90))},
+    {"Group": "Top 1%", "Share of net worth": fmt_pct(w_share(nw, w, nw >= p99))}
+])
+wealth_share_df
+```
+
+```{python}
+# Wealth concentration chart
+labels = ["Bottom 50%", "50-90", "Top 10%", "Top 1%"]
+values = [
+    w_share(nw, w, nw <= p50),
+    w_share(nw, w, (nw > p50) & (nw < p90)),
+    w_share(nw, w, nw >= p90),
+    w_share(nw, w, nw >= p99)
+]
+
+plt.figure(figsize=(7, 4))
+plt.bar(labels, values, color=["#6c757d", "#6c757d", "#1b4332", "#081c15"])
+plt.gca().yaxis.set_major_formatter(lambda x, pos: f"{x*100:.0f}%")
+plt.ylabel("Share of net worth")
+plt.title("Wealth Concentration")
+plt.ylim(0, 1)
+plt.grid(True, axis="y", alpha=0.3)
+plt.show()
+```
+
+**Liquidity Adequacy**
+
+```{python}
+# Months of income in liquid assets
+liq = df["LIQ"].values
+ratio = np.full_like(inc, np.nan, dtype=float)
+mask = inc > 0
+ratio[mask] = liq[mask] / (inc[mask] / 12.0)
+
+liq_rows = [
+    {"Threshold": "< 1 month", "Share of households": fmt_pct(w_mean((ratio < 1).astype(int), w))},
+    {"Threshold": "< 3 months", "Share of households": fmt_pct(w_mean((ratio < 3).astype(int), w))},
+    {"Threshold": "< 6 months", "Share of households": fmt_pct(w_mean((ratio < 6).astype(int), w))}
+]
+
+pd.DataFrame(liq_rows)
+```
+
+**Debt Burden and Credit Cards**
+
+```{python}
+rows = []
+if "HDEBT" in df.columns:
+    rows.append({"Measure": "Any debt", "Value": fmt_pct(w_mean(df["HDEBT"].values, w))})
+if "DEBT" in df.columns:
+    m = df["DEBT"].values > 0
+    rows.append({"Measure": "Median debt among debtors", "Value": fmt_money(w_median(df.loc[m, "DEBT"].values, w[m]))})
+if "DEBT2INC" in df.columns:
+    dti = df["DEBT2INC"].values
+    rows.append({"Measure": "Debt-to-income > 1", "Value": fmt_pct(w_mean((dti > 1).astype(int), w))})
+    rows.append({"Measure": "Debt-to-income > 2", "Value": fmt_pct(w_mean((dti > 2).astype(int), w))})
+    rows.append({"Measure": "Debt-to-income > 4", "Value": fmt_pct(w_mean((dti > 4).astype(int), w))})
+if "HCCBAL" in df.columns:
+    rows.append({"Measure": "Has credit card balance", "Value": fmt_pct(w_mean(df["HCCBAL"].values, w))})
+
+pd.DataFrame(rows)
+```
+
+```{python}
+# Credit card balances by income quintile (among households with balances)
+if "CCBAL" in df.columns and "HCCBAL" in df.columns:
+    ccbal = df["CCBAL"].values
+    hcc = df["HCCBAL"].values
+    cc_rows = []
+    for q in range(1, 6):
+        m = (inc_q == q) & (hcc == 1)
+        cc_rows.append({
+            "Income quintile": q,
+            "Median CC balance": fmt_money(w_median(ccbal[m], w[m])) if m.sum() > 0 else ""
+        })
+    pd.DataFrame(cc_rows)
+```
+
+**Homeownership and Housing Leverage**
+
+```{python}
+if home_indicator is not None:
+    home_rows = [
+        {"Measure": "Homeownership rate", "Value": fmt_pct(w_mean(home_indicator, w))}
+    ]
+    if "HPRIM_MORT" in df.columns:
+        home_rows.append({"Measure": "Has primary mortgage", "Value": fmt_pct(w_mean(df["HPRIM_MORT"].values, w))})
+    if "HSEC_MORT" in df.columns:
+        home_rows.append({"Measure": "Has second mortgage", "Value": fmt_pct(w_mean(df["HSEC_MORT"].values, w))})
+    pd.DataFrame(home_rows)
+```
+
+```{python}
+# Homeownership by income quintile
+if home_indicator is not None:
+    rows = []
+    for q in range(1, 6):
+        m = inc_q == q
+        rows.append({
+            "Income quintile": q,
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m]))
+        })
+    pd.DataFrame(rows)
+```
+
+```{python}
+# Homeownership by net worth quintile
+if home_indicator is not None:
+    rows = []
+    for q in range(1, 6):
+        m = nw_q == q
+        rows.append({
+            "Net worth quintile": q,
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m]))
+        })
+    pd.DataFrame(rows)
+```
+
+**Retirement Coverage and Balances**
+
+```{python}
+if "HRETQLIQ" in df.columns:
+    rows = []
+    for q in range(1, 6):
+        m = inc_q == q
+        rows.append({
+            "Income quintile": q,
+            "Retirement account ownership": fmt_pct(w_mean(df["HRETQLIQ"].values[m], w[m]))
+        })
+    pd.DataFrame(rows)
+```
+
+```{python}
+# Retirement balances among holders by income quintile
+if "RETQLIQ" in df.columns and "HRETQLIQ" in df.columns:
+    rows = []
+    ret = df["RETQLIQ"].values
+    hret = df["HRETQLIQ"].values
+    for q in range(1, 6):
+        m = (inc_q == q) & (hret == 1)
+        rows.append({
+            "Income quintile": q,
+            "Median retirement balance": fmt_money(w_median(ret[m], w[m])) if m.sum() > 0 else ""
+        })
+    pd.DataFrame(rows)
+```
+
+**Stocks, Bonds, and Business Ownership**
+
+```{python}
+rows = []
+for label, var in [
+    ("Direct stock ownership", "HSTOCKS"),
+    ("Bond ownership", "HBOND"),
+    ("Business ownership", "HBUS")
+]:
+    if var in df.columns:
+        rows.append({"Measure": label, "Share of households": fmt_pct(w_mean(df[var].values, w))})
+
+pd.DataFrame(rows)
+```
+
+```{python}
+# Stock ownership by income quintile
+if "HSTOCKS" in df.columns:
+    rows = []
+    for q in range(1, 6):
+        m = inc_q == q
+        rows.append({
+            "Income quintile": q,
+            "Stock ownership rate": fmt_pct(w_mean(df["HSTOCKS"].values[m], w[m]))
+        })
+    pd.DataFrame(rows)
+```
+
+**Education Installment Loans**
+
+```{python}
+if "HEDN_INST" in df.columns:
+    rows = []
+    for g in sorted(df["AGECL"].dropna().unique()):
+        m = df["AGECL"].values == g
+        rows.append({
+            "AGECL": int(g),
+            "Education installment loan rate": fmt_pct(w_mean(df["HEDN_INST"].values[m], w[m]))
+        })
+    pd.DataFrame(rows)
+```
+
+**Age Group Patterns**
+
+```{python}
+if "AGECL" in df.columns:
+    age_rows = []
+    for g in sorted(df["AGECL"].dropna().unique()):
+        m = df["AGECL"].values == g
+        age_rows.append({
+            "AGECL": int(g),
+            "Median net worth": fmt_money(w_median(df.loc[m, "NETWORTH"].values, w[m])),
+            "Median income": fmt_money(w_median(df.loc[m, "INCOME"].values, w[m])),
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m])) if home_indicator is not None else "",
+            "Retirement ownership": fmt_pct(w_mean(df["HRETQLIQ"].values[m], w[m])) if "HRETQLIQ" in df.columns else ""
+        })
+    pd.DataFrame(age_rows)
+```
+
+**Race/Ethnicity Patterns (SCF Codes)**
+
+```{python}
+if "RACECL4" in df.columns:
+    race_rows = []
+    for g in sorted(df["RACECL4"].dropna().unique()):
+        m = df["RACECL4"].values == g
+        race_rows.append({
+            "RACECL4": int(g),
+            "Median net worth": fmt_money(w_median(df.loc[m, "NETWORTH"].values, w[m])),
+            "Median income": fmt_money(w_median(df.loc[m, "INCOME"].values, w[m])),
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m])) if home_indicator is not None else ""
+        })
+    pd.DataFrame(race_rows)
+```
+
+**Appendix: Data Coverage**
+
+```{python}
+# Total weighted households represented
+pd.DataFrame({
+    "Total weighted households (sum of WGT)": [f"{w.sum():,.0f}"]
+})
+```
+
+**Regression-Based Insights (Correlational)**
+
+These models are exploratory and **not causal**. They are meant to surface relationships that may be underappreciated or counterintuitive. I use weighted linear regression with the SCF `WGT`. Continuous variables are transformed with `asinh()` so negative values are handled cleanly and effects are roughly log-like at higher values.
+
+```{python}
+# Regression helpers
+def build_X(df, cols, drop_first=True):
+    X = []
+    names = []
+    for col in cols:
+        if isinstance(col, tuple):
+            name, arr = col
+            X.append(arr)
+            names.append(name)
+        else:
+            vals = df[col].values
+            cats = sorted([c for c in pd.unique(vals) if pd.notna(c)])
+            if drop_first and len(cats) > 0:
+                cats = cats[1:]
+            for c in cats:
+                X.append((vals == c).astype(float))
+                names.append(f"{col}={c}")
+    X = np.column_stack(X) if X else np.empty((len(df), 0))
+    return X, names
+
+
+def wls(y, X, w):
+    X1 = np.column_stack([np.ones(len(y)), X])
+    m = np.isfinite(y) & np.isfinite(w) & np.all(np.isfinite(X1), axis=1)
+    y = y[m]
+    X1 = X1[m]
+    w = w[m]
+    sw = np.sqrt(w)
+    Xw = X1 * sw[:, None]
+    yw = y * sw
+    beta, *_ = np.linalg.lstsq(Xw, yw, rcond=None)
+    resid = y - X1 @ beta
+    dof = max(len(y) - X1.shape[1], 1)
+    sigma2 = (w * resid**2).sum() / dof
+    XtWX_inv = np.linalg.inv(X1.T @ (X1 * w[:, None]))
+    se = np.sqrt(np.diag(XtWX_inv) * sigma2)
+    return beta, se, m.sum()
+
+
+def coef_table(beta, se, names, keep_prefixes):
+    rows = []
+    for name, b, s in zip(names, beta, se):
+        if name == "Intercept":
+            continue
+        if any(name.startswith(p) for p in keep_prefixes):
+            rows.append({
+                "Variable": name,
+                "Coef": b,
+                "SE": s
+            })
+    return pd.DataFrame(rows)
+
+
+home = df["HHOUSES"].values if "HHOUSES" in df.columns else (df["HOUSECL"].values == 1).astype(int)
+inc = df["INCOME"].values
+nw = df["NETWORTH"].values
+liq = df["LIQ"].values
+
+asinh_inc = np.arcsinh(inc)
+asinh_nw = np.arcsinh(nw)
+asinh_liq = np.arcsinh(liq)
+
+# Liquidity months of income
+liq_ratio = np.full_like(inc, np.nan, dtype=float)
+mask_inc = inc > 0
+liq_ratio[mask_inc] = liq[mask_inc] / (inc[mask_inc] / 12.0)
+low_liq = (liq_ratio < 3).astype(float)
+
+# Model A: Net worth (asinh)
+cols_A = [
+    ("asinh_income", asinh_inc),
+    ("homeowner", home),
+    ("has_debt", df["HDEBT"].values),
+    ("asinh_liquid", asinh_liq),
+    "AGECL", "EDCL", "RACECL4", "MARRIED", "KIDS"
+]
+X_A, names_A = build_X(df, cols_A)
+beta_A, se_A, n_A = wls(asinh_nw, X_A, w)
+names_A = ["Intercept"] + names_A
+
+# Model B: Retirement ownership (linear probability)
+cols_B = [
+    ("asinh_income", asinh_inc),
+    ("homeowner", home),
+    ("asinh_liquid", asinh_liq),
+    "AGECL", "EDCL", "RACECL4", "MARRIED", "KIDS"
+]
+X_B, names_B = build_X(df, cols_B)
+beta_B, se_B, n_B = wls(df["HRETQLIQ"].values.astype(float), X_B, w)
+names_B = ["Intercept"] + names_B
+
+# Model C: Credit card balance (linear probability)
+cols_C = [
+    ("asinh_income", asinh_inc),
+    ("homeowner", home),
+    ("asinh_liquid", asinh_liq),
+    "AGECL", "EDCL", "RACECL4", "MARRIED", "KIDS"
+]
+X_C, names_C = build_X(df, cols_C)
+beta_C, se_C, n_C = wls(df["HCCBAL"].values.astype(float), X_C, w)
+names_C = ["Intercept"] + names_C
+
+# Model D: Low liquidity (<3 months) (linear probability)
+cols_D = [
+    ("asinh_income", asinh_inc),
+    ("homeowner", home),
+    ("has_debt", df["HDEBT"].values),
+    "AGECL", "EDCL", "RACECL4", "MARRIED", "KIDS"
+]
+X_D, names_D = build_X(df, cols_D)
+beta_D, se_D, n_D = wls(low_liq, X_D, w)
+names_D = ["Intercept"] + names_D
+
+# Compact coefficient tables (focus on key drivers)
+keep = ["asinh_income", "homeowner", "asinh_liquid", "has_debt", "MARRIED=2"]
+
+table_A = coef_table(beta_A, se_A, names_A, keep)
+table_B = coef_table(beta_B, se_B, names_B, keep)
+table_C = coef_table(beta_C, se_C, names_C, keep)
+table_D = coef_table(beta_D, se_D, names_D, keep)
+
+display(Markdown("**Model A:** asinh(Net Worth)"))
+display(table_A)
+
+display(Markdown("**Model B:** Retirement Ownership (LPM)"))
+display(table_B)
+
+display(Markdown("**Model C:** Credit Card Balance (LPM)"))
+display(table_C)
+
+display(Markdown("**Model D:** Low Liquidity (<3 months) (LPM)"))
+display(table_D)
+```
+
+```{python}
+# Convert selected coefficients to more interpretable "1 SD" effects
+def one_sd_effect(beta, se, name, names, x):
+    if name not in names:
+        return None
+    b = beta[names.index(name)]
+    sd = np.nanstd(x)
+    return b * sd
+
+effects = {
+    "Net worth: +1 SD income (asinh)": one_sd_effect(beta_A, se_A, "asinh_income", names_A, asinh_inc),
+    "Net worth: +1 SD liquid assets (asinh)": one_sd_effect(beta_A, se_A, "asinh_liquid", names_A, asinh_liq),
+    "Retirement ownership: +1 SD income (asinh)": one_sd_effect(beta_B, se_B, "asinh_income", names_B, asinh_inc),
+    "Credit card balance: +1 SD liquid assets (asinh)": one_sd_effect(beta_C, se_C, "asinh_liquid", names_C, asinh_liq),
+    "Low liquidity (<3m): +1 SD income (asinh)": one_sd_effect(beta_D, se_D, "asinh_income", names_D, asinh_inc)
+}
+
+pd.DataFrame({"Effect (approx)": effects}).T
+```
+
+**Interpretive Takeaways (What Looks Wrong or Underappreciated)**
+
+```{python}
+# Pull a few key coefficients for narrative
+coef_A = {n:b for n,b in zip(names_A, beta_A)}
+coef_B = {n:b for n,b in zip(names_B, beta_B)}
+coef_C = {n:b for n,b in zip(names_C, beta_C)}
+coef_D = {n:b for n,b in zip(names_D, beta_D)}
+
+lines = []
+
+# 1) High income doesn't guarantee liquidity cushion
+lines.append(
+    f"- **Common-sense idea that looks wrong:** higher-income households are *more* likely to have <3 months of liquid assets once you measure liquidity *relative to income*. The model shows a positive association of income with low-liquidity risk (coef on asinh income in Model D: {coef_D.get('asinh_income', float('nan')):.3f})."
+)
+
+# 2) Liquidity matters beyond income for credit card balances
+lines.append(
+    f"- **Underappreciated:** liquidity is a strong negative predictor of carrying a credit card balance even after income and demographics. In Model C, the coefficient on liquid assets is negative (asinh_liquid: {coef_C.get('asinh_liquid', float('nan')):.3f})."
+)
+
+# 3) Homeownership has an unusually large association with net worth
+lines.append(
+    f"- **New emphasis:** homeownership remains one of the largest correlates of net worth even controlling for income, liquidity, and demographics (Model A homeowner coef: {coef_A.get('homeowner', float('nan')):.3f}). This suggests home equity is doing heavy lifting in balance sheets."
+)
+
+# 4) Retirement ownership is tied to more than income
+lines.append(
+    f"- **Additional insight:** retirement ownership rises with income and liquidity, but homeownership also shows an independent association (Model B homeowner coef: {coef_B.get('homeowner', float('nan')):.3f})."
+)
+
+display(Markdown("\n".join(lines)))
+```

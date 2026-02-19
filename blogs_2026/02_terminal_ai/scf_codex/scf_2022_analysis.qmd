@@ -1,0 +1,388 @@
+---
+title: "SCF 2022: Interesting Results"
+date: 2026-02-07
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+from IPython.display import Markdown, display
+import matplotlib.pyplot as plt
+
+DATA_PATH = "SCFP2022.csv"
+
+# Load only the columns we need for this report
+all_cols = pd.read_csv(DATA_PATH, nrows=1).columns
+usecols = [
+    "WGT",
+    "INCOME", "NETWORTH", "ASSET", "DEBT",
+    "LIQ", "RETQLIQ", "RETEQ",
+    "HOUSES", "HOMEEQ",
+    "DEBT2INC", "CCBAL",
+    "HHOUSES", "HOUSECL",
+    "HDEBT", "HASSET", "HLIQ",
+    "HCHECK", "HSAVING", "HSTOCKS", "HBOND",
+    "HRETQLIQ", "HBUS", "HCCBAL",
+    "HPRIM_MORT", "HSEC_MORT",
+    "HVEHIC", "VEHIC",
+    "EDN_INST", "HEDN_INST",
+    "AGE", "AGECL", "EDUC", "EDCL",
+    "RACECL", "RACECL4", "RACECL5",
+    "MARRIED", "KIDS",
+    "CHECKING", "SAVING", "STOCKS", "BOND", "BUS",
+    "IRAKH", "PIRMORT"
+]
+usecols = [c for c in usecols if c in all_cols]
+
+df = pd.read_csv(DATA_PATH, usecols=usecols)
+
+w = df["WGT"].astype(float).values
+
+# Weighted statistics helpers
+
+def w_mean(x, w):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    if w.sum() == 0:
+        return np.nan
+    return (x * w).sum() / w.sum()
+
+
+def w_quantile(x, w, q):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    if len(x) == 0:
+        return np.nan
+    idx = np.argsort(x)
+    x = x[idx]
+    w = w[idx]
+    cum = np.cumsum(w)
+    if cum[-1] == 0:
+        return np.nan
+    target = q * cum[-1]
+    return np.interp(target, cum, x)
+
+
+def w_median(x, w):
+    return w_quantile(x, w, 0.5)
+
+
+def w_share(x, w, mask):
+    m = np.isfinite(x) & np.isfinite(w)
+    x = x[m]
+    w = w[m]
+    mask = mask[m]
+    total = (x * w).sum()
+    if total == 0:
+        return np.nan
+    return (x * w * mask).sum() / total
+
+
+def fmt_money(x):
+    if pd.isna(x):
+        return ""
+    return f"${x:,.0f}"
+
+
+def fmt_pct(x):
+    if pd.isna(x):
+        return ""
+    return f"{x*100:,.1f}%"
+
+# Useful derived values
+home_indicator = None
+if "HHOUSES" in df.columns:
+    home_indicator = df["HHOUSES"].values
+elif "HOUSECL" in df.columns:
+    home_indicator = (df["HOUSECL"].values == 1).astype(int)
+```
+
+**Notes**
+
+This report uses the SCF 2022 public data in `SCFP2022.csv` and applies the SCF household weight (`WGT`) for all estimates. Variable labels follow SCF naming; when in doubt, consult the SCF codebook for exact definitions of indicator variables and group codes (e.g., `AGECL`, `EDCL`, `RACECL4`).
+
+```{python}
+# Core distribution summary
+summary_rows = []
+for var, label in [
+    ("INCOME", "Household income"),
+    ("NETWORTH", "Net worth"),
+    ("ASSET", "Total assets"),
+    ("DEBT", "Total debt")
+]:
+    if var not in df.columns:
+        continue
+    x = df[var].values
+    summary_rows.append({
+        "Measure": label,
+        "P10": fmt_money(w_quantile(x, w, 0.10)),
+        "Median": fmt_money(w_median(x, w)),
+        "P90": fmt_money(w_quantile(x, w, 0.90))
+    })
+
+summary_df = pd.DataFrame(summary_rows)
+summary_df
+```
+
+```{python}
+# Wealth concentration
+nw = df["NETWORTH"].values
+p50 = w_quantile(nw, w, 0.50)
+p90 = w_quantile(nw, w, 0.90)
+p99 = w_quantile(nw, w, 0.99)
+
+wealth_share_df = pd.DataFrame([
+    {"Group": "Bottom 50%", "Share of net worth": fmt_pct(w_share(nw, w, nw <= p50))},
+    {"Group": "Middle 40% (50-90)", "Share of net worth": fmt_pct(w_share(nw, w, (nw > p50) & (nw < p90)))},
+    {"Group": "Top 10%", "Share of net worth": fmt_pct(w_share(nw, w, nw >= p90))},
+    {"Group": "Top 1%", "Share of net worth": fmt_pct(w_share(nw, w, nw >= p99))}
+])
+wealth_share_df
+```
+
+```{python}
+# Ownership rates
+ownership_vars = {
+    "Homeowner (HHOUSES/HOUSECL)": None,
+    "Has any debt (HDEBT)": "HDEBT",
+    "Has checking account (HCHECK)": "HCHECK",
+    "Has savings account (HSAVING)": "HSAVING",
+    "Has liquid assets (HLIQ)": "HLIQ",
+    "Has retirement accounts (HRETQLIQ)": "HRETQLIQ",
+    "Has directly held stocks (HSTOCKS)": "HSTOCKS",
+    "Has bonds (HBOND)": "HBOND",
+    "Has a business interest (HBUS)": "HBUS",
+    "Has credit card balance (HCCBAL)": "HCCBAL",
+    "Has education installment loans (HEDN_INST)": "HEDN_INST",
+    "Has vehicles (HVEHIC)": "HVEHIC",
+    "Has primary mortgage (HPRIM_MORT)": "HPRIM_MORT",
+    "Has second mortgage (HSEC_MORT)": "HSEC_MORT"
+}
+
+ownership_rows = []
+for label, var in ownership_vars.items():
+    if var is None:
+        if home_indicator is None:
+            continue
+        rate = w_mean(home_indicator, w)
+    else:
+        if var not in df.columns:
+            continue
+        rate = w_mean(df[var].values, w)
+    ownership_rows.append({"Indicator": label, "Share of households": fmt_pct(rate)})
+
+ownership_df = pd.DataFrame(ownership_rows)
+ownership_df
+```
+
+```{python}
+# Conditional medians for holders
+cond_rows = []
+
+if "DEBT" in df.columns:
+    mask = df["DEBT"].values > 0
+    cond_rows.append({
+        "Measure": "Debt among households with debt",
+        "Median": fmt_money(w_median(df.loc[mask, "DEBT"].values, w[mask]))
+    })
+
+if "HOMEEQ" in df.columns and home_indicator is not None:
+    mask = home_indicator == 1
+    cond_rows.append({
+        "Measure": "Home equity among homeowners",
+        "Median": fmt_money(w_median(df.loc[mask, "HOMEEQ"].values, w[mask]))
+    })
+
+if "RETQLIQ" in df.columns and "HRETQLIQ" in df.columns:
+    mask = df["HRETQLIQ"].values == 1
+    cond_rows.append({
+        "Measure": "Retirement account balance among holders",
+        "Median": fmt_money(w_median(df.loc[mask, "RETQLIQ"].values, w[mask]))
+    })
+
+if "STOCKS" in df.columns and "HSTOCKS" in df.columns:
+    mask = df["HSTOCKS"].values == 1
+    cond_rows.append({
+        "Measure": "Direct stock holdings among holders",
+        "Median": fmt_money(w_median(df.loc[mask, "STOCKS"].values, w[mask]))
+    })
+
+if "LIQ" in df.columns and "HLIQ" in df.columns:
+    mask = df["HLIQ"].values == 1
+    cond_rows.append({
+        "Measure": "Liquid assets among holders",
+        "Median": fmt_money(w_median(df.loc[mask, "LIQ"].values, w[mask]))
+    })
+
+if "CCBAL" in df.columns and "HCCBAL" in df.columns:
+    mask = df["HCCBAL"].values == 1
+    cond_rows.append({
+        "Measure": "Credit card balance among households with balances",
+        "Median": fmt_money(w_median(df.loc[mask, "CCBAL"].values, w[mask]))
+    })
+
+if "DEBT2INC" in df.columns and "DEBT" in df.columns:
+    mask = df["DEBT"].values > 0
+    cond_rows.append({
+        "Measure": "Debt-to-income ratio among households with debt",
+        "Median": f"{w_median(df.loc[mask, 'DEBT2INC'].values, w[mask]):.2f}"  # ratio, not percent
+    })
+
+cond_df = pd.DataFrame(cond_rows)
+cond_df
+```
+
+```{python}
+# Key findings as a compact bullet list
+neg_nw = w_mean((df["NETWORTH"].values < 0).astype(int), w)
+median_income = w_median(df["INCOME"].values, w)
+median_nw = w_median(df["NETWORTH"].values, w)
+
+home_rate = w_mean(home_indicator, w) if home_indicator is not None else np.nan
+any_debt = w_mean(df["HDEBT"].values, w) if "HDEBT" in df.columns else np.nan
+stock_rate = w_mean(df["HSTOCKS"].values, w) if "HSTOCKS" in df.columns else np.nan
+ret_rate = w_mean(df["HRETQLIQ"].values, w) if "HRETQLIQ" in df.columns else np.nan
+cc_rate = w_mean(df["HCCBAL"].values, w) if "HCCBAL" in df.columns else np.nan
+edu_inst_rate = w_mean(df["HEDN_INST"].values, w) if "HEDN_INST" in df.columns else np.nan
+
+p10_income = w_quantile(df["INCOME"].values, w, 0.10)
+p90_income = w_quantile(df["INCOME"].values, w, 0.90)
+
+p10_nw = w_quantile(df["NETWORTH"].values, w, 0.10)
+p90_nw = w_quantile(df["NETWORTH"].values, w, 0.90)
+
+share_top10 = w_share(nw, w, nw >= p90)
+share_top1 = w_share(nw, w, nw >= p99)
+share_bottom50 = w_share(nw, w, nw <= p50)
+
+lines = [
+    f"- Median household income is {fmt_money(median_income)} (10th percentile {fmt_money(p10_income)}, 90th percentile {fmt_money(p90_income)}).",
+    f"- Median net worth is {fmt_money(median_nw)} (10th percentile {fmt_money(p10_nw)}, 90th percentile {fmt_money(p90_nw)}).",
+    f"- {fmt_pct(neg_nw)} of households have negative net worth.",
+    f"- The top 10% hold {fmt_pct(share_top10)} of net worth; the top 1% hold {fmt_pct(share_top1)}; the bottom 50% hold {fmt_pct(share_bottom50)}.",
+]
+
+if not pd.isna(home_rate):
+    lines.append(f"- Homeownership rate is {fmt_pct(home_rate)}.")
+if not pd.isna(any_debt):
+    lines.append(f"- {fmt_pct(any_debt)} of households have some debt.")
+if not pd.isna(ret_rate):
+    lines.append(f"- {fmt_pct(ret_rate)} of households have retirement accounts.")
+if not pd.isna(stock_rate):
+    lines.append(f"- {fmt_pct(stock_rate)} of households hold directly owned stocks.")
+if not pd.isna(cc_rate):
+    lines.append(f"- {fmt_pct(cc_rate)} of households carry a credit card balance.")
+if not pd.isna(edu_inst_rate):
+    lines.append(f"- {fmt_pct(edu_inst_rate)} of households have education installment loans.")
+
+
+display(Markdown("\n".join(lines)))
+```
+
+**Age Group Patterns**
+
+```{python}
+if "AGECL" in df.columns:
+    age_rows = []
+    for g in sorted(df["AGECL"].dropna().unique()):
+        m = df["AGECL"].values == g
+        age_rows.append({
+            "AGECL": int(g),
+            "Median net worth": fmt_money(w_median(df.loc[m, "NETWORTH"].values, w[m])),
+            "Median income": fmt_money(w_median(df.loc[m, "INCOME"].values, w[m])),
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m])) if home_indicator is not None else ""
+        })
+    age_df = pd.DataFrame(age_rows)
+    age_df
+```
+
+**Education Patterns**
+
+```{python}
+if "EDCL" in df.columns:
+    ed_rows = []
+    for g in sorted(df["EDCL"].dropna().unique()):
+        m = df["EDCL"].values == g
+        ed_rows.append({
+            "EDCL": int(g),
+            "Median net worth": fmt_money(w_median(df.loc[m, "NETWORTH"].values, w[m])),
+            "Median income": fmt_money(w_median(df.loc[m, "INCOME"].values, w[m])),
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m])) if home_indicator is not None else ""
+        })
+    ed_df = pd.DataFrame(ed_rows)
+    ed_df
+```
+
+**Race/Ethnicity Patterns (SCF Codes)**
+
+```{python}
+if "RACECL4" in df.columns:
+    race_rows = []
+    for g in sorted(df["RACECL4"].dropna().unique()):
+        m = df["RACECL4"].values == g
+        race_rows.append({
+            "RACECL4": int(g),
+            "Median net worth": fmt_money(w_median(df.loc[m, "NETWORTH"].values, w[m])),
+            "Median income": fmt_money(w_median(df.loc[m, "INCOME"].values, w[m])),
+            "Homeownership rate": fmt_pct(w_mean(home_indicator[m], w[m])) if home_indicator is not None else ""
+        })
+    race_df = pd.DataFrame(race_rows)
+    race_df
+```
+
+**Charts**
+
+```{python}
+# Net worth by weighted percentile (1-99)
+percentiles = np.arange(1, 100)
+nw_p = [w_quantile(nw, w, p/100) for p in percentiles]
+
+plt.figure(figsize=(7, 4))
+plt.plot(percentiles, nw_p, color="#2a6f97")
+plt.yscale("symlog", linthresh=1e4)
+plt.xlabel("Percentile")
+plt.ylabel("Net worth (symlog scale)")
+plt.title("Net Worth by Weighted Percentile")
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+```{python}
+# Wealth share bar chart
+labels = ["Bottom 50%", "50-90", "Top 10%", "Top 1%"]
+values = [
+    w_share(nw, w, nw <= p50),
+    w_share(nw, w, (nw > p50) & (nw < p90)),
+    w_share(nw, w, nw >= p90),
+    w_share(nw, w, nw >= p99)
+]
+
+plt.figure(figsize=(7, 4))
+plt.bar(labels, values, color=["#6c757d", "#6c757d", "#1b4332", "#081c15"])
+plt.gca().yaxis.set_major_formatter(lambda x, pos: f"{x*100:.0f}%")
+plt.ylabel("Share of net worth")
+plt.title("Wealth Concentration")
+plt.ylim(0, 1)
+plt.grid(True, axis="y", alpha=0.3)
+plt.show()
+```
+
+**Appendix: Data Coverage**
+
+```{python}
+# Total weighted households represented
+pd.DataFrame({
+    "Total weighted households (sum of WGT)": [f"{w.sum():,.0f}"]
+})
+```
