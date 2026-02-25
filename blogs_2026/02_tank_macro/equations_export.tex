@@ -1,0 +1,124 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{margin=1in, paperwidth=7in, paperheight=30in}
+\usepackage{booktabs}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large\textbf{Full Linearized Equation System --- TANK-CW Task Displacement Model}}
+\end{center}
+
+\vspace{0.5em}
+
+\noindent\textit{All variables are log-linearized deviations from steady state.
+Bars denote steady-state values.}
+
+\vspace{1em}
+
+\begin{align}
+u'(c^S)_t &= Pr_t - \sigma_c\, c^S_t
+  \tag{1. Capitalist MU} \\[4pt]
+u'(c^S)_t &= r_t + u'(c^S)_{t+1}
+  \tag{2. Capitalist Euler} \\[4pt]
+u'(n^S)_t &= 0, \quad n^S_t = 0
+  \tag{3. Capitalists supply no labor} \\[4pt]
+u'(c^W)_t &= Pr_t - \sigma_c\, c^W_t
+  \tag{4. Worker MU} \\[4pt]
+u'(n^W)_t &= \varphi\, n^W_t
+  \tag{5. Worker disutility of labor} \\[4pt]
+mrs_t &= u'(n^W)_t - u'(c^W)_t
+  \tag{6. Worker MRS} \\[4pt]
+u'(c^W)_t &= r_t + u'(c^W)_{t+1} - \tfrac{\psi^W}{\bar{c}^W}\, b^W_t
+  \tag{7. Worker Euler} \\[4pt]
+c^W_t + \tfrac{b^W_t}{\bar{c}^W} &=
+  \tfrac{\bar{W}\bar{n}^W}{\bar{c}^W}(w_t + n^W_t)
+  - \tfrac{\bar{t}^W}{\bar{c}^W}\,t^W_t
+  + \tfrac{\tau^d}{\lambda}\tfrac{d_t}{\bar{c}^W}
+  + \tfrac{\bar{R}\, b^W_{t-1}}{\bar{c}^W}
+  \tag{8. Worker budget} \\[4pt]
+\tilde{I}_t &= \chi^I_{wr}(w_t - r^K_t)
+  \tag{9. Cost-min automation threshold} \\[4pt]
+I^*_t &= \omega_I\, I_t + (1-\omega_I)\,\tilde{I}_t
+  \tag{10. Equilibrium task share} \\[4pt]
+y^m_t &= (1-\alpha)(z_t + n_t) + \alpha(u_t + k_{t-1}) + \chi^Y_I\, I^*_t
+  \tag{11. Task-based production} \\[4pt]
+y_t &= y^m_t\,(1 + F/\bar{Y})
+  \tag{12. Retail output} \\[4pt]
+mpl^{human}_t &= y^m_t - \chi^{MPL}_I\, I^*_t - n_t
+  \tag{13. Human MPL, displacement effect} \\[4pt]
+w_t &= mc_t + mpl^{human}_t
+  \tag{14. Real wage} \\[4pt]
+mpk_t &= y^m_t + \chi^{MPK}_I\, I^*_t - u_t - k_{t-1}
+  \tag{15. MPK, capital complementarity} \\[4pt]
+r^K_t &= mc_t + mpk_t
+  \tag{16. Capital rental rate} \\[4pt]
+y_t &= \tfrac{\bar{W}\bar{n}}{\bar{Y}}(w_t + n_t)
+     + \tfrac{\bar{R}^K\bar{K}}{\bar{Y}}(r^K_t + u_t + k_{t-1})
+     + \tfrac{d_t}{\bar{Y}}
+  \tag{17. Income identity} \\[4pt]
+d_t &= d^S_t
+  \tag{18. Profits to capitalists} \\[4pt]
+ls_t &= w_t + n_t - y_t
+  \tag{19. Labor share} \\[4pt]
+r^K_t &= \tfrac{\gamma_2}{\gamma_1}\, u_t
+  \tag{20. Variable capital utilization} \\[4pt]
+k^S_t &= \delta(i^S_t + zi_t) + (1-\delta)\, k^S_{t-1}
+  \tag{21. Capital law of motion} \\[4pt]
+R_t - \pi_{t+1} &= \beta(1-\delta)\, q_{t+1}
+  + [1-\beta(1-\delta)]\, r^K_{t+1} - q_t
+  \tag{22. Capital arbitrage / Tobin's Q} \\[4pt]
+(1+\bar{R}^{-1})\, i^S_t &= \bar{R}^{-1}\, i^S_{t+1} + i^S_{t-1}
+  + \tfrac{1}{2\iota}(q_t + zi_t)
+  \tag{23. Investment Euler} \\[4pt]
+i_t = i^S_t,\quad & k_t = k^S_t
+  \tag{24. Investment and capital aggregation} \\[4pt]
+y_t &= c_y\, c_t + g_y\, g_t + \imath_y\, i_t
+     + \tfrac{\gamma_1\bar{K}}{\bar{Y}}\, u_t
+  \tag{25. Resource constraint} \\[4pt]
+r_t &= R_t - \pi_{t+1}
+  \tag{26. Fisher equation} \\[4pt]
+c_t &= \lambda\, c^W_t + (1-\lambda)\, c^S_t
+  \tag{27. Consumption aggregation} \\[4pt]
+n_t &= n^W_t
+  \tag{28. Labor aggregation} \\[4pt]
+\pi_t &= \beta\, \pi_{t+1} + \kappa\,(mc_t + ms_t)
+  \tag{29. New Keynesian Phillips curve} \\[4pt]
+\pi^w_t &= \beta\, \pi^w_{t+1} + \kappa_w\,(mrs_t - w_t + wms_t)
+  \tag{30. Wage Phillips curve} \\[4pt]
+\pi^w_t &= w_t - w_{t-1}
+  \tag{31. Wage inflation} \\[4pt]
+R_t &= \rho_r\, R_{t-1}
+  + (1-\rho_r)(\phi_\pi \pi_t + \phi_y y_t) + \varepsilon^M_t
+  \tag{32. Taylor rule} \\[4pt]
+z_t &= \rho_Z\, z_{t-1}
+  + (1-\phi_{disp})\,\varepsilon^{AI}_t + \varepsilon^Z_t
+  \tag{33. Labor-augmenting tech} \\[4pt]
+I_t &= \rho_{AI}\, I_{t-1} + \phi_{disp}\,\varepsilon^{AI}_t
+  \tag{34. Automation frontier} \\[4pt]
+g_t &= \rho_G\, g_{t-1} + \varepsilon^G_t
+  \tag{35. Gov.\ spending shock} \\[4pt]
+b_t &= \bar{R}(b_{t-1} + r_{t-1})
+  + \tfrac{\bar{G}}{\bar{B}}\,g_t - \tfrac{\bar{t}}{\bar{B}}\,t_t
+  \tag{36. Gov.\ budget constraint} \\[4pt]
+b_t &= b^S_t + \lambda\, b^W_t/\bar{B}
+  \tag{37. Bond market clearing} \\[4pt]
+t_t &= \rho_\tau\, t_{t-1}
+  + \phi_{\tau B}\, b_{t-1} + \phi_{\tau G}\, g_t
+  \tag{38. Fiscal rule} \\[4pt]
+t^S_t &= \tfrac{1-\lambda}{\lambda}\,t_t, \quad
+  t^W_t = \tfrac{\lambda}{1-\lambda}\,t_t
+  \tag{39. Tax allocation} \\[4pt]
+ms_t &= \rho_{MS}\, ms_{t-1} + \varepsilon^{MS}_t
+  \tag{40. Price markup shock} \\[4pt]
+wms_t &= \rho_{WMS}\, wms_{t-1} + \varepsilon^{WMS}_t
+  \tag{41. Wage markup shock} \\[4pt]
+Pr_t &= \rho_{Pr}\, Pr_{t-1} + \varepsilon^{Pr}_t
+  \tag{42. Preference shock} \\[4pt]
+zi_t &= \rho_{ZI}\, zi_{t-1} + \varepsilon^{ZI}_t
+  \tag{43. MEI shock}
+\end{align}
+
+\end{document}

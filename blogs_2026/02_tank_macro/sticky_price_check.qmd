@@ -1,0 +1,298 @@
+---
+title: "Can Wage Rigidity Make AI Bad for Workers?"
+subtitle: "A Sticky-Wage Check in TANK-CW: Productivity Without Wage Adjustment"
+format:
+  html:
+    self-contained: true
+    toc: true
+    toc-depth: 2
+---
+
+## The Question
+
+The task-displacement framework (see `displacement_explainer.qmd`) explains how AI can
+raise output while harming workers through a **structural** channel: automation
+replaces the set of tasks humans perform, compressing the human marginal product of
+labor and pulling wages down.
+
+This document tests a simpler, purely nominal version of the same outcome. The
+question is: **can extreme wage stickiness alone produce a world where AI raises output
+but workers capture none of the gains --- even when the shock is entirely
+labor-augmenting with no task displacement?**
+
+The only thing that differs between the two scenarios is $\kappa_w$, the slope of the
+wage Phillips curve. Prices adjust at the same normal speed in both cases.
+
+- **Scenario 1 — Normal wages** ($\kappa_w \approx 0.117$): Average wage spell is
+  3.5 quarters. Wages respond to the gap between the marginal rate of substitution and
+  the real wage. Productivity gains flow to workers.
+
+- **Scenario 2 — Frozen wages** ($\kappa_w \approx 0.0002$): Average wage spell is
+  100 quarters. Wages essentially cannot adjust over any horizon shown. Productivity
+  gains cannot reach workers through nominal wage adjustment and flow instead to
+  profits.
+
+Prices are kept at normal stickiness ($\kappa \approx 0.117$) in both scenarios.
+This keeps the Taylor rule's nominal anchor intact and the model determinate.
+
+---
+
+## The Model
+
+Standard TANK-CW (Two-Agent New Keynesian with Capital and Wealth), model version 1:
+workers are $\lambda \approx 0.80$ of the population, hand-to-mouth. Capitalists
+($1-\lambda \approx 0.20$) own capital and receive profits.
+
+Standard Cobb-Douglas production — no task allocation block:
+
+$$
+y^m_t = (1-\alpha)(z_t + n_t) + \alpha(u_t + k_{t-1})
+$$
+
+$$
+mpl_t = y^m_t - n_t, \qquad w_t = mc_t + mpl_t
+$$
+
+Near-permanent productivity shock: $z_t = 0.999\, z_{t-1} + \varepsilon^Z_t$.
+
+### The Wage Phillips Curve Slope as the Scenario Control
+
+$$
+\pi^w_t = \beta\,\pi^w_{t+1} + \kappa_w\,(mrs_t - w_t), \qquad \pi^w_t = w_t - w_{t-1}
+$$
+
+From Calvo wage-setting with average spell $s_w$ quarters:
+
+$$
+\kappa_w = \frac{(1 - \text{calvo}_w)(1 - \beta\,\text{calvo}_w)}{\text{calvo}_w},
+\qquad \text{calvo}_w = 1 - \frac{1}{s_w}
+$$
+
+| Scenario | $s_w$ (quarters) | $\kappa_w$ | $\kappa$ (prices) |
+|---|---|---|---|
+| Normal wages | 3.5 | 0.117 | 0.117 (unchanged) |
+| Frozen wages | 100 | 0.0002 | 0.117 (unchanged) |
+
+As $\kappa_w \to 0$, the wage Phillips curve flattens: wages are entirely
+forward-looking and do not respond to the MRS--wage gap within any reasonable horizon.
+The wage equation becomes $\pi^w_t \approx \beta\,\pi^w_{t+1}$, and since
+$\pi^w_t = w_t - w_{t-1}$, wages barely move period to period.
+
+Prices still adjust normally in both cases, so the Taylor rule continues to respond to
+inflation and the model remains determinate.
+
+---
+
+## Results
+
+*Generate the figure by running `compare_sticky_price.m` in MATLAB/Dynare.*
+
+![**Figure 1.** Impulse responses to a one-unit near-permanent productivity shock
+($\rho_Z = 0.999$). **Blue**: normal wage stickiness ($\kappa_w \approx 0.117$,
+3.5-quarter average wage spell). **Red**: frozen wages ($\kappa_w \approx 0.0002$,
+100-quarter average spell). Prices adjust at identical normal speed in both scenarios
+($\kappa \approx 0.117$). All variables shown as percent deviations from steady
+state. Horizon: 20 quarters. Model: TANK-CW, no task displacement.](fig_sticky_comparison.png)
+
+### Reading the Eight Panels
+
+**Panel 1 --- Fed Funds Rate (Nominal):** Zero means the nominal interest rate is at
+its steady-state level --- monetary policy is neutral. Both scenarios cut rates: prices
+adjust normally in both, so the productivity shock still compresses marginal costs,
+generates some disinflation, and the Taylor rule responds. But the cut is smaller
+under frozen wages (red). Under normal wages (blue), falling labor costs amplify the
+deflationary signal; under frozen wages, wages don't fall and the disinflation comes
+only from the price channel, producing a weaker rate cut.
+
+**Panel 2 --- Output:** Zero means output is at its pre-shock steady-state level.
+Both lines are well above zero --- a productivity gain raises output regardless of wage
+stickiness. The red line (frozen wages) is dramatically higher: when wages are stuck,
+firms face very cheap labor relative to the improved productivity level and hire
+aggressively, expanding hours (see Panel 5), which further raises output. The monetary
+accommodation is also slightly larger in the blue case over the longer run as wages
+feed back into prices, but the dominant effect is the hours channel.
+
+**Panel 3 --- Real Wage:** Zero means real wages are at their pre-shock level ---
+workers earn the same per hour as before productivity increased. Under normal wages
+(blue), wages rise toward the new, higher MPL over several quarters. Workers are
+capturing their share of the productivity gain. Under frozen wages (red), wages
+barely move above zero throughout the 20-quarter horizon. At 100-quarter average
+spell, only about 1% of the MRS--wage gap closes each quarter. Workers are
+producing substantially more per hour but are not being paid more for it.
+
+**Panel 4 --- Labor Share:** Zero means labor's share of output is at its long-run
+value of 67%. Under normal wages (blue), labor share falls modestly: output rises
+faster than wages initially, but wages catch up, so the share recovers toward zero
+over time. Under frozen wages (red), labor share collapses to around $-65\%$ at
+impact and only slowly recovers --- output surges (driven by higher hours) while
+wages are flat, so the denominator grows much faster than the numerator. Labor's
+fraction of the pie falls sharply.
+
+**Panel 5 --- Hours Worked:** Zero means workers are working the same hours as
+before the shock. Under normal wages (blue), hours dip slightly below zero: wages
+rise, workers feel wealthier, and the income effect leads them to take some leisure.
+Under frozen wages (red), hours surge to $+150\%$ above steady state and stay
+elevated for many quarters. Why? Wages are frozen at the pre-shock level, but
+productivity has permanently risen. Firms can now get much more output per dollar
+of labor cost. They hire aggressively. Workers supply the hours because their
+real wage hasn't risen, so there is no income effect restraining labor supply.
+The model's labor demand side dominates.
+
+**Panel 6 --- Worker Consumption ($\lambda$-weighted):** Zero means aggregate
+worker consumption is at its steady-state level. Both lines are above zero:
+even under frozen wages, workers are working many more hours, so their total labor
+income ($W + H$) rises substantially --- the wage per hour is flat, but there are
+far more hours. Under normal wages (blue), worker consumption rises from both
+higher wages and more hours (though hours are only slightly above baseline). The
+blue line rises more slowly at first (wages adjust gradually) but represents a
+more permanent, wage-driven improvement. The red line is higher because hours are
+much higher, but this represents workers grinding out more labor rather than
+earning more per hour.
+
+**Panel 7 --- Capitalist Consumption ($(1-\lambda)$-weighted):** Zero means
+capitalist consumption is at its steady-state level. Both lines are above zero.
+Red is substantially higher throughout. Under frozen wages, the entire productivity
+surplus beyond the fixed wage bill accrues to profits, which capitalists consume
+and invest. The gap between red and blue here is the distributional cost of wage
+rigidity: the extra consumption capitalists enjoy under frozen wages is exactly the
+extra consumption that workers would have had if wages could adjust.
+
+**Panel 8 --- Profits:** Zero means profits are at steady-state. Both positive.
+Under frozen wages (red), profits are higher and more persistent: output rises
+sharply (from both productivity and hours), the wage bill barely moves, and the
+surplus accrues to firm owners. Under normal wages (blue), profits rise initially
+but fall back as wages rise and claim the productivity dividend; profits return
+toward steady state over the 20-quarter window.
+
+---
+
+## Specific Questions
+
+### Why Does the Fed Cut Less Under Frozen Wages?
+
+The Taylor rule responds to realized price inflation:
+
+$$
+R_t = \rho_r R_{t-1} + (1-\rho_r)\phi_\pi \pi_t + \ldots
+$$
+
+In both scenarios, prices adjust normally (kappa = 0.117). The productivity shock
+lowers marginal cost $mc_t = w_t - mpl_t$. Under normal wages, $w_t$ rises as
+wages adjust but $mpl_t$ rises more, so $mc_t$ falls substantially → deflation →
+larger rate cut.
+
+Under frozen wages, $w_t$ barely moves, so $mc_t = w_t - mpl_t \approx -mpl_t$
+falls by even more than in the normal case. This actually creates *more* deflation
+from the cost side. But there is an offsetting force: the large expansion in hours
+drives output and demand up sharply. Higher demand puts upward pressure on marginal
+costs through the utilization and capital channels. The net effect on $mc_t$, and
+therefore on inflation and the rate cut, depends on the balance of these forces. In
+the model, the demand expansion partially offsets the cost compression, so the
+inflation signal is somewhat smaller under frozen wages, and the Fed cuts rates by
+a bit less.
+
+### Why Are Hours So Much Higher Under Frozen Wages?
+
+Hours are determined jointly by labor demand (firms hire until the wage equals the
+value of the marginal product) and the wage Phillips curve.
+
+Under normal wages, productivity rises, MPL rises, and the wage Phillips curve
+transmits this into higher wages over a few quarters. As wages rise, the labor cost
+to firms increases, moderating their desire to hire. The hours expansion is limited.
+Additionally, higher wages create an income effect on labor supply: workers feel
+richer and choose to work less.
+
+Under frozen wages, MPL rises but wages don't. The wedge between MPL and the wage
+grows continuously as the near-permanent productivity shock accumulates. Firms see
+labor as extraordinarily cheap relative to what it produces. They hire much more.
+Workers have no income effect pulling them away from work (their wage per hour
+hasn't changed), so they supply whatever hours firms demand. The result is a large,
+persistent hours boom.
+
+This is the other side of workers not capturing productivity gains: they work much
+more, for essentially the same hourly pay.
+
+### Why Is Output So Much Higher Under Frozen Wages?
+
+Output is $y^m = (1-\alpha)(z + n) + \alpha(u + k)$. The productivity gain $z$
+is the same in both scenarios. But under frozen wages, $n$ is much higher (hours
+surge +150%), which feeds directly into the labor term $(1-\alpha) n_t$. Capital
+utilization $u$ also rises as firms work their capital harder to meet demand. The
+combination of higher hours and higher utilization makes output substantially larger
+under frozen wages than under normal wages, where the hours effect is small.
+
+---
+
+## Comparison to the AR Task Displacement Framework
+
+Both this experiment and the task displacement experiment produce workers who fail
+to capture productivity gains. The mechanisms and dynamics are different:
+
+| Feature | AR Displacement ($\phi_{disp}=1$) | Frozen Wages ($\kappa_w \to 0$) |
+|---|---|---|
+| Mechanism | Machines replace human tasks; human MPL compressed | Wages cannot adjust; workers cannot claim higher MPL |
+| Real wage | Falls (MPL structurally lower) | Barely rises (stuck at pre-shock level) |
+| Labor share | Collapses | Collapses |
+| Hours | Fall less than augmentation | Surge dramatically |
+| Worker consumption | Falls below SS | Rises, but via overwork not wage gains |
+| Profits | Rise modestly | Surge and persist |
+| Inflation | Small deflation (wages fall → MC falls) | Deflation (cost compression, partially offset by demand) |
+| Fed funds | Small rate cut | Moderate rate cut |
+| Output | Slightly above augmentation | Dramatically above normal wages |
+
+The key difference: under displacement, workers are replaced by machines and work
+fewer hours for lower wages. Under frozen wages, workers are not replaced --- they
+work far more hours at the same wage. Both scenarios harm workers relative to the
+baseline where wages adjust, but through opposite labor-quantity effects.
+
+---
+
+## Blog Post Notes
+
+### The Core Story
+
+Imagine two economies hit by the same AI productivity shock. In the first, the
+labor market functions normally: wages respond to higher productivity over a few
+quarters, and workers capture a share of the gains. In the second, wages are
+effectively frozen --- not because workers are displaced by machines, but because
+the wage-setting process is too slow to adjust. Output in the second economy is
+actually much higher than in the first, and workers put in far more hours. But
+their hourly pay barely changes. All the extra output goes to profits. Workers are
+working harder for the same wage while their employers capture the entire
+productivity dividend.
+
+This experiment shows that distributional harm from AI does not require structural
+displacement. Wage rigidity alone --- the inability of workers to bargain up their
+wages in response to higher productivity --- is sufficient to reproduce the same
+inequality outcome.
+
+### Why This Is the Right Simple Test
+
+The AR task displacement model is rich but complex: it requires modeling an
+automation frontier, a cost-minimizing threshold, and a task-share equilibrium.
+This experiment strips all of that away. The production function is plain
+Cobb-Douglas. The only change between scenarios is one number: $\kappa_w$, the
+speed at which wages respond to labor market conditions. The result is the same
+distributional pattern. This suggests that the mechanism connecting AI to worker
+harm may be more about **wage-setting power** than about the specific technology
+of task replacement.
+
+### Key Policy Takeaways
+
+1. **$\kappa_w$ is a policy variable.** Union density, sector-level wage bargaining,
+   minimum wage indexation, and profit-sharing mandates all affect how quickly wages
+   respond to productivity gains. Policies that raise $\kappa_w$ help workers capture
+   AI gains. A labor market with weak worker bargaining power operates in the
+   low-$\kappa_w$ regime.
+
+2. **More output is not enough.** Under frozen wages, output is dramatically higher
+   than under normal wages. A policymaker watching GDP would see a stronger economy.
+   But worker welfare is lower on a per-hour basis. Hours-adjusted or wage-adjusted
+   measures of worker wellbeing tell a completely different story from headline GDP.
+
+3. **The Fed cannot fix distributional rigidity.** In both scenarios the Fed cuts
+   rates and provides some accommodation. But the rate cut under frozen wages
+   primarily benefits capitalists (through investment and asset prices) rather than
+   workers (who would need higher wages, not lower interest rates, to benefit).
+   Monetary policy is not a substitute for labor market institutions that allow
+   wages to rise with productivity.

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.citriniresearch.com)",
+      "Bash(which matlab:)",
+      "Bash(tail:*)",
+      "Bash(tail:)",
+      "Bash(/Applications/MATLAB_R2025b.app/bin/matlab:)",
+      "Bash(/Applications/MATLAB_R2025b.app/bin/matlab:*)",
+      "Bash(cd \"/Users/mtkonczal/Documents/command_line_AI_projects/underclass macro\" && quarto render ai_displacement_analysis.qmd --to html 2>&1)",
+      "Bash(open:*)",
+      "Bash(cd \"/Users/mtkonczal/Documents/command_line_AI_projects/underclass macro\" && quarto render ai_displacement_analysis.qmd 2>&1)",
+      "Bash(ls:*)",
+      "Bash(head:*)",
+      "Bash(cd:*)",
+      "Bash(which quarto:*)",
+      "Bash(cd \"/Users/mtkonczal/Documents/command_line_AI_projects/tank macro\" && quarto render displacement_explainer.qmd 2>&1)",
+      "Bash(python3:*)",
+      "Bash(echo pdfcrop not found:*)",
+      "Bash(cd \"/Users/mtkonczal/Documents/command_line_AI_projects/tank macro\" && quarto render sticky_price_check.qmd 2>&1)"
+    ]
+  }
+}

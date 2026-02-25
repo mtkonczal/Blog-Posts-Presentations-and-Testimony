@@ -1,0 +1,615 @@
+---
+title: "Does AI Raise Wages or Displace Workers?"
+subtitle: "A TANK-CW Experiment on Task Automation vs. Labor-Augmenting AI"
+format:
+  html:
+    self-contained: true
+    toc: true
+    toc-depth: 2
+---
+
+## The Question We Are Asking
+
+Not all AI is the same. A factory robot that replaces a line worker is
+economically distinct from software that helps that worker do twice as much in
+the same shift. The first *displaces* a human task; the second *augments* human
+productivity. Both raise output. But they have opposite effects on wages, the
+labor share, and the distribution of income between workers and capital owners.
+
+This experiment uses a medium-scale TANK-CW (Two-Agent New Keynesian model with
+Capital and Wealth) to ask: **what happens when the same AI shock is routed
+entirely into automation versus entirely into labor-augmenting productivity
+--- and what happens at every point in between?**
+
+We find that the type of AI shock matters enormously for distribution, and
+somewhat for monetary policy. Output looks similar across all three cases. Wages,
+labor share, and worker consumption tell completely different stories.
+
+---
+
+## The Setup
+
+The model has two types of agents:
+
+- **Workers** ($\lambda \approx 0.80$ of the population): hand-to-mouth
+  households who supply labor and consume their wage income each period.
+- **Capitalists** ($1-\lambda \approx 0.20$): saver households who own the
+  capital stock and receive profits and capital returns.
+
+The economy has sticky prices and sticky wages, government spending and debt, and
+variable capital utilization. The key new ingredient is the **task allocation
+block**, which gives the model an Acemoglu-Restrepo flavor.
+
+A single AI innovation shock, $\varepsilon_t^{AI}$, can be split between two
+channels by the parameter $\phi_{disp} \in [0,1]$:
+
+$$
+Z_t = \rho_Z Z_{t-1} + (1 - \phi_{disp})\,\varepsilon_t^{AI} + \varepsilon_t^Z
+\tag{1}
+$$
+
+$$
+I_t = \rho_{AI}\, I_{t-1} + \phi_{disp}\,\varepsilon_t^{AI}
+\tag{2}
+$$
+
+- When $\phi_{disp} = 0$: the entire shock loads into $Z_t$, the
+  **labor-augmenting productivity** term. AI makes every worker more
+  productive --- wages rise with productivity, gains are broadly shared.
+- When $\phi_{disp} = 1$: the entire shock loads into $I_t$, the
+  **automation technology frontier**. AI replaces human tasks --- output
+  rises but wages fall and labor share collapses.
+- When $\phi_{disp} = 0.5$: the shock is evenly split between the two
+  channels.
+
+Both shocks are near-permanent ($\rho_Z = \rho_{AI} = 0.999$), representing
+the kind of durable structural shift AI might represent.
+
+We compare the full impulse responses across all three values.
+
+---
+
+## The Task Allocation Block: An Acemoglu-Restrepo Approximation
+
+### Conceptual Background
+
+In Acemoglu and Restrepo (2018, 2019), production is organized as a continuum
+of tasks indexed on $[0,1]$. At each point in time, tasks $[0, I^*]$ are
+performed by machines (automated) and tasks $[I^*, 1]$ are performed by humans.
+
+Two forces determine the equilibrium automated task share $I^*$:
+
+1. **The technology frontier** $I_t$: what *can* be automated, given the current
+   state of AI. When AI advances, $I_t$ rises.
+2. **The cost-minimizing threshold** $\tilde{I}_t$: what *should* be automated,
+   given relative factor prices. When wages rise relative to capital rental costs,
+   firms want to automate more tasks.
+
+In the full AR system, $I^* = \min\{I_t,\, \tilde{I}_t\}$: automation expands
+until either the technology ceiling or the cost floor is hit.
+
+### The Linearized Approximation Used Here
+
+The full AR task integral structure is not modeled explicitly. Instead we
+use a linear blend that approximates the AR assignment rule in the neighborhood
+of a technology-constrained steady state (where $I_t < \tilde{I}_t$, so the
+technology frontier is the binding constraint):
+
+$$
+\tilde{I}_t = \chi^{I}_{wr}\,(W_t - RK_t)
+\tag{3}
+$$
+
+$$
+I^*_t = \omega_I\, I_t + (1 - \omega_I)\,\tilde{I}_t
+\tag{4}
+$$
+
+Equation (3) says firms want to automate more tasks whenever wages rise relative
+to the capital rental rate. The parameter $\chi^I_{wr} = 0.40$ is the
+elasticity of the cost-minimizing threshold to relative factor costs.
+
+Equation (4) is the linearized analog of AR's $\min\{\cdot\}$ rule. With
+$\omega_I = 0.90$ (close to 1), the equilibrium task share largely tracks the
+technology frontier $I_t$, not the firm's cost preference. This approximates
+a world where firms are *technology constrained* rather than *price constrained*
+--- they would automate more tasks if they could, but the AI hasn't gotten there
+yet.
+
+### Task-Based Production and Factor Prices
+
+Once we know $I^*_t$, the production block reads:
+
+$$
+Y^W_t = (1-\alpha)\,(Z_t + H_t) + \alpha\,(U_t + K_{t-1}) + \chi^{Y}_{I}\, I^*_t
+\tag{5}
+$$
+
+$$
+MPL^{human}_t = Y^W_t - \chi^{MPL}_{I}\, I^*_t - H_t
+\tag{6}
+$$
+
+$$
+MPK_t = Y^W_t + \chi^{MPK}_{I}\, I^*_t - U_t - K_{t-1}
+\tag{7}
+$$
+
+$$
+W_t = MC_t + MPL^{human}_t
+\tag{8}
+$$
+
+Three $\chi$ coefficients capture the task-reallocation effects that in the full
+AR model would come from integrating over the automated task margin:
+
+| Parameter | Value | Meaning |
+|---|---|---|
+| $\chi^Y_I = 0.67$ | Output rises as more tasks are automated |
+| $\chi^{MPL}_I = 0.67$ | **Displacement effect**: higher $I^*$ shrinks the human task set, compressing human MPL |
+| $\chi^{MPK}_I = 0.33$ | **Complementarity effect**: automation makes capital more valuable |
+
+The displacement effect in equation (6) is the heart of the AR mechanism. When
+$I^*$ rises, machines take over more tasks; the remaining tasks done by humans
+constitute a smaller share of the production process, so the marginal product of
+an additional hour of human labor falls. Wages fall with it.
+
+---
+
+## Results
+
+We ran the model three times under the AI displacement shock $\varepsilon_t^{AI}$,
+setting $\phi_{disp} \in \{0,\, 0.5,\, 1\}$.
+
+### Impulse Response Comparison
+
+![**Figure 1.** Impulse responses to a one-unit AI shock across three displacement
+intensities. **Blue**: $\phi_{disp} = 0$ (pure labor-augmenting AI, all gains go
+through $Z$). **Amber**: $\phi_{disp} = 0.5$ (half augmenting, half displacement).
+**Red**: $\phi_{disp} = 1$ (pure automation, all gains go through $I$). All
+variables shown as percent deviations from steady state. Horizon: 20 quarters.](fig_phi_disp_comparison.png)
+
+### Reading the Eight Panels
+
+**Panel 1 --- Fed Funds Rate (Nominal):** Zero means the nominal interest rate is
+at its steady-state value --- monetary policy is neutral and the Fed is responding
+to nothing. All three lines dip below zero, meaning the Fed cuts rates after the
+AI shock. But the cut is dramatically larger under blue ($-0.072$ at impact) than
+under red ($-0.020$). Under labor-augmenting AI, the sharp productivity boom
+drives a large disinflationary swing through marginal costs, triggering an
+aggressive Fed response. Under displacement, the disinflation is far smaller ---
+the Fed barely moves. (See Section 4.1 for the full explanation.)
+
+**Panel 2 --- Output:** Zero means output is at its pre-shock steady-state level ---
+the economy is producing exactly as much as before the AI arrived. All three
+scenarios raise output above zero permanently, as you would expect from a
+near-permanent AI shock. But note that output is *slightly higher* under
+displacement ($Y_1 = 0.610$) than under augmentation ($Y_1 = 0.590$). The
+automation channel generates a small additional output dividend on top of the
+standard productivity boost, because it directly adds to production via
+$\chi^Y_I I^*_t$ while also freeing capital to be utilized more intensively.
+
+**Panel 3 --- Real Wage:** Zero means the real wage is at its pre-shock level ---
+workers earn the same per hour as before AI arrived. This is the panel where the
+three cases diverge most starkly. Blue is solidly above zero: labor-augmenting AI
+raises human MPL, so the firm is willing to pay workers more. Wages rise with
+productivity. Red dips below zero: displacement AI compresses the human task set
+via equation (6), which directly lowers human MPL even as output rises, so the
+equilibrium wage falls. Amber sits near zero, the two effects roughly canceling.
+The wage panel is the cleanest summary of the entire experiment: same output, very
+different wage outcomes.
+
+**Panel 4 --- Labor Share:** Zero means labor's share of GDP (wages times hours
+divided by total output) is at its long-run calibrated value of 67% --- the
+capital-labor split of income is unchanged. All three scenarios push labor share
+below zero, meaning workers are getting a smaller fraction of the pie after AI
+arrives. But the severity differs enormously. Under augmentation (blue), labor
+share falls modestly --- output rises faster than labor income but wages help
+workers keep up. Under displacement (red), labor share collapses to nearly
+$-0.86$: output rises, wages fall, and hours fall too, so labor income shrinks
+from every direction simultaneously.
+
+**Panel 5 --- Hours Worked:** Zero means workers are putting in the same number
+of hours per week as before the AI shock. All three scenarios reduce hours below
+zero --- workers work less after AI arrives. But counterintuitively, *hours fall
+the least under displacement*. Under augmentation (blue), wages rise, making
+workers wealthier; they use part of that wealth to buy leisure (the income effect
+on labor supply), and hours fall by $-0.264$. Under displacement (red), wages
+fall; workers cannot afford as much leisure, so the income effect works in
+reverse and they maintain closer to their pre-shock hours (hours fall by only
+$-0.226$). They are working harder precisely because they are earning less per
+hour. (See Section 4.2 for more detail.)
+
+**Panel 6 --- Worker Consumption ($\lambda$-weighted):** Zero means aggregate
+worker consumption equals its steady-state level --- workers are buying the same
+total amount as they were before AI. Blue is far above zero: higher wages raise
+worker income, so workers consume substantially more. Red dips below zero at
+impact: wages fall, and because workers are largely hand-to-mouth consumers, their
+consumption contracts immediately with their income. Workers are worse off in
+absolute consumption terms under full displacement --- even in a world where the
+economy is producing slightly more output.
+
+**Panel 7 --- Capitalist Consumption ($(1-\lambda)$-weighted):** Zero means the
+consumption of the capitalist household equals its steady-state share of
+aggregate consumption. All three lines are above zero --- capitalists are
+unambiguously better off under all AI scenarios. But the gain is largest under
+displacement (red). Automation boosts capital returns through the MPK
+complementarity channel ($\chi^{MPK}_I I^*_t$ in equation (7)), raising the
+value of the capital stock. Forward-looking capitalists immediately consume more
+against this permanent increase in capital income. Under augmentation, capitalists
+also gain but must share the output dividend with workers, so their consumption
+rise is smaller.
+
+**Panel 8 --- Profits:** Zero means firm profits are at their steady-state level ---
+shareholders are receiving the normal return on capital, no windfall. All three
+lines are above zero: AI raises profitability in every scenario. Interestingly,
+blue has slightly higher impact profits ($0.508$) than red ($0.432$), even though
+capitalist consumption is much higher under red. The resolution: the large
+output boom from augmentation generates more total surplus in period 1. But under
+displacement, the task-automation channel raises the *permanent* path of capital
+returns (through higher MPK), so capitalists can borrow against future profits
+and consume more today even if current-period profits are marginally lower.
+
+---
+
+### Impact Response Table
+
+| $\phi_{disp}$ | $Y_1$ | $W_1$ | $LS_1$ | $H_1$ | $\pi_1$ | $R_{n,1}$ | profits$_1$ | $CHl_1$ | $CSl_1$ |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0.00 (blue) | 0.590 | 0.180 | −0.673 | −0.264 | −0.161 | −0.072 | 0.508 | 0.514 | 0.367 |
+| 0.50 (amber) | 0.600 | 0.078 | −0.767 | −0.245 | −0.103 | −0.046 | 0.470 | 0.240 | 0.607 |
+| 1.00 (red) | 0.610 | −0.025 | −0.861 | −0.226 | −0.045 | −0.020 | 0.432 | −0.035 | 0.846 |
+
+---
+
+## Specific Questions
+
+### 4.1 Why Does the Fed Cut Rates Less Under Displacement?
+
+At first this seems backward. AI displaces workers and compresses wages ---
+shouldn't that be deflationary and trigger bigger rate cuts?
+
+The key is how each AI type transmits to inflation through **marginal cost**.
+In the New Keynesian Phillips curve,
+
+$$
+\pi_t = \beta\, E_t[\pi_{t+1}] + \kappa\, MC_t,
+$$
+
+inflation responds to the real marginal cost $MC_t$. And $MC_t = W_t - MPL_t^{human}$
+(the wage per unit of human marginal product).
+
+Under **labor-augmenting AI** ($\phi_{disp} = 0$): $Z$ jumps sharply. Human MPL
+surges because every hour of labor now generates more output. Wages rise (0.180)
+but MPL rises by even more. The denominator of marginal cost explodes relative to
+the numerator, so $MC$ falls dramatically ($MC_1 \approx -0.67$). This is a big
+deflationary supply shock. The Taylor rule triggers large rate cuts ($R_{n,1} = -0.072$).
+
+Under **displacement AI** ($\phi_{disp} = 1$): $I^*$ rises, which simultaneously
+raises output *and* compresses human MPL via equation (6). Wages also fall
+$(-0.025)$. Both the numerator (wages) and denominator (human MPL) of marginal
+cost move in the same direction. The net fall in $MC$ is much smaller
+($MC_1 \approx -0.27$). Less disinflation means the Fed barely needs to respond
+($R_{n,1} = -0.020$).
+
+**The punchline**: under augmentation, productivity gains flow to human workers,
+dramatically cutting unit labor costs and generating strong deflation. Under
+displacement, productivity gains come from replacing human tasks with machines;
+the compression of human MPL mutes the fall in marginal costs, so inflation
+barely moves and the Fed cuts very little. Displacement is less disinflationary,
+which is why rate cuts shrink as $\phi_{disp}$ rises.
+
+### 4.2 Why Are Hours and Output Higher Under Displacement?
+
+**Hours are higher under displacement** (less negative: $-0.226$ vs $-0.264$ for blue).
+
+When labor-augmenting AI raises wages, workers are wealthier per hour worked.
+Standard theory says higher permanent income leads households to consume more
+leisure --- the income effect pushes hours *down*. Under augmentation, this
+income effect is strong and hours fall significantly.
+
+When displacement AI *lowers* wages, workers are poorer per hour worked. The
+income effect now runs in reverse: workers cannot afford as much leisure and
+maintain more hours. In addition, the lower wage weakens the substitution effect
+(leisure is relatively cheaper when wages are low, pushing toward more leisure),
+but in this calibration the income effect dominates at the margin, so workers
+with lower wages end up working more hours than workers who got a wage raise.
+They are, in a real sense, running harder on the treadmill precisely because it
+got slower.
+
+**Output is higher under displacement** ($Y_1 = 0.610$ vs $0.590$ for blue).
+
+Under displacement, production receives an additional boost from the direct
+automation term $\chi^Y_I I^*_t$ in equation (5). When $\phi_{disp} = 1$ and
+$I^*_1 \approx 0.882$, this term adds approximately $0.67 \times 0.882 = 0.59$
+to wholesale output on top of all other factor contributions. Under
+augmentation, the shock goes into $Z$, which enters production as
+$(1-\alpha) \times Z_t$ with $1-\alpha = 0.67$, so a unit $Z$ shock adds $0.67$
+--- similar in magnitude. But under displacement, hours also fall *less*, so the
+human labor input is slightly higher. These two small advantages combine to make
+displacement marginally more productive in the first period.
+
+This is the disturbing arithmetic of task displacement: it produces more output
+and employs people for more hours than the "nice" scenario, yet wages fall,
+labor share collapses, and workers consume less. More work, more output, less pay.
+
+---
+
+## Task-Allocation Internals
+
+The following table shows what happens inside the AR approximation block in the
+impact quarter:
+
+| $\phi_{disp}$ | $I_1$ (`AI_disp`) | $\tilde{I}_1$ | $I^*_1$ |
+|---:|---:|---:|---:|
+| 0.00 | 0.000 | 0.092 | 0.009 |
+| 0.50 | 0.500 | −0.043 | 0.446 |
+| 1.00 | 1.000 | −0.179 | 0.882 |
+
+Under augmentation ($\phi_{disp} = 0$): the technology frontier $I_t$ does not
+move. The cost-minimizing threshold $\tilde{I}$ rises slightly because wages rise
+relative to capital costs, but with $\omega_I = 0.90$, the equilibrium $I^*$
+barely budges ($0.009$). No displacement occurs.
+
+Under displacement ($\phi_{disp} = 1$): the technology frontier jumps to 1.0.
+The cost-minimizing threshold actually *falls* (−0.179), because automation
+lowers wages relative to capital costs --- firms would prefer *less* automation
+on pure cost grounds. But the technology frontier dominates ($\omega_I = 0.90$),
+so $I^*$ rises to 0.882. This is the technology-constrained regime: firms
+automate because they can, even though falling wages would ordinarily argue for
+less automation.
+
+---
+
+## Two Figures Side by Side
+
+For comparison, Figure 2 shows the two extreme cases (Scenario A, pure $Z$ shock
+vs. Scenario B, pure $I$ shock) from separate model files, using the same
+impulse response window.
+
+![**Figure 2.** Two types of AI shock: labor-augmenting ($Z$, blue) versus
+task-displacement ($I^*$, red). Blue is Scenario A (`tank_cw_medium_displace_A.mod`,
+$\phi_{disp} = 0$). Red is Scenario B (`tank_cw_medium_displace_B.mod`,
+$\phi_{disp} = 1$). Note: scales differ between Figure 1 and Figure 2 because
+Figure 2 includes the Scenario A model's long-run labor dynamics.](fig_displacement_comparison.png)
+
+In Figure 2, the contrast becomes even starker at longer horizons. The blue line
+for real wages keeps rising toward a permanently higher level, as the
+near-permanent productivity shift feeds through sticky wages into a new, higher
+wage level. The red line for labor share remains far below zero permanently ---
+there is no mechanism in the model for the labor share to recover once automation
+has re-routed tasks to machines.
+
+---
+
+## Blog Post Notes
+
+### How to Describe This to a General Audience
+
+**The central story in one paragraph:**
+
+AI can be good or bad for workers depending on its type. Labor-augmenting AI ---
+the kind that makes each worker more productive --- raises wages, raises the
+labor share, and leaves workers better off even though the economy's capital
+owners also do well. Task-displacement AI --- the kind that replaces human
+tasks altogether --- raises output and actually keeps more people employed at
+more hours, but wages fall, and workers consume less. The gains from displacement
+accrue almost entirely to capital owners. Both scenarios are "AI booms." Only one
+of them is a boom for workers.
+
+**Describing the Acemoglu-Restrepo approximation for a blog:**
+
+Think of the economy as a list of tasks: write the report, drive the truck, file
+the claim, diagnose the scan. At any moment, some tasks are done by machines and
+some by humans. The dividing line between them --- economists call it the
+"automation frontier" --- can shift over time as AI improves.
+
+When AI advances the automation frontier, firms can take tasks that were
+previously human-only and reassign them to machines. The humans who were doing
+those tasks don't disappear from the economy, but they have fewer tasks available
+to them. With a smaller task set, each additional hour of human labor produces
+less, so firms are willing to pay less per hour. This is the displacement effect:
+the human marginal product of labor falls, and wages follow.
+
+This model captures that mechanism in a simplified but internally consistent way.
+Instead of modeling the full continuum of tasks (which Acemoglu and Restrepo do
+in their 2018 and 2019 papers), we use a single state variable $I^*_t$ to
+represent the share of tasks currently automated. When AI pushes $I^*$ up, the
+production function rewards machines more and penalizes human labor --- captured
+by the $-\chi^{MPL}_I I^*_t$ term in the human marginal product equation. The
+coefficient $\chi^{MPL}_I = 0.67$ reflects the degree to which automating an
+additional fraction of tasks compresses human MPL, calibrated to match
+standard labor-share estimates.
+
+**Key messages for the blog:**
+
+1. **Same output, different distribution.** All three $\phi_{disp}$ values
+   produce roughly the same GDP path. The question of "how much AI raises
+   output" is largely independent of the question "who benefits."
+
+2. **The Fed is not a neutral arbiter.** Displacement AI is less disinflationary
+   than augmenting AI. This means the Fed cuts rates less under displacement,
+   providing less stimulus to an economy where workers are already losing ground.
+   Monetary policy cannot easily offset distributional damage from task automation.
+
+3. **More hours, less pay.** Under full displacement, workers actually work more
+   hours than under augmentation, because falling wages weaken the income effect
+   that would otherwise allow them to take more leisure. This is a stark
+   illustration of how aggregate statistics (hours, output) can be misleading
+   about worker welfare.
+
+4. **Capital wins most under displacement.** Capitalist consumption rises 0.846
+   units under full displacement versus 0.367 under pure augmentation. Automation
+   complements capital both through higher MPK and through the permanent income
+   channel as forward-looking capitalists borrow against the future stream of
+   capital returns.
+
+5. **Policy implication.** If the goal is to share AI gains broadly, the type of
+   AI policy matters. Subsidizing AI that augments workers (training, tools,
+   software that raises human productivity) has very different distributional
+   consequences from subsidizing AI that automates tasks (robotics, autonomous
+   systems). This model gives a structural framework for thinking through those
+   tradeoffs.
+
+---
+
+## Appendix: Full LaTeX for the Task Allocation Block
+
+```latex
+\subsubsection*{Task Allocation Block (Acemoglu--Restrepo Approximation)}
+
+Let $I_t$ denote the technology-feasible automation frontier (what AI can
+currently automate), $\tilde{I}_t$ the cost-minimizing automation threshold
+(what firms would choose based on relative factor prices), and $I^*_t$ the
+equilibrium automated task share.
+
+\paragraph{Cost-minimizing threshold}
+\begin{equation}
+  \tilde{I}_t = \chi^{I}_{wr}\bigl(W_t - RK_t\bigr)
+  \label{eq:Itilde}
+\end{equation}
+Firms want to automate more tasks whenever wages rise relative to the capital
+rental rate. $\chi^I_{wr} > 0$ is the elasticity of the cost-minimizing
+threshold to relative factor prices.
+
+\paragraph{Equilibrium automated task share}
+\begin{equation}
+  I^*_t = \omega_I\, I_t + (1-\omega_I)\,\tilde{I}_t
+  \label{eq:Istar}
+\end{equation}
+This is the linearized analog of Acemoglu--Restrepo's assignment rule
+$I^* = \min\{I,\tilde{I}\}$. With $\omega_I$ close to 1, the economy
+is in the technology-constrained regime: automation tracks the frontier,
+not firms' cost preferences.
+
+\paragraph{Task-based production function}
+\begin{equation}
+  Y^W_t = (1-\alpha)\bigl(Z_t + H_t\bigr) + \alpha\bigl(U_t + K_{t-1}\bigr)
+          + \chi^{Y}_{I}\, I^*_t
+  \label{eq:YW}
+\end{equation}
+Output rises as more tasks are automated ($\chi^Y_I > 0$).
+
+\paragraph{Human marginal product of labor (displacement effect)}
+\begin{equation}
+  MPL^{human}_t = Y^W_t - \chi^{MPL}_{I}\, I^*_t - H_t
+  \label{eq:MPL}
+\end{equation}
+Higher $I^*$ compresses the set of tasks available to human workers,
+lowering human MPL. This is the core displacement channel.
+
+\paragraph{Marginal product of capital (complementarity effect)}
+\begin{equation}
+  MPK_t = Y^W_t + \chi^{MPK}_{I}\, I^*_t - U_t - K_{t-1}
+  \label{eq:MPK}
+\end{equation}
+Automation raises the marginal return to capital as machines and capital
+are complements in automated production.
+
+\paragraph{Real wage}
+\begin{equation}
+  W_t = MC_t + MPL^{human}_t
+  \label{eq:wage}
+\end{equation}
+
+\paragraph{AI shock decomposition}
+\begin{align}
+  Z_t     &= \rho_Z\, Z_{t-1} + (1-\phi_{disp})\,\varepsilon_t^{AI}
+             + \varepsilon_t^Z
+             \label{eq:Z} \\
+  I_t     &= \rho_{AI}\, I_{t-1} + \phi_{disp}\,\varepsilon_t^{AI}
+             \label{eq:I}
+\end{align}
+$\phi_{disp} = 0$: pure labor-augmenting AI. $\phi_{disp} = 1$: pure
+automation. All values in between represent a mixed shock.
+```
+
+---
+
+## Appendix: Full Linearized Equation System
+
+$$u'(c^S)_t = Pr_t - \sigma_c\, c^S_t \tag{1. Capitalist MU}$$
+
+$$u'(c^S)_t = r_t + u'(c^S)_{t+1} \tag{2. Capitalist Euler}$$
+
+$$u'(n^S)_t = 0, \quad n^S_t = 0 \tag{3. Capitalists supply no labor}$$
+
+$$u'(c^W)_t = Pr_t - \sigma_c\, c^W_t \tag{4. Worker MU}$$
+
+$$u'(n^W)_t = \varphi\, n^W_t \tag{5. Worker disutility of labor}$$
+
+$$mrs_t = u'(n^W)_t - u'(c^W)_t \tag{6. Worker MRS}$$
+
+$$u'(c^W)_t = r_t + u'(c^W)_{t+1} - \tfrac{\psi^W}{\bar{c}^W}\, b^W_t \tag{7. Worker Euler}$$
+
+$$c^W_t + \tfrac{b^W_t}{\bar{c}^W} = \tfrac{\bar{W}\bar{n}^W}{\bar{c}^W}(w_t + n^W_t) - \tfrac{\bar{t}^W}{\bar{c}^W}\,t^W_t + \tfrac{\tau^d}{\lambda}\tfrac{d_t}{\bar{c}^W} + \tfrac{\bar{R}\, b^W_{t-1}}{\bar{c}^W} \tag{8. Worker budget}$$
+
+$$\tilde{I}_t = \chi^I_{wr}(w_t - r^K_t) \tag{9. Cost-min automation threshold}$$
+
+$$I^*_t = \omega_I\, I_t + (1-\omega_I)\,\tilde{I}_t \tag{10. Equilibrium task share}$$
+
+$$y^m_t = (1-\alpha)(z_t + n_t) + \alpha(u_t + k_{t-1}) + \chi^Y_I\, I^*_t \tag{11. Task-based production}$$
+
+$$y_t = y^m_t\,(1 + F/\bar{Y}) \tag{12. Retail output}$$
+
+$$mpl^{human}_t = y^m_t - \chi^{MPL}_I\, I^*_t - n_t \tag{13. Human MPL, displacement effect}$$
+
+$$w_t = mc_t + mpl^{human}_t \tag{14. Real wage}$$
+
+$$mpk_t = y^m_t + \chi^{MPK}_I\, I^*_t - u_t - k_{t-1} \tag{15. MPK, capital complementarity}$$
+
+$$r^K_t = mc_t + mpk_t \tag{16. Capital rental rate}$$
+
+$$y_t = \tfrac{\bar{W}\bar{n}}{\bar{Y}}(w_t + n_t) + \tfrac{\bar{R}^K\bar{K}}{\bar{Y}}(r^K_t + u_t + k_{t-1}) + \tfrac{d_t}{\bar{Y}} \tag{17. Income identity}$$
+
+$$d_t = d^S_t \tag{18. Profits to capitalists}$$
+
+$$ls_t = w_t + n_t - y_t \tag{19. Labor share}$$
+
+$$r^K_t = \tfrac{\gamma_2}{\gamma_1}\, u_t \tag{20. Variable capital utilization}$$
+
+$$k^S_t = \delta(i^S_t + zi_t) + (1-\delta)\, k^S_{t-1} \tag{21. Capital law of motion}$$
+
+$$R_t - \pi_{t+1} = \beta(1-\delta)\, q_{t+1} + [1-\beta(1-\delta)]\, r^K_{t+1} - q_t \tag{22. Capital arbitrage / Tobin's Q}$$
+
+$$(1+\bar{R}^{-1})\, i^S_t = \bar{R}^{-1}\, i^S_{t+1} + i^S_{t-1} + \tfrac{1}{2\iota}(q_t + zi_t) \tag{23. Investment Euler}$$
+
+$$i_t = i^S_t, \quad k_t = k^S_t \tag{24. Investment and capital aggregation}$$
+
+$$y_t = c_y\, c_t + g_y\, g_t + \imath_y\, i_t + \tfrac{\gamma_1\bar{K}}{\bar{Y}}\, u_t \tag{25. Resource constraint}$$
+
+$$r_t = R_t - \pi_{t+1} \tag{26. Fisher equation}$$
+
+$$c_t = \lambda\, c^W_t + (1-\lambda)\, c^S_t \tag{27. Consumption aggregation}$$
+
+$$n_t = n^W_t \tag{28. Labor aggregation}$$
+
+$$\pi_t = \beta\, \pi_{t+1} + \kappa\,(mc_t + ms_t) \tag{29. New Keynesian Phillips curve}$$
+
+$$\pi^w_t = \beta\, \pi^w_{t+1} + \kappa_w\,(mrs_t - w_t + wms_t) \tag{30. Wage Phillips curve}$$
+
+$$\pi^w_t = w_t - w_{t-1} \tag{31. Wage inflation}$$
+
+$$R_t = \rho_r\, R_{t-1} + (1-\rho_r)(\phi_\pi \pi_t + \phi_y y_t) + \varepsilon^M_t \tag{32. Taylor rule}$$
+
+$$z_t = \rho_Z\, z_{t-1} + (1-\phi_{disp})\,\varepsilon^{AI}_t + \varepsilon^Z_t \tag{33. Labor-augmenting tech}$$
+
+$$I_t = \rho_{AI}\, I_{t-1} + \phi_{disp}\,\varepsilon^{AI}_t \tag{34. Automation frontier}$$
+
+$$g_t = \rho_G\, g_{t-1} + \varepsilon^G_t \tag{35. Gov. spending shock}$$
+
+$$b_t = \bar{R}(b_{t-1} + r_{t-1}) + \tfrac{\bar{G}}{\bar{B}}\,g_t - \tfrac{\bar{t}}{\bar{B}}\,t_t \tag{36. Gov. budget constraint}$$
+
+$$b_t = b^S_t + \lambda\, b^W_t/\bar{B} \tag{37. Bond market clearing}$$
+
+$$t_t = \rho_\tau\, t_{t-1} + \phi_{\tau B}\, b_{t-1} + \phi_{\tau G}\, g_t \tag{38. Fiscal rule}$$
+
+$$t^S_t = \tfrac{1-\lambda}{\lambda}\,t_t, \quad t^W_t = \tfrac{\lambda}{1-\lambda}\,t_t \tag{39. Tax allocation}$$
+
+$$ms_t = \rho_{MS}\, ms_{t-1} + \varepsilon^{MS}_t \tag{40. Price markup shock}$$
+
+$$wms_t = \rho_{WMS}\, wms_{t-1} + \varepsilon^{WMS}_t \tag{41. Wage markup shock}$$
+
+$$Pr_t = \rho_{Pr}\, Pr_{t-1} + \varepsilon^{Pr}_t \tag{42. Preference shock}$$
+
+$$zi_t = \rho_{ZI}\, zi_{t-1} + \varepsilon^{ZI}_t \tag{43. MEI shock}$$
