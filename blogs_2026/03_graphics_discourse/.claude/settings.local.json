@@ -9,7 +9,9 @@
       "Bash(ls:*)",
       "WebFetch(domain:www.brookings.edu)",
       "Bash(grep -E \"^[A-Z]{2,}\")",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(CURL_SSL_BACKEND=SecureTransport Rscript -e 'readr::read_csv\\(\"https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE\", col_types = readr::cols\\(\\)\\) |> head\\(\\)' 2>&1)",
+      "Bash(Rscript -e 'cat\\(Sys.getenv\\(\"\"\"\"FRED_API_KEY\"\"\"\"\\), \"\"\"\"\\\\n\"\"\"\"\\)')"
     ]
   }
 }

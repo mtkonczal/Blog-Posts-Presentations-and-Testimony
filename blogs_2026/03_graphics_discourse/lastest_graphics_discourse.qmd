@@ -1,8 +1,7 @@
 ---
-title: "Five Graphics Changing My Mind Three Months Into 2026"
-subtitle: "Productivity, inflation, and the labor market: where things stand and what I'm watching"
+title: "Six Graphics for the Inflation Discourse"
 author: "Mike Konczal"
-date: "2026-03-05"
+date: "2026-03-18"
 format:
   html:
     theme: cosmo
@@ -20,7 +19,6 @@ execute:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE,
   warning = FALSE,
   message = FALSE,
   fig.align = "center",
@@ -61,8 +59,15 @@ gray <- "#888888"
 light_blue <- "#5B9BD5"
 ```
 
+```{r prep-data, eval=FALSE}
+# Uncomment (set eval=TRUE) to re-pull PCE data from BEA API.
+# This is slow (~1-2 min) and only needed when updating to a new data release.
+# After running, it writes data/pce_monthly.rds which all downstream chunks read.
+source("00_prep_data.R")
+```
+
 ```{r inflation-table}
-source("4_inflation_chart.R", local = TRUE)
+source("01_inflation_chart.R", local = TRUE)
 
 tbl <- assemble_table(pce)
 chart_date <- format(max(pce$date, na.rm = TRUE), "%B %Y")
@@ -366,7 +371,7 @@ residual_rate_nhs <- function(df, start, end, annualize_months = NULL) {
 }
 
 row_nhs <- tibble(
-  Measure = "Market-Based Non-Housing Services",
+  Measure = "Market-Based Core Services ex Housing",
   `Past 3 Months` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(3), latest_date, 3),
   `Past 6 Months` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(6), latest_date, 6),
   `12-month` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(12), latest_date),
@@ -539,7 +544,8 @@ p_fim
 
 ```{r taylor-rule, fig.height=5.5}
 # ── Pull Fed Funds Rate and unemployment from FRED ────────────────────────
-# Work around R libcurl HTTP/2 issue by forcing curl method
+# getFRED() works in RStudio but hits an HTTP/2 libcurl bug when rendering
+# via quarto/Rscript. Use download.file(method = "curl") as workaround.
 dl_fred <- function(id) {
   tmp <- tempfile(fileext = ".csv")
   download.file(paste0("https://fred.stlouisfed.org/graph/fredgraph.csv?id=", id),
@@ -610,7 +616,7 @@ fig6 <- ggplot(taylor_long, aes(x = date, y = rate, color = series)) +
     "Fed Funds Rate" = navy
   )) +
   scale_y_continuous(labels = percent_format()) +
-  scale_x_date(breaks = date_breaks_gg(8, max(taylor_df$date)),
+  scale_x_date(breaks = seq(max(taylor_df$date), min(taylor_df$date), by = "-6 months"),
                date_labels = "%b\n%Y") +
   labs(
     title = "Figure 6: Fed Funds Rate vs. Taylor Rule Estimates",
