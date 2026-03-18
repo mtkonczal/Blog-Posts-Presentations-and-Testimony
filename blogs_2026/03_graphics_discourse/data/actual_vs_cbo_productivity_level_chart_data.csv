@@ -1,0 +1,74 @@
+date,value,series,line_type,release_header,release_month_year,release_date,projection_start,anchor_date,index_unit,source_file
+2019-04-01,102.971,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2019-07-01,104.129,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2019-10-01,105.103,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2020-01-01,104.679,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2020-04-01,109.773,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2020-07-01,111.491,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2020-10-01,110.598,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2021-01-01,111.393,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2021-04-01,111.625,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2021-07-01,110.948,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2021-10-01,111.581,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2022-01-01,110.183,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2022-04-01,109.366,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2022-07-01,109.422,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2022-10-01,110.035,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2023-01-01,110.269,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2023-04-01,111.362,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2023-07-01,112.738,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2023-10-01,113.832,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2024-01-01,113.902,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2024-04-01,114.947,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2024-07-01,115.989,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2024-10-01,116.394,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2025-01-01,116.127,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2025-04-01,117.319,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2025-07-01,118.814,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2025-10-01,119.642,Actual OPHNFB level,actual,NA,NA,NA,NA,NA,NA,NA
+2023-10-01,113.83199999999998,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2024-01-01,114.05701722208181,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2024-04-01,114.40944145575331,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2024-07-01,114.98688291150665,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2024-10-01,115.56740679495974,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2025-01-01,115.89003422753366,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2025-04-01,116.30718944289994,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2025-07-01,116.67194338737048,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2025-10-01,117.16204939163084,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2026-01-01,117.60797393219481,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2026-04-01,118.1710307253493,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2026-07-01,118.74847218110263,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2026-10-01,119.33310596815538,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2027-01-01,119.93417936960681,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2027-04-01,120.53422529515832,CBO February 2024 release,cbo,February 2024 Baseline Forecast—Data Release (Quarterly),February 2024,2024-02-01,2024-01-01,2023-10-01,2017 = 100,51135-2024-02-Economic-Projections.xlsx
+2019-10-01,105.103,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2020-01-01,105.41562394017735,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2020-04-01,105.86654258286308,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2020-07-01,106.25123559336168,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2020-10-01,106.65540673097416,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2021-01-01,107.04302146053985,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2021-04-01,107.44621869179663,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2021-07-01,107.89713733448234,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2021-10-01,108.40064692037548,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2022-01-01,108.90805213169135,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2022-04-01,109.45343969087926,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2022-07-01,109.99882725006718,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2022-10-01,110.53934527747663,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2023-01-01,111.089602368443,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2023-04-01,111.64375508483215,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2023-07-01,112.19401217579852,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2023-10-01,112.74037364134212,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2024-01-01,113.27796994968449,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2024-04-01,113.81361844531547,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2024-07-01,114.35316256636922,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2024-10-01,114.89270668742297,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2025-01-01,115.4361464338995,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2025-04-01,115.98835133757726,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2025-07-01,116.51913030142978,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2025-10-01,117.08399598773154,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2026-01-01,117.64593995496622,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2026-04-01,118.18061454424151,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2026-07-01,118.72015866529526,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2026-10-01,119.26554622448317,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2027-01-01,119.80411643918123,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx
+2027-04-01,120.330999777611,CBO January 2020 release,cbo,January 2020 Baseline Forecast—Data Release (Quarterly),January 2020,2020-01-01,2020-01-01,2019-10-01,Unknown,51135-2020-01-economicprojections_0.xlsx

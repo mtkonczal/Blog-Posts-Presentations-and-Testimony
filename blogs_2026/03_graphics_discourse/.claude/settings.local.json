@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.federalreserve.gov)",
+      "Bash(quarto render:*)",
+      "Bash(open:*)",
+      "Bash(Rscript:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:www.brookings.edu)",
+      "Bash(grep -E \"^[A-Z]{2,}\")",
+      "Bash(curl:*)"
+    ]
+  }
+}

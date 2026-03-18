@@ -1,0 +1,626 @@
+---
+title: "Five Graphics Changing My Mind Three Months Into 2026"
+subtitle: "Productivity, inflation, and the labor market: where things stand and what I'm watching"
+author: "Mike Konczal"
+date: "2026-03-05"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    fig-width: 9
+    fig-height: 5.5
+    code-fold: true
+    self-contained: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  dpi = 150
+)
+
+library(tidyusmacro)
+library(tidyverse)
+library(scales)
+library(lubridate)
+library(gt)
+
+pce <- read_rds("data/pce_monthly.rds")
+
+theme_konczal <- function() {
+  theme_minimal(base_size = 13) +
+    theme(
+      plot.title.position = "plot",
+      plot.title = element_text(face = "bold", size = 14, margin = margin(b = 6)),
+      plot.subtitle = element_text(size = 11, color = "#444444", margin = margin(b = 12)),
+      plot.caption = element_text(size = 9, color = "#666666", hjust = 0, margin = margin(t = 10)),
+      axis.title = element_text(size = 11),
+      axis.text = element_text(size = 10),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      legend.position = "top",
+      legend.title = element_blank(),
+      plot.background = element_rect(fill = "white", color = NA),
+      panel.background = element_rect(fill = "white", color = NA)
+    )
+}
+
+red <- "#B2262F"
+navy <- "#1B3A5C"
+teal <- "#2C7873"
+gold <- "#E5A020"
+gray <- "#888888"
+light_blue <- "#5B9BD5"
+```
+
+```{r inflation-table}
+source("4_inflation_chart.R", local = TRUE)
+
+tbl <- assemble_table(pce)
+chart_date <- format(max(pce$date, na.rm = TRUE), "%B %Y")
+
+fig1_gt <- tbl %>%
+  gt(rowname_col = "LineDescription") %>%
+  tab_header(
+    title = md(paste0(
+      "**Figure 1: Breakdown of Weighted Contribution to ",
+      chart_date,
+      " PCE Inflation**"
+    )),
+    subtitle = "All rates are annualized. Weights approximated as nominal consumption shares."
+  ) %>%
+  cols_align(align = "center", columns = everything()) %>%
+  fmt_percent(
+    columns = where(is.numeric),
+    decimals = 2
+  ) %>%
+  tab_style(
+    style = cell_borders(
+      sides = "bottom",
+      color = "black",
+      weight = px(2)
+    ),
+    locations = list(
+      cells_stub(rows = "Total PCE Inflation"),
+      cells_body(rows = "Total PCE Inflation")
+    )
+  ) %>%
+  tab_source_note(
+    "Totals may differ slightly due to rounding. BEA, Author's analysis. Mike Konczal."
+  ) %>%
+  opt_stylize(style = 6, color = "blue")
+
+fig1_gt |> gtsave("graphics/fig1_pce_inflation_table.png", vwidth = 1200)
+fig1_gt
+```
+
+```{r market-based-setup}
+# Helper: pull a single series from pce, deduplicating by date
+get_pce_series <- function(pce, desc, line_no = NULL) {
+  out <- pce |> filter(LineDescription == desc)
+  if (!is.null(line_no)) out <- out |> filter(LineNo == line_no)
+  out |>
+    distinct(date, .keep_all = TRUE) |>
+    select(date, idx = DataValue, wt = PCEweight) |>
+    arrange(date)
+}
+
+# Pull all raw series used across charts
+mkt_svc  <- get_pce_series(pce, "Market-based PCE services")
+mkt_hsg  <- get_pce_series(pce, "Market-based PCE housing services")
+hh_util  <- get_pce_series(pce, "Household utilities", line_no = 386)
+mkt_core <- get_pce_series(pce, "Market-based PCE excluding food and energy")
+
+latest_date <- max(pce$date, na.rm = TRUE)
+```
+
+```{r market-based-core, fig.height=5.5}
+mkt_core_df <- mkt_core |>
+  rename(core_idx = idx) |>
+  arrange(date) |>
+  mutate(
+    `3-month AR` = 100 * ((core_idx / lag(core_idx, 3))^4 - 1),
+    `6-month AR` = 100 * ((core_idx / lag(core_idx, 6))^2 - 1),
+    `12-month`   = 100 * (core_idx / lag(core_idx, 12) - 1)
+  ) |>
+  filter(!is.na(`12-month`), date >= as.Date("2018-01-01"))
+
+mkt_core_long <- mkt_core_df |>
+  select(date, `3-month AR`, `6-month AR`, `12-month`) |>
+  pivot_longer(cols = -date, names_to = "horizon", values_to = "rate") |>
+  mutate(horizon = factor(horizon, levels = c("3-month AR", "6-month AR", "12-month")))
+
+latest_mkt_core <- mkt_core_df |> slice_tail(n = 1)
+
+fig2 <- ggplot(mkt_core_long, aes(x = date, y = rate, color = horizon)) +
+  geom_line(linewidth = 0.9) +
+  scale_color_manual(values = c(
+    "3-month AR" = red,
+    "6-month AR" = gold,
+    "12-month" = navy
+  )) +
+  scale_x_date(breaks = date_breaks_gg(8, latest_date), date_labels = "%b\n%Y") +
+  labs(
+    title = "Figure 2: Market-Based PCE Excluding Food and Energy",
+    subtitle = "Core inflation using only market-transacted prices",
+    x = NULL,
+    y = "Inflation rate (%)",
+    caption = "Source: BEA PCE chain-type price indexes. Author's calculations. Mike Konczal."
+  ) +
+  theme_konczal()
+
+ggsave("graphics/fig2_market_based_core.png", fig2, width = 9, height = 5.5, dpi = 200)
+fig2
+```
+
+```{r market-based-core-ex-housing, fig.height=5.5}
+mkt_core_xh <- mkt_core |>
+  inner_join(mkt_hsg |> rename(hsg_idx = idx, hsg_wt = wt), by = "date") |>
+  rename(core_idx = idx, core_wt = wt) |>
+  arrange(date) |>
+  mutate(
+    hsg_sh = hsg_wt / core_wt,
+    nhs_sh = 1 - hsg_sh,
+    core_r3  = 100 * ((core_idx / lag(core_idx, 3))^4 - 1),
+    hsg_r3   = 100 * ((hsg_idx / lag(hsg_idx, 3))^4 - 1),
+    core_r6  = 100 * ((core_idx / lag(core_idx, 6))^2 - 1),
+    hsg_r6   = 100 * ((hsg_idx / lag(hsg_idx, 6))^2 - 1),
+    core_r12 = 100 * (core_idx / lag(core_idx, 12) - 1),
+    hsg_r12  = 100 * (hsg_idx / lag(hsg_idx, 12) - 1),
+    `3-month AR` = (core_r3 - hsg_sh * hsg_r3) / nhs_sh,
+    `6-month AR` = (core_r6 - hsg_sh * hsg_r6) / nhs_sh,
+    `12-month`   = (core_r12 - hsg_sh * hsg_r12) / nhs_sh
+  ) |>
+  filter(!is.na(`12-month`), date >= as.Date("2018-01-01"))
+
+mkt_core_xh_long <- mkt_core_xh |>
+  select(date, `3-month AR`, `6-month AR`, `12-month`) |>
+  pivot_longer(cols = -date, names_to = "horizon", values_to = "rate") |>
+  mutate(horizon = factor(horizon, levels = c("3-month AR", "6-month AR", "12-month")))
+
+latest_mkt_core_xh <- mkt_core_xh |> slice_tail(n = 1)
+
+fig3 <- ggplot(mkt_core_xh_long, aes(x = date, y = rate, color = horizon)) +
+  geom_line(linewidth = 0.9) +
+  scale_color_manual(values = c(
+    "3-month AR" = red,
+    "6-month AR" = gold,
+    "12-month" = navy
+  )) +
+  scale_x_date(breaks = date_breaks_gg(8, latest_date), date_labels = "%b\n%Y") +
+  labs(
+    title = "Figure 3: Market-Based Core Excluding Housing",
+    subtitle = "Market-based PCE ex food, energy, and housing services",
+    x = NULL,
+    y = "Inflation rate (%)",
+    caption = "Source: BEA PCE chain-type price indexes. Within-aggregate residual calculation. Author's calculations. Mike Konczal."
+  ) +
+  theme_konczal()
+
+ggsave("graphics/fig3_market_based_core_ex_housing.png", fig3, width = 9, height = 5.5, dpi = 200)
+fig3
+```
+
+```{r market-based-nhs, fig.height=5.5}
+# Build synthetic market-based non-housing, non-utility services inflation
+# r_services ≈ s_hsg * r_hsg + s_util * r_util + s_nhs * r_nhs
+# => r_nhs = (r_svc - s_hsg * r_hsg - s_util * r_util) / s_nhs
+
+mkt_nhs <- mkt_svc |>
+  inner_join(mkt_hsg |> rename(hsg_idx = idx, hsg_wt = wt), by = "date") |>
+  inner_join(hh_util |> rename(util_idx = idx, util_wt = wt), by = "date") |>
+  rename(svc_idx = idx, svc_wt = wt) |>
+  arrange(date) |>
+  mutate(
+    hsg_sh  = hsg_wt / svc_wt,
+    util_sh = util_wt / svc_wt,
+    nhs_sh  = 1 - hsg_sh - util_sh,
+    svc_r3  = 100 * ((svc_idx / lag(svc_idx, 3))^4 - 1),
+    hsg_r3  = 100 * ((hsg_idx / lag(hsg_idx, 3))^4 - 1),
+    util_r3 = 100 * ((util_idx / lag(util_idx, 3))^4 - 1),
+    svc_r6  = 100 * ((svc_idx / lag(svc_idx, 6))^2 - 1),
+    hsg_r6  = 100 * ((hsg_idx / lag(hsg_idx, 6))^2 - 1),
+    util_r6 = 100 * ((util_idx / lag(util_idx, 6))^2 - 1),
+    svc_r12 = 100 * (svc_idx / lag(svc_idx, 12) - 1),
+    hsg_r12 = 100 * (hsg_idx / lag(hsg_idx, 12) - 1),
+    util_r12 = 100 * (util_idx / lag(util_idx, 12) - 1),
+    `3-month AR` = (svc_r3 - hsg_sh * hsg_r3 - util_sh * util_r3) / nhs_sh,
+    `6-month AR` = (svc_r6 - hsg_sh * hsg_r6 - util_sh * util_r6) / nhs_sh,
+    `12-month`   = (svc_r12 - hsg_sh * hsg_r12 - util_sh * util_r12) / nhs_sh
+  ) |>
+  filter(!is.na(`12-month`), date >= as.Date("2018-01-01"))
+
+mkt_nhs_long <- mkt_nhs |>
+  select(date, `3-month AR`, `6-month AR`, `12-month`) |>
+  pivot_longer(cols = -date, names_to = "horizon", values_to = "rate") |>
+  mutate(horizon = factor(horizon, levels = c("3-month AR", "6-month AR", "12-month")))
+
+latest_mkt_nhs <- mkt_nhs |> slice_tail(n = 1)
+
+ggplot(mkt_nhs_long, aes(x = date, y = rate, color = horizon)) +
+  geom_line(linewidth = 0.9) +
+  scale_color_manual(values = c(
+    "3-month AR" = red,
+    "6-month AR" = gold,
+    "12-month" = navy
+  )) +
+  scale_x_date(breaks = date_breaks_gg(8, latest_date), date_labels = "%b\n%Y") +
+  labs(
+    title = "Market-Based Core Non-Housing Services",
+    subtitle = "Synthetic index: market-based PCE services minus housing services and household utilities",
+    x = NULL,
+    y = "Inflation rate (%)",
+    caption = "Source: BEA PCE chain-type price indexes. Within-aggregate residual calculation. Author's calculations. Mike Konczal."
+  ) +
+  theme_konczal()
+```
+
+```{r market-based-summary-table}
+# Helper: compute annualized rate between two dates from a price index series
+idx_rate <- function(df, date_col = "date", idx_col, start, end, annualize_months = NULL) {
+  v0 <- df[[idx_col]][df[[date_col]] == start]
+  v1 <- df[[idx_col]][df[[date_col]] == end]
+  if (length(v0) == 0 || length(v1) == 0) return(NA_real_)
+  raw <- v1 / v0 - 1
+  if (!is.null(annualize_months)) {
+    raw <- (1 + raw)^(12 / annualize_months) - 1
+  }
+  raw
+}
+
+# Build a row for a direct index series
+build_mkt_row <- function(label, df, idx_col, latest_date) {
+  tibble(
+    Measure = label,
+    `Past 3 Months` = 100 * ((df[[idx_col]][df$date == latest_date] /
+      df[[idx_col]][df$date == latest_date %m-% months(3)])^4 - 1) / 100,
+    `Past 6 Months` = 100 * ((df[[idx_col]][df$date == latest_date] /
+      df[[idx_col]][df$date == latest_date %m-% months(6)])^2 - 1) / 100,
+    `12-month` = (df[[idx_col]][df$date == latest_date] /
+      df[[idx_col]][df$date == latest_date %m-% months(12)] - 1),
+    `2025` = idx_rate(df, "date", idx_col, as.Date("2024-12-01"), as.Date("2025-12-01")),
+    `2024` = idx_rate(df, "date", idx_col, as.Date("2023-12-01"), as.Date("2024-12-01")),
+    `2018-2019` = idx_rate(df, "date", idx_col, as.Date("2017-12-01"), as.Date("2019-12-01"),
+                           annualize_months = 24),
+    `2002-2007` = idx_rate(df, "date", idx_col, as.Date("2001-12-01"), as.Date("2007-12-01"),
+                           annualize_months = 72)
+  )
+}
+
+# 1. Market-based core (direct series)
+mkt_core_full <- get_pce_series(pce, "Market-based PCE excluding food and energy") |>
+  rename(core_idx = idx)
+
+row_core <- build_mkt_row(
+  "Market-Based Core",
+  mkt_core_full, "core_idx", latest_date
+)
+
+# 2. Market-based core ex housing (residual)
+mkt_core_xh_full <- mkt_core |>
+  inner_join(mkt_hsg |> rename(hsg_idx = idx, hsg_wt = wt), by = "date") |>
+  rename(core_idx = idx, core_wt = wt) |>
+  arrange(date) |>
+  mutate(
+    hsg_sh = hsg_wt / core_wt,
+    nhs_sh = 1 - hsg_sh
+  )
+
+residual_rate <- function(df, start, end, annualize_months = NULL) {
+  r0 <- df |> filter(date == start)
+  r1 <- df |> filter(date == end)
+  if (nrow(r0) == 0 || nrow(r1) == 0) return(NA_real_)
+  core_raw <- r1$core_idx / r0$core_idx - 1
+  hsg_raw  <- r1$hsg_idx / r0$hsg_idx - 1
+  if (!is.null(annualize_months)) {
+    core_raw <- (1 + core_raw)^(12 / annualize_months) - 1
+    hsg_raw  <- (1 + hsg_raw)^(12 / annualize_months) - 1
+  }
+  (core_raw - r1$hsg_sh * hsg_raw) / r1$nhs_sh
+}
+
+row_core_xh <- tibble(
+  Measure = "Market-Based Core ex Housing",
+  `Past 3 Months` = residual_rate(mkt_core_xh_full, latest_date %m-% months(3), latest_date, 3),
+  `Past 6 Months` = residual_rate(mkt_core_xh_full, latest_date %m-% months(6), latest_date, 6),
+  `12-month` = residual_rate(mkt_core_xh_full, latest_date %m-% months(12), latest_date),
+  `2025` = residual_rate(mkt_core_xh_full, as.Date("2024-12-01"), as.Date("2025-12-01")),
+  `2024` = residual_rate(mkt_core_xh_full, as.Date("2023-12-01"), as.Date("2024-12-01")),
+  `2018-2019` = residual_rate(mkt_core_xh_full, as.Date("2017-12-01"), as.Date("2019-12-01"), 24),
+  `2002-2007` = residual_rate(mkt_core_xh_full, as.Date("2001-12-01"), as.Date("2007-12-01"), 72)
+)
+
+# 3. Market-based NHS (residual)
+mkt_nhs_full <- mkt_svc |>
+  inner_join(mkt_hsg |> rename(hsg_idx = idx, hsg_wt = wt), by = "date") |>
+  inner_join(hh_util |> rename(util_idx = idx, util_wt = wt), by = "date") |>
+  rename(svc_idx = idx, svc_wt = wt) |>
+  arrange(date) |>
+  mutate(
+    hsg_sh  = hsg_wt / svc_wt,
+    util_sh = util_wt / svc_wt,
+    nhs_sh  = 1 - hsg_sh - util_sh
+  )
+
+residual_rate_nhs <- function(df, start, end, annualize_months = NULL) {
+  r0 <- df |> filter(date == start)
+  r1 <- df |> filter(date == end)
+  if (nrow(r0) == 0 || nrow(r1) == 0) return(NA_real_)
+  svc_raw  <- r1$svc_idx / r0$svc_idx - 1
+  hsg_raw  <- r1$hsg_idx / r0$hsg_idx - 1
+  util_raw <- r1$util_idx / r0$util_idx - 1
+  if (!is.null(annualize_months)) {
+    svc_raw  <- (1 + svc_raw)^(12 / annualize_months) - 1
+    hsg_raw  <- (1 + hsg_raw)^(12 / annualize_months) - 1
+    util_raw <- (1 + util_raw)^(12 / annualize_months) - 1
+  }
+  (svc_raw - r1$hsg_sh * hsg_raw - r1$util_sh * util_raw) / r1$nhs_sh
+}
+
+row_nhs <- tibble(
+  Measure = "Market-Based Non-Housing Services",
+  `Past 3 Months` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(3), latest_date, 3),
+  `Past 6 Months` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(6), latest_date, 6),
+  `12-month` = residual_rate_nhs(mkt_nhs_full, latest_date %m-% months(12), latest_date),
+  `2025` = residual_rate_nhs(mkt_nhs_full, as.Date("2024-12-01"), as.Date("2025-12-01")),
+  `2024` = residual_rate_nhs(mkt_nhs_full, as.Date("2023-12-01"), as.Date("2024-12-01")),
+  `2018-2019` = residual_rate_nhs(mkt_nhs_full, as.Date("2017-12-01"), as.Date("2019-12-01"), 24),
+  `2002-2007` = residual_rate_nhs(mkt_nhs_full, as.Date("2001-12-01"), as.Date("2007-12-01"), 72)
+)
+
+mkt_table <- bind_rows(row_core, row_core_xh, row_nhs)
+
+chart_date <- format(latest_date, "%B %Y")
+
+fig4_gt <- mkt_table |>
+  gt(rowname_col = "Measure") |>
+  tab_header(
+    title = md(paste0("**Figure 4: Market-Based PCE Inflation Measures, ", chart_date, "**")),
+    subtitle = "All rates annualized. Residual measures use within-aggregate expenditure shares."
+  ) |>
+  cols_align(align = "center", columns = everything()) |>
+  fmt_percent(
+    columns = where(is.numeric),
+    decimals = 2
+  ) |>
+  tab_source_note(
+    "Source: BEA PCE chain-type price indexes. Author's calculations. Mike Konczal."
+  ) |>
+  opt_stylize(style = 6, color = "blue")
+
+fig4_gt |> gtsave("graphics/fig4_market_based_table.png", vwidth = 1200)
+fig4_gt
+```
+
+```{r fim-chart, fig.height=6, fig.width=10}
+# ── Load FIM data ──────────────────────────────────────────────────────────
+fim_hist <- read_csv("data/FIM_historical.csv", show_col_types = FALSE) |>
+  mutate(qdate = as.Date(paste0(year, "-", as.integer(substr(quarter, 2, 2)) * 3 - 2, "-01")),
+         qlabel = paste(year, quarter))
+
+fim_det <- read_csv("data/FIM_detailed.csv", show_col_types = FALSE) |>
+  rename(qlabel = 1) |>
+  mutate(
+    year = as.integer(substr(qlabel, 1, 4)),
+    qnum = as.integer(substr(qlabel, 7, 7)),
+    qdate = as.Date(paste0(year, "-", qnum * 3 - 2, "-01"))
+  )
+
+# ── Historical totals: Q1 2023 through Q3 2025 ────────────────────────────
+hist_dots <- fim_hist |>
+  filter(qdate >= as.Date("2023-01-01"), qdate <= as.Date("2025-07-01")) |>
+  select(qdate, qlabel, total)
+
+# ── Detailed bars: Q4 2025 through Q4 2026 ────────────────────────────────
+det_bars <- fim_det |>
+  filter(qdate >= as.Date("2025-10-01"), qdate <= as.Date("2026-10-01")) |>
+  mutate(
+    everything_else = `Underlying FIM` + `IRA, CHIPS and Student Loans`
+  ) |>
+  select(qdate, qlabel, Total, OBBBA, Tariffs,
+         shutdown = `Government shutdown`, everything_else)
+
+# Stack the bar components
+bar_long <- det_bars |>
+  select(qdate, qlabel, OBBBA, Tariffs, shutdown, everything_else) |>
+  pivot_longer(cols = c(OBBBA, Tariffs, shutdown, everything_else),
+               names_to = "category", values_to = "value") |>
+  mutate(
+    category = case_match(
+      category,
+      "OBBBA" ~ "OBBBA",
+      "Tariffs" ~ "Tariffs",
+      "shutdown" ~ "Gov't Shutdown",
+      "everything_else" ~ "Everything Else"
+    ),
+    category = factor(category, levels = c("OBBBA", "Everything Else",
+                                            "Tariffs", "Gov't Shutdown"))
+  )
+
+# ── Combined dots: total across the full range ─────────────────────────────
+all_dots <- bind_rows(
+  hist_dots |> select(qdate, qlabel, total),
+  det_bars |> select(qdate, qlabel, total = Total)
+)
+
+# ── Quarter labels for x-axis ─────────────────────────────────────────────
+qlabels <- all_dots |> distinct(qdate, qlabel) |> arrange(qdate)
+
+# ── Build the chart ───────────────────────────────────────────────────────
+# Need to position labels correctly in diverging stacked bars.
+# Compute cumulative positions within positive and negative stacks separately.
+bar_long <- bar_long |>
+  arrange(qdate, category) |>
+  group_by(qdate) |>
+  mutate(
+    is_pos = value >= 0,
+    # Cumulative sums within pos/neg groups for label positioning
+    pos_cumsum = cumsum(if_else(is_pos, value, 0)),
+    neg_cumsum = cumsum(if_else(!is_pos, value, 0)),
+    # Midpoint for label
+    pos_prev = lag(pos_cumsum, default = 0),
+    neg_prev = lag(neg_cumsum, default = 0),
+    ymid = if_else(is_pos,
+                   (pos_prev + pos_cumsum) / 2,
+                   (neg_prev + neg_cumsum) / 2)
+  ) |>
+  ungroup()
+
+bar_pos <- bar_long |> filter(value >= 0)
+bar_neg <- bar_long |> filter(value < 0)
+
+bar_colors <- c(
+  "OBBBA" = "#2C7873",
+  "Everything Else" = "#5B9BD5",
+  "Tariffs" = "#E5A020",
+  "Gov't Shutdown" = "#B2262F"
+)
+
+p_fim <- ggplot() +
+  # Stacked bars: positive values
+  geom_col(data = bar_pos,
+           aes(x = qdate, y = value, fill = category),
+           position = "stack", width = 70) +
+  # Stacked bars: negative values
+  geom_col(data = bar_neg,
+           aes(x = qdate, y = value, fill = category),
+           position = "stack", width = 70) +
+  # Labels inside bars (skip if |value| < 0.15)
+  geom_text(data = bar_pos |> filter(abs(value) >= 0.15),
+            aes(x = qdate, y = value, label = sprintf("%+.2f", value),
+                fill = category),
+            position = position_stack(vjust = 0.5),
+            size = 3, color = "white", fontface = "bold",
+            show.legend = FALSE) +
+  geom_text(data = bar_neg |> filter(abs(value) >= 0.15),
+            aes(x = qdate, y = value, label = sprintf("%+.2f", value),
+                fill = category),
+            position = position_stack(vjust = 0.5),
+            size = 3, color = "white", fontface = "bold",
+            show.legend = FALSE) +
+  # Total dots across full range
+  geom_point(data = all_dots, aes(x = qdate, y = total),
+             size = 3.5, color = "black") +
+  geom_line(data = all_dots, aes(x = qdate, y = total),
+            linewidth = 0.5, color = "black", linetype = "dotted") +
+  # Divider line at zero
+  geom_hline(yintercept = 0, linewidth = 0.4, color = "grey30") +
+  # Vertical line separating historical from detailed
+  geom_vline(xintercept = as.Date("2025-08-15"), linewidth = 0.3,
+             linetype = "dashed", color = "grey50") +
+  annotate("text", x = as.Date("2025-08-15"), y = max(all_dots$total) + 0.3,
+           label = "Detailed\nbreakdown →", hjust = 1.1, size = 3, color = "grey40") +
+  scale_fill_manual(values = bar_colors) +
+  scale_x_date(breaks = qlabels$qdate,
+               labels = qlabels$qlabel) +
+  labs(
+    title = "Figure 5: Hutchins Center Fiscal Impact Measure",
+    subtitle = "Contribution of fiscal policy to real GDP growth (pp). Dots = total FIM. Bars = detailed decomposition.",
+    x = NULL,
+    y = "Percentage points of GDP growth",
+    caption = "Source: Brookings Hutchins Center Fiscal Impact Measure. Author's presentation. Mike Konczal."
+  ) +
+  theme_konczal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 9)
+  )
+
+ggsave("graphics/fig5_fiscal_impact_measure.png", p_fim, width = 10, height = 6, dpi = 200)
+p_fim
+```
+
+```{r taylor-rule, fig.height=5.5}
+# ── Pull Fed Funds Rate and unemployment from FRED ────────────────────────
+# Work around R libcurl HTTP/2 issue by forcing curl method
+dl_fred <- function(id) {
+  tmp <- tempfile(fileext = ".csv")
+  download.file(paste0("https://fred.stlouisfed.org/graph/fredgraph.csv?id=", id),
+                tmp, method = "curl", quiet = TRUE)
+  read_csv(tmp, show_col_types = FALSE) |>
+    rename(date = 1, value = 2) |>
+    mutate(date = as.Date(date))
+}
+fred_df <- dl_fred("UNRATE") |> rename(unrate = value) |>
+  inner_join(dl_fred("FEDFUNDS") |> rename(fed_funds = value), by = "date") |>
+  mutate(unrate = unrate / 100, fed_funds = fed_funds / 100)
+
+# ── Compute headline PCE inflation and core goods contribution (YoY) ─────
+# Headline PCE price index
+pce_headline <- pce |>
+  filter(LineDescription == "Personal consumption expenditures") |>
+  distinct(date, .keep_all = TRUE) |>
+  select(date, idx = DataValue) |>
+  arrange(date) |>
+  mutate(pce_yoy = idx / lag(idx, 12) - 1)
+
+# Core goods: weighted contribution to headline (rate * lagged weight)
+pce_core_goods <- pce |>
+  filter(LineDescription == "PCE goods excluding food and energy") |>
+  distinct(date, .keep_all = TRUE) |>
+  select(date, idx = DataValue, wt = PCEweight) |>
+  arrange(date) |>
+  mutate(
+    rate_yoy = idx / lag(idx, 12) - 1,
+    wt_lag = coalesce(lag(wt, 1), wt),
+    goods_contrib_yoy = rate_yoy * wt_lag
+  )
+
+# ── Merge and compute Taylor Rules ───────────────────────────────────────
+taylor_df <- pce_headline |>
+  select(date, pce_yoy) |>
+  inner_join(pce_core_goods |> select(date, goods_contrib_yoy), by = "date") |>
+  mutate(pce_adj = pce_yoy - goods_contrib_yoy) |>
+  inner_join(fred_df, by = "date") |>
+  mutate(
+    neutral_rate = 0.01,
+    unrate_star = 0.042,
+    pce_target = 0.02,
+    # Standard Taylor Rule (year-over-year headline PCE)
+    taylor = neutral_rate + pce_yoy +
+      0.5 * (pce_yoy - pce_target) + (unrate_star - unrate),
+    # Adjusted: headline minus core goods contribution
+    taylor_adj = neutral_rate + pce_adj +
+      0.5 * (pce_adj - pce_target) + (unrate_star - unrate)
+  ) |>
+  filter(date >= as.Date("2023-01-01"))
+
+# ── Pivot for plotting ───────────────────────────────────────────────────
+taylor_long <- taylor_df |>
+  select(date, `Fed Funds Rate` = fed_funds,
+         `Taylor Rule` = taylor,
+         `Taylor Rule ex Core Goods` = taylor_adj) |>
+  pivot_longer(-date, names_to = "series", values_to = "rate") |>
+  mutate(series = factor(series, levels = c(
+    "Taylor Rule", "Taylor Rule ex Core Goods", "Fed Funds Rate"
+  )))
+
+fig6 <- ggplot(taylor_long, aes(x = date, y = rate, color = series)) +
+  geom_line(linewidth = 0.9) +
+  scale_color_manual(values = c(
+    "Taylor Rule" = red,
+    "Taylor Rule ex Core Goods" = gold,
+    "Fed Funds Rate" = navy
+  )) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_date(breaks = date_breaks_gg(8, max(taylor_df$date)),
+               date_labels = "%b\n%Y") +
+  labs(
+    title = "Figure 6: Fed Funds Rate vs. Taylor Rule Estimates",
+    subtitle = "Taylor Rule using year-over-year PCE inflation; adjusted version removes core goods contribution",
+    x = NULL,
+    y = "Rate",
+    caption = "Source: BEA, FRED. Taylor Rule: r* + inflation + 0.5*(inflation - 2%) + (u* - u). Author's calculations. Mike Konczal."
+  ) +
+  theme_konczal()
+
+ggsave("graphics/fig6_taylor_rule.png", fig6, width = 9, height = 5.5, dpi = 200)
+fig6
+```
